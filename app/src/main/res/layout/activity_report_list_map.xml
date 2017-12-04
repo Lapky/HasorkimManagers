@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListMapActivity">
+
+
+    <ImageView
+        android:contentDescription="@string/logo_content_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/full_logo"
+        android:layout_marginTop="50sp"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/logo_content_description"
+        android:src="@drawable/temp_map_vets" />
+
+    <Button
+        style="?android:attr/buttonBarButtonStyle"
+        android:id="@+id/openReportListButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="לפרטים"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/button_text_size" />
+
+</LinearLayout>
