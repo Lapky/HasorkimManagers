@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.LogInActivity">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="155sp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:src="@drawable/full_logo"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0sp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/standard_padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Chen"
+            android:gravity="center_horizontal"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="שלום"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0sp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/standard_padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="052734223"
+            android:gravity="center_horizontal"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:alpha="0.2"
+            />
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="טלפון"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:alpha="0.2"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:background="@android:color/holo_red_dark"
+        android:text="התחבר"
+        android:textSize="36sp"
+        style="?android:attr/buttonBarButtonStyle"
+        android:id="@+id/logIn"
+        android:onClick="GoToReportList"/>
+</LinearLayout>
