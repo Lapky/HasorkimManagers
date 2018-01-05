@@ -1,10 +1,13 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,12 +18,16 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Collections;
 
 public class LogInActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
+
     View mRootView;
     private static final String TAG = LogInActivity.class.getSimpleName();
 
@@ -63,9 +70,30 @@ public class LogInActivity extends AppCompatActivity {
 
 
     public void GoToReportList(String idToken) {
+        getLocationPermission();
+        FirebaseMessaging.getInstance().subscribeToTopic("new_report");
         Intent intent = new Intent(LogInActivity.this, ReportListActivity.class);
         intent.putExtra("token", idToken);
         startActivity(intent);
+    }
+
+    /**
+     * Prompts the user for permission to use the device location.
+     */
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            );
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

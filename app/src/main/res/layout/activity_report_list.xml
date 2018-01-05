@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <ImageView
-        android:contentDescription="@string/logo_content_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:src="@drawable/full_logo"
         android:layout_marginTop="50sp"
-        />
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/logo_content_description"
+        android:src="@drawable/full_logo" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="6"
         android:fillViewport="true">
+
         <ListView
             android:id="@+id/list_view_reports"
             android:layout_width="match_parent"
@@ -29,13 +37,13 @@
     </ScrollView>
 
     <Button
-        style="?android:attr/buttonBarButtonStyle"
         android:id="@+id/openReportMapButton"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="1"
         android:text="על מפה"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/button_text_size"/>
+        android:textSize="@dimen/button_text_size" />
 
 </LinearLayout>
