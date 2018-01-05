@@ -1,88 +1,64 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
-
-import android.content.Intent;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import java.util.ArrayList;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
+
+
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
 public class ReportListActivity extends BaseActivity {
 
-    private LayoutInflater layoutInflater;
-    private ViewGroup thisContainer;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    User user;
+    Activity activity;
+    TextView dText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_report_list);
 
-        layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        setContentView(R.layout.activity_report_list);
 
-        thisContainer = (ViewGroup) layoutInflater.inflate(R.layout.activity_report_list, null);
+        mRecyclerView = findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
 
-        mDrawer.addView(thisContainer, 0);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        Button openVetMapButton = thisContainer.findViewById(R.id.openReportMapButton);
-        openVetMapButton.setOnClickListener(new View.OnClickListener() {
+
+        activity = this;
+
+        //setting up a user objext for the list
+        user = getUser();
+
+        dText = findViewById(R.id.dText);
+        dText.setText(String.valueOf(user.getIsManager()));
+
+        user.checkCreds(new MyCallBackClass(){
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ReportListActivity.this, ReportListMapActivity.class);
-                startActivity(intent);
+            public void execute() {
+                RecyclerView.Adapter mAdapter = new ReportAdapter(false,user.getIsManager(), getApplicationContext(),activity);
+                mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
+                mRecyclerView.setAdapter(mAdapter);
+
+
+                dText.setText(String.valueOf(user.getIsManager()));
             }
         });
 
-        ArrayList<Report> reportList = new ArrayList<>();
 
-        reportList.add(new Report(1,"Shahar", "1-12-2017 13:52:45", "Street Sokolov 14, City Ramat-Gan",
-                "סורק אישר", "Dog looks a bit sick", 544764751, "C58",
-                7, 0.3));
-        reportList.add(new Report(2, "Bar",  "1-12-2017 13:32:08", "Street Arlozorov 51, City Tel-Aviv",
-                "חיפוש סורק", "", 503724771, "",
-                4, 1.5));
-        reportList.add(new Report(3, "Chan", "1-12-2017 07:01:12", "Street Hod 33, City Arad",
-                "סורק אישר", "Dog is in my yard", 544999701, "S4",
-                1, 189.4));
-        reportList.add(new Report(4, "Boris", "29-11-2017 13:09:16", "Street Tpuach 18, City Yesod Hamahla",
-                "סורק - שווא", "Dog is sad", 523864011, "N1",
-                3, 233.3));
-        reportList.add(new Report(5, "Momo",  "29-11-2017 18:18:59", "Street Shlavim 27, City Petach Tikva",
-                "נמסר", "", 524710723, "E12",
-                13, 6.7));
-        reportList.add(new Report(6,"Gamba", "28-11-2017 19:48:36", "Street Sokolov 4, City Kiryat-Bialic",
-                "מחכה לאיסוף", "I love dogs", 544444891, "N10",
-                6, 94.8));
-
-        ReportAdapter adapter = new ReportAdapter(
-                this,
-                R.layout.report_list_item,
-                reportList
-        );
-        ListView listView = (ListView) findViewById(R.id.list_view_reports);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-
-                //Object o = ((ListView)parent).getItemAtPosition(position);
-                if (position == 0)
-                {
-                    Intent intent = new Intent(ReportListActivity.this, ReportViewScannerActivity.class);
-                    startActivity(intent);
-                }
-                if (position == 1)
-                {
-                    Intent intent = new Intent(ReportListActivity.this, ReportViewManagerActivity.class);
-                    startActivity(intent);
-                }
-
-
-
-            }
-        });
     }
+
+    public interface MyCallBackClass {
+        void execute();
+    }
+
 
 }
