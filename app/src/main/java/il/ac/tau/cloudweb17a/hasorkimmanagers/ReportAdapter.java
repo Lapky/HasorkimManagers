@@ -1,7 +1,7 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 
-        import android.app.Activity;
+import android.app.Activity;
         import android.content.Context;
         import android.content.Intent;
         import android.support.v7.widget.RecyclerView;
@@ -22,8 +22,10 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
         import java.io.IOException;
         import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-        import okhttp3.Call;
+import okhttp3.Call;
         import okhttp3.Callback;
         import okhttp3.Response;
         import okhttp3.ResponseBody;
@@ -89,22 +91,20 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             StatusView.setText(report.getStatus());
             AddressView.setText(report.getAddress());
             timeView.setText(report.getStartTimeAsString());
-            distance.setText((Double.toString(report.getLat()) + "," + Double.toString(report.getLat())));
+            distance.setText(report.getDistance());
             numberScanners.setText(Integer.toString(report.getAvailableScanners()));
         }
 
     }
 
 
-/*    class SortbyId implements Comparator<Report>
+    class SortbyDistance implements Comparator<Report>
     {
-        // Used for sorting in ascending order of
-        // roll number
         public int compare(Report a, Report b)
         {
-            return (int) (a.getStartTime() - b.getStartTime());
+            return a.getDistancevalue() - b.getDistancevalue();
         }
-    }*/
+    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ReportAdapter(boolean isOnlyOpenP, boolean isManagerP, Context contextP, Activity activityP) {
@@ -116,7 +116,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports");
         Query query= reportsRef.orderByChild("startTime").limitToFirst(10);
 
-        Log.d(TAG, "" + isOnlyOpen+","+isManager);
+        Log.d(TAG, "only open:" + isOnlyOpen+", is manager:"+isManager);
 
         query.addChildEventListener(new ChildEventListener() {
             @Override
@@ -129,48 +129,55 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     if(isManager) {
                         mDataset.add(report);
                     }else {
-                        ArrayList<LatLong> locationList =new ArrayList<>();
-                        LatLong thisLatLong = new LatLong();
-                        thisLatLong.Lat=report.getLat();
-                        thisLatLong.Long=report.getLong();
-                        locationList.add(thisLatLong);
+                        if(report.isOpenReport()) {
+                            ArrayList<LatLong> locationList = new ArrayList<>();
+                            LatLong thisLatLong = new LatLong();
+                            thisLatLong.Lat = report.getLat();
+                            thisLatLong.Long = report.getLong();
+                            locationList.add(thisLatLong);
 
-                        distanceService.getDistanceRequest(locationList, 0, 0, context.getString(R.string.google_maps_key)).enqueue(
-                            new Callback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    Log.e(TAG, "no response from distances");
-                                    //probably should retry
 
-                                }
+                            Log.d(TAG, "sendRequest");
+                            distanceService.getDistanceRequest(locationList, context.getString(R.string.google_maps_key)).enqueue(
+                                    new Callback() {
+                                        @Override
+                                        public void onFailure(Call call, IOException e) {
+                                            Log.e(TAG, "no response from distances");
+                                            //probably should retry
 
-                                @Override
-                                public void onResponse(Call call, Response response) throws IOException {
-                                    ResponseBody responseBody = response.body();
-                                    final String distance =distanceService.getDistances(responseBody.string());
-                                    if(distance==null){
-                                        //update
-                                    }
-                                    else {
-                                        //update
-                                        //distance.setText(distance);
-                                        Log.d(TAG, "distance: " + distance);
-                                    }
+                                        }
 
-                                    activity.runOnUiThread(
-                                            new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    TextView dText = activity.findViewById(R.id.dText);
-                                                    dText.setText(String.valueOf("goten to callback: "+ distance+""+report.getId()));
-                                                    mDataset.add(report);
-                                                    notifyDataSetChanged();
-                                                }
+                                        @Override
+                                        public void onResponse(Call call, Response response) throws IOException {
+                                            ResponseBody responseBody = response.body();
+                                            String[] parsedDate = distanceService.parseJSON(responseBody.string());
+                                            if (parsedDate == null) {
+                                                //update TODO
+                                            } else {
+                                                report.setDistance(parsedDate[0]);
+                                                report.setDuration(parsedDate[1]);
+                                                report.setDistancevalue(Integer.parseInt(parsedDate[2]));
+                                                //update
+                                                //distance.setText(distance);
+                                                activity.runOnUiThread(
+                                                        new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                //TextView dText = activity.findViewById(R.id.dText);
+                                                                //dText.setText(String.valueOf("gotten to callback: "+ distance+""+report.getId()));
+
+                                                                mDataset.add(report);
+                                                                Collections.sort(mDataset, new SortbyDistance());
+                                                                notifyDataSetChanged();
+                                                            }
+                                                        }
+                                                );
+
                                             }
-                                    );
-                                }
-                            }
-                        );
+                                        }
+                                    }
+                            );
+                        }
                     }
                 }
                 else{

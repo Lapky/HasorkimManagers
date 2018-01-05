@@ -51,9 +51,13 @@ public class Report implements  java.io.Serializable{
     private double Lat;
     private double Long;
 
+    private String distance;
+    private String duration;
 
     private int nextIncrementalId;
     private static final String TAG = "Report";
+    private int distancevalue;
+
 
     public Report(){
         // Default constructor required for calls to DataSnapshot.getValue(Report.class)
@@ -111,11 +115,12 @@ public class Report implements  java.io.Serializable{
 
     public int getIncrementalReportId() { return incrementalReportId; }
 
+    /*
     public void persistReport(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports");
         reportsRef.push().setValue(this);
-    }
+    }*/
 
     public void setExtraPhoneNumber(String extraPhoneNumber) {
         this.extraPhoneNumber = extraPhoneNumber;
@@ -335,5 +340,28 @@ public class Report implements  java.io.Serializable{
 
     public String getAvailableScannersStr() {
         return String.valueOf(availableScanners);
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDistancevalue(int distancevalue) {
+        this.distancevalue = distancevalue;
+    }
+
+    public int getDistancevalue() {
+        return distancevalue;
     }
 }
