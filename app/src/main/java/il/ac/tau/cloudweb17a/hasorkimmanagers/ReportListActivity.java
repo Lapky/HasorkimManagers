@@ -12,10 +12,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.Report.getLastReportStartTime;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
@@ -29,6 +33,7 @@ public class ReportListActivity extends AppCompatActivity {
     private boolean isOnlyOpen=false;
     private int numberOfReports=10;
     private int numberOfReportsToAdd=10;
+    ReportAdapter mAdapter;
 
     MyCallBackClass showList = new MyCallBackClass() {
         @Override
@@ -42,30 +47,32 @@ public class ReportListActivity extends AppCompatActivity {
             };
 
 
-            RecyclerView.Adapter mAdapter = new ReportAdapter(isOnlyOpen, user.getIsManager(), getApplicationContext(), activity, setUIVisible,numberOfReports);
+
+            mAdapter = new ReportAdapter(isOnlyOpen, user.getIsManager(), getApplicationContext(), activity, setUIVisible,numberOfReports);
             mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
             mRecyclerView.setAdapter(mAdapter);
 
-            if(getUser().getIsManager()){
 
+
+            if(getUser().getIsManager()){
                 mRecyclerView.addOnScrollListener(
-                    new RecyclerView.OnScrollListener() {
-                        private boolean mIsLoading=false;
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                            if (mIsLoading)
-                                return;
-                            int visibleItemCount = mLayoutManager.getChildCount();
-                            int totalItemCount = mLayoutManager.getItemCount();
-                            int pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
-                            if (pastVisibleItems + visibleItemCount >= totalItemCount) {
-                                //Toast.makeText(ReportListActivity.this,"Lat",Toast.LENGTH_LONG).show();
-                                mIsLoading=true;
-                                numberOfReports = numberOfReports + numberOfReportsToAdd;
-                                showList.execute();
+                        new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                int visibleItemCount = mLayoutManager.getChildCount();
+                                int totalItemCount = mLayoutManager.getItemCount();
+                                int pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
+                                if (pastVisibleItems + visibleItemCount >= numberOfReports) {
+                                    //Toast.makeText(ReportListActivity.this,"Lat",Toast.LENGTH_LONG).show();
+
+                                    numberOfReports = numberOfReports + numberOfReportsToAdd;
+                                    Query query = FirebaseDatabase.getInstance().getReference().child("reports")
+                                            .orderByChild("startTime").startAt(getLastReportStartTime()).limitToFirst(numberOfReportsToAdd);
+                                    mAdapter.updateList(query,showList);
+
+                                }
                             }
                         }
-                    }
                 );
                 isOnlyOpenGroup.setVisibility(View.VISIBLE);
                 setUIVisible.execute();
@@ -75,7 +82,7 @@ public class ReportListActivity extends AppCompatActivity {
 
     User user;
     Activity activity;
-    ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +143,7 @@ public class ReportListActivity extends AppCompatActivity {
         else {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }

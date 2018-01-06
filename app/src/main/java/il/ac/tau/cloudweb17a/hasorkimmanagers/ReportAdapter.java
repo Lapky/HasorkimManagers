@@ -2,35 +2,36 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 
 import android.app.Activity;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.support.v7.widget.RecyclerView;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.TextView;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-        import com.google.firebase.database.ChildEventListener;
-        import com.google.firebase.database.DataSnapshot;
-        import com.google.firebase.database.DatabaseError;
-        import com.google.firebase.database.DatabaseReference;
-        import com.google.firebase.database.FirebaseDatabase;
-        import com.google.firebase.database.Query;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
-        import org.w3c.dom.Text;
+import org.w3c.dom.Text;
 
-        import java.io.IOException;
-        import java.util.ArrayList;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import okhttp3.Call;
-        import okhttp3.Callback;
-        import okhttp3.Response;
-        import okhttp3.ResponseBody;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
-        import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.Report.setLastReportStartTime;
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
 /**
@@ -141,6 +142,13 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         }
         Log.d(TAG, "only open:" + isOnlyOpen+", is manager:"+isManager);
 
+        updateList(query,setUIVisible);
+
+
+    }
+
+    public void updateList(Query query, final ReportListActivity.MyCallBackClass setUIVisible){
+        Log.d(TAG, "updating list");
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
@@ -153,10 +161,12 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     if(isManager) {
                         if(!isOnlyOpen){
                             mDataset.add(report);
+                            setLastReportStartTime(report.getStartTime());
                         }
                         else {
                             if (report.isOpenReport()) {
                                 mDataset.add(report);
+                                setLastReportStartTime(report.getStartTime());
                             }
                         }
                     }else {
@@ -272,8 +282,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-
-
 
     }
 

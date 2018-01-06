@@ -330,4 +330,15 @@ public class Report implements  java.io.Serializable{
     public int getDistancevalue() {
         return distancevalue;
     }
+
+    private static long lastReportStartTime;
+
+    public static void setLastReportStartTime(long lastReportStartTime) {
+        Report.lastReportStartTime = lastReportStartTime;
+    }
+
+    public static long getLastReportStartTime() {
+
+        return lastReportStartTime;
+    }
 }
