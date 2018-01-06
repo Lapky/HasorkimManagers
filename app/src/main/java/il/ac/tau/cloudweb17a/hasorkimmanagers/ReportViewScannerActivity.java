@@ -113,16 +113,16 @@ public class ReportViewScannerActivity extends BaseActivity {
         if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId))){
 
             buttonEnlist.setVisibility(LinearLayout.GONE);
-            buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
-        }
 
+        }
+        if (report.isScannerEnlisted(userId)) buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
 
 
         buttonEnlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 report.addToPotentialScanners(userId);
-                report.reportUpdateStatus("SCANNER_ENLISTED");
+                if (Objects.equals(report.getStatus(), "NEW")) report.reportUpdateStatus("SCANNER_ENLISTED");
 
                 startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
                 finish();
@@ -130,11 +130,11 @@ public class ReportViewScannerActivity extends BaseActivity {
 
         });
 
-        buttonEnlist.setOnClickListener(new View.OnClickListener() {
+        buttonUnenlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                report.addToPotentialScanners(userId);
-                report.reportUpdateStatus("SCANNER_ENLISTED");
+                report.subtrectFromPotentialScanners(userId);
+                if (report.getAvailableScanners() < 1) report.reportUpdateStatus("NEW");
 
                 startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
                 finish();

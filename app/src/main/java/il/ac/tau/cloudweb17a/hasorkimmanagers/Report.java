@@ -68,10 +68,11 @@ public class Report implements  java.io.Serializable{
     private static final String TAG = "Report";
     private int distancevalue;
 
-    public void addToPotentialScanners(String userId){
-        potentialScanners.add(userId);
-        availableScanners = potentialScanners.size();
+    private void changePotentialScanners(String userId, int change){
+        if (change == 0) potentialScanners.remove(userId);
+        else if (change == 1) potentialScanners.add(userId);
 
+        availableScanners = potentialScanners.size();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
@@ -87,6 +88,16 @@ public class Report implements  java.io.Serializable{
 
         reportsRef.updateChildren(reportMap);
     }
+
+    public void addToPotentialScanners(String userId){
+        this.changePotentialScanners(userId, 1);
+    }
+
+
+    public void subtrectFromPotentialScanners(String userId){
+        this.changePotentialScanners(userId, 0);
+    }
+
 
     public boolean isScannerEnlisted(String userId){
         return potentialScanners.contains(userId);
