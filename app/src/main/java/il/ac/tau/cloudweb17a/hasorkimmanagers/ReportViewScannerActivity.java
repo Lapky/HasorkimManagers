@@ -3,24 +3,16 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import java.util.Objects;
 
-import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
-
-public class ReportViewScannerActivity extends BaseActivity {
-
-    private LayoutInflater layoutInflater;
-    private ViewGroup thisContainer;
-    private PopupWindow popupWindow;
+public class ReportViewScannerActivity extends AppCompatActivity {
 
     private Report report;
     private Boolean isManager;
@@ -30,13 +22,7 @@ public class ReportViewScannerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_active_report);
-
-        layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        thisContainer = (ViewGroup) layoutInflater.inflate(R.layout.activity_report_view_scanner, null);
-
-        mDrawer.addView(thisContainer, 0);
+        setContentView(R.layout.activity_report_view_scanner);
 
         report = (Report) getIntent().getSerializableExtra("Report");
         isManager = (Boolean) getIntent().getSerializableExtra("isManager");

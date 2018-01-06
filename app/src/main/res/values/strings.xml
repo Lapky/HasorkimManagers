@@ -2,10 +2,6 @@
     <string name="app_name">הסורקים</string>
     <string name="title_activity_login">Sign in</string>
 
-    <string name="google_places_key">AIzaSyBcSLd55VIpNE_MRmt5GyRini-d7cENn1w</string>
-    <string name="google_maps_key">AIzaSyCUlK4p2XDeYowxS67p6gC2GjqEHzLfSCo</string>
-
-
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
