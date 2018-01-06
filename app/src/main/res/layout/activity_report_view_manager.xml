@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="סטטוס:"
                     android:textSize="32sp"
                     android:textStyle="bold"
@@ -92,7 +92,7 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="end"
                 android:text="טלפון:"
                 android:textSize="@dimen/standard_text_size"
                 android:textStyle="bold"
@@ -122,7 +122,7 @@
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="שם המדווח:"
                     android:textSize="@dimen/standard_text_size"
                     android:textStyle="bold"
@@ -152,7 +152,7 @@
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="זמן דיווח:"
                     android:textSize="@dimen/standard_text_size"
                     android:textStyle="bold"
@@ -183,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="כתובת דיווח"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:textStyle="bold"
                     android:textSize="@dimen/standard_text_size"
                     android:textColor="@android:color/black"/>
@@ -213,7 +213,7 @@
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="מידע נוסף:"
                     android:textSize="@dimen/standard_text_size"
                     android:textStyle="bold"
@@ -241,7 +241,7 @@
                     android:id="@+id/list_view_scanners"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="right"/>
+                    android:layout_gravity="end"/>
             </android.support.v4.widget.NestedScrollView>
 
             <LinearLayout
@@ -257,14 +257,14 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="2"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:src="@drawable/dog1" />
 
                 <TextView
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="תמונה דיווח:"
                     android:textSize="@dimen/standard_text_size"
                     android:textStyle="bold" />

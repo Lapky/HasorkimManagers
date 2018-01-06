@@ -10,24 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="right">
+        android:gravity="end">
 
         <TextView
             android:id="@+id/scanner_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingRight="@dimen/standard_padding"
+            android:paddingEnd="@dimen/standard_padding"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginLeft="@dimen/standard_padding"
+            android:layout_marginStart="@dimen/standard_padding"
             android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/scanner_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/standard_padding"
+            android:paddingEnd="@dimen/standard_padding"
             android:textSize="24sp"
             android:layout_weight="1"
             android:textStyle="bold"
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingRight="@dimen/standard_padding"
+            android:paddingEnd="@dimen/standard_padding"
             android:text="שלח"
             android:textStyle="bold"
             android:textColor="@android:color/black"

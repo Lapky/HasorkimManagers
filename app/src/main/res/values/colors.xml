@@ -2,7 +2,12 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#3F51B5</color>
+    <color name="map_activity_placeholder">#e0ffffff</color>
     <color name="colorProgressBar">#1976D2</color>
+    <color name="backgroundColor">#FAFAFA</color>
+    <color name="moreDetailsButtonTextColor">#FAFAFA</color>
+    <color name="distanceToVetColor">#2979FF</color>
+    <color name="attentionColor">#C62828</color>
     <color name="reportListColor">#37474F</color>
 </resources>
