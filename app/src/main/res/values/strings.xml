@@ -21,7 +21,8 @@
     <string name="logo_content_description">לוגו</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="google_maps_key">AIzaSyCUlK4p2XDeYowxS67p6gC2GjqEHzLfSCo</string>
+    <string name="google_places_key">AIzaSyBcSLd55VIpNE_MRmt5GyRini-d7cENn1w</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="sign_in_cancelled">התחברות בוטלה</string>
