@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity">
 
@@ -16,34 +17,53 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/list_type_buttons_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50sp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/logo_content_description"
-        android:src="@drawable/full_logo" />
+        android:layout_weight="1"
+        android:background="@drawable/radio_buttons_border_line"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    <ScrollView
+        <RadioButton
+            android:id="@+id/all_reports_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:paddingEnd="@dimen/double_padding"
+            android:text="@string/all_reports"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/open_reports_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/open_reports"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RadioGroup>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
-        android:fillViewport="true">
+        android:layout_weight="10"
+        android:scrollbars="vertical"
+        android:visibility="gone" />
 
-        <ListView
-            android:id="@+id/list_view_reports"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </ScrollView>
 
-    <Button
-        android:id="@+id/openReportMapButton"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="1"
-        android:text="על מפה"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/button_text_size" />
+    <ProgressBar
+        android:id="@+id/report_list_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:theme="@style/ProgressTheme"
+        android:visibility="visible" />
 
 </LinearLayout>

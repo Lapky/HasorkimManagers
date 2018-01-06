@@ -1,80 +1,171 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
-
-import android.content.Intent;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.RadioGroup;
 
-import java.util.ArrayList;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
 public class ReportListActivity extends AppCompatActivity {
 
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    RadioGroup isOnlyOpenGroup;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean isOnlyOpen=false;
+    private int numberOfReports=10;
+    private int numberOfReportsToAdd=10;
+
+    MyCallBackClass showList = new MyCallBackClass() {
+        @Override
+        public void execute() {
+            MyCallBackClass setUIVisible=new MyCallBackClass() {
+                @Override
+                public void execute() {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    findViewById(R.id.report_list_progress_bar).setVisibility(View.GONE);
+                }
+            };
+
+
+            RecyclerView.Adapter mAdapter = new ReportAdapter(isOnlyOpen, user.getIsManager(), getApplicationContext(), activity, setUIVisible,numberOfReports);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
+            mRecyclerView.setAdapter(mAdapter);
+
+            if(getUser().getIsManager()){
+
+                mRecyclerView.addOnScrollListener(
+                    new RecyclerView.OnScrollListener() {
+                        private boolean mIsLoading=false;
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            if (mIsLoading)
+                                return;
+                            int visibleItemCount = mLayoutManager.getChildCount();
+                            int totalItemCount = mLayoutManager.getItemCount();
+                            int pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
+                            if (pastVisibleItems + visibleItemCount >= totalItemCount) {
+                                //Toast.makeText(ReportListActivity.this,"Lat",Toast.LENGTH_LONG).show();
+                                mIsLoading=true;
+                                numberOfReports = numberOfReports + numberOfReportsToAdd;
+                                showList.execute();
+                            }
+                        }
+                    }
+                );
+                isOnlyOpenGroup.setVisibility(View.VISIBLE);
+                setUIVisible.execute();
+            }
+        }
+    };
+
+    User user;
+    Activity activity;
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_report_list);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        Button openVetMapButton = findViewById(R.id.openReportMapButton);
-        openVetMapButton.setOnClickListener(new View.OnClickListener() {
+        isOnlyOpenGroup = findViewById(R.id.list_type_buttons_group);
+        isOnlyOpenGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ReportListActivity.this, ReportListMapActivity.class);
-                startActivity(intent);
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.all_reports_button:
+                        isOnlyOpen=false;
+                        break;
+                    case R.id.open_reports_button:
+                        isOnlyOpen=true;
+                        break;
+                }
+                showList.execute();
             }
         });
 
-        ArrayList<Report> reportList = new ArrayList<>();
 
-        reportList.add(new Report(1, "Shahar", "1-12-2017 13:52:45", "Street Sokolov 14, City Ramat-Gan",
-                "סורק אישר", "Dog looks a bit sick", 544764751, "C58",
-                7, 0.3));
-        reportList.add(new Report(2, "Bar", "1-12-2017 13:32:08", "Street Arlozorov 51, City Tel-Aviv",
-                "חיפוש סורק", "", 503724771, "",
-                4, 1.5));
-        reportList.add(new Report(3, "Chan", "1-12-2017 07:01:12", "Street Hod 33, City Arad",
-                "סורק אישר", "Dog is in my yard", 544999701, "S4",
-                1, 189.4));
-        reportList.add(new Report(4, "Boris", "29-11-2017 13:09:16", "Street Tpuach 18, City Yesod Hamahla",
-                "סורק - שווא", "Dog is sad", 523864011, "N1",
-                3, 233.3));
-        reportList.add(new Report(5, "Momo", "29-11-2017 18:18:59", "Street Shlavim 27, City Petach Tikva",
-                "נמסר", "", 524710723, "E12",
-                13, 6.7));
-        reportList.add(new Report(6, "Gamba", "28-11-2017 19:48:36", "Street Sokolov 4, City Kiryat-Bialic",
-                "מחכה לאיסוף", "I love dogs", 544444891, "N10",
-                6, 94.8));
+        mRecyclerView = findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
 
-        ReportAdapter adapter = new ReportAdapter(
-                this,
-                R.layout.report_list_item,
-                reportList
-        );
-        ListView listView = findViewById(R.id.list_view_reports);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-                if (position == 0) {
-                    Intent intent = new Intent(ReportListActivity.this, ReportViewScannerActivity.class);
-                    startActivity(intent);
-                }
-                if (position == 1) {
-                    Intent intent = new Intent(ReportListActivity.this, ReportViewManagerActivity.class);
-                    startActivity(intent);
-                }
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        activity = this;
 
+        //setting up a user object for the list
+        user = getUser();
+
+        user.checkCreds( new MyCallBackClass() {
+            @Override
+            public void execute() {
+                checkPermissions(showList);
             }
         });
+
     }
+
+    private void checkPermissions(MyCallBackClass showList) {
+        Context context = this.getApplicationContext();
+
+        if ((ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)   == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)    ) {
+            if(user.getIsManager()){
+                showList.execute();
+            }else {
+                distanceService.getDeviceLocation(showList, mFusedLocationProviderClient, this);
+            }
+        }
+        else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    /**
+     * Handles the result of the request for location permissions.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+
+        //mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    distanceService.getDeviceLocation(showList,mFusedLocationProviderClient, this);
+                }
+            }
+        }
+
+
+    }
+
+    public interface MyCallBackClass {
+        void execute();
+    }
+
 
 }

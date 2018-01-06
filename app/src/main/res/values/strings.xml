@@ -3,6 +3,8 @@
     <string name="title_activity_login">Sign in</string>
 
     <string name="google_places_key">AIzaSyBcSLd55VIpNE_MRmt5GyRini-d7cENn1w</string>
+    <string name="google_maps_key">AIzaSyCUlK4p2XDeYowxS67p6gC2GjqEHzLfSCo</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -44,4 +46,7 @@
     <string name="pref_title_radius">רדיוס התראות (ק״מ)</string>
     <string name="pref_default_radius">5</string>
     <string name="pref_title_notification_radius">קבע הגבלת התראות</string>
+    <string name="all_reports">כל הדיווחים</string>
+    <string name="open_reports">רק דיווחים פתוחים</string>
+    <string name="report_details_status"><u>סטטוס</u></string>
 </resources>
