@@ -83,6 +83,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 intent = new Intent(context, ReportViewScannerActivity.class);
 
             intent.putExtra("Report", mReport);
+            intent.putExtra("isManager", getUser().getIsManager());
+            intent.putExtra("userId", getUser().getId());
             context.startActivity(intent);
         }
 
@@ -123,9 +125,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 try {
                     final Report report = dataSnapshot.getValue(Report.class);
-
                     String key = dataSnapshot.getKey();
                     report.setId(key);
+
+                    report.setPotentialScanners();
 
                     if(!isOnlyOpen){
                         if(isManager) {
@@ -210,6 +213,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 Report report = dataSnapshot.getValue(Report.class);
                 String key = dataSnapshot.getKey();
                 report.setId(key);
+
+                report.setPotentialScanners();
 
 
                 //looking for report to update

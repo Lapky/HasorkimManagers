@@ -19,11 +19,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 
 public class Report implements  java.io.Serializable{
@@ -39,9 +43,15 @@ public class Report implements  java.io.Serializable{
     private String phoneNumber;
     private String extraPhoneNumber;
     private String assignedScanner;
+
     private int availableScanners;
+
+    private Set<String> potentialScanners ;
+
+
     private String cancellationText;
     private String userId;
+
     private boolean hasSimilarReports;
     private boolean isDogWithReporter;
     private String imageUrl;
@@ -58,9 +68,57 @@ public class Report implements  java.io.Serializable{
     private static final String TAG = "Report";
     private int distancevalue;
 
+    public void addToPotentialScanners(String userId){
+        potentialScanners.add(userId);
+        availableScanners = potentialScanners.size();
+
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String,Object> potentialScannersMap = new HashMap<String,Object>();
+
+        for (String scanner: potentialScanners){
+            potentialScannersMap.put(scanner, 1);
+        }
+
+        reportMap.put("availableScanners", this.availableScanners);
+        reportMap.put("potentialScanners", potentialScannersMap);
+
+        reportsRef.updateChildren(reportMap);
+    }
+
+    public boolean isScannerEnlisted(String userId){
+        return potentialScanners.contains(userId);
+    }
+
+
+    public void setPotentialScanners(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id).child("potentialScanners");
+        potentialScanners = new HashSet<>();
+        reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
+                for (DataSnapshot userId : contactChildren) {
+                    potentialScanners.add(userId.getKey().toString());
+                }
+
+                availableScanners = potentialScanners.size();
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+            }
+        });
+
+    }
+
 
     public Report(){
         // Default constructor required for calls to DataSnapshot.getValue(Report.class)
+
+        //this.setPotentialScanners();
     }
 
 
@@ -100,6 +158,7 @@ public class Report implements  java.io.Serializable{
     public long getStartTime(){
         return this.startTime;
     }
+
     public String getStartTimeAsString() {
         Format format = new SimpleDateFormat("HH:mm dd/MM/yyyy");
         return format.format(new Date(-this.startTime));
@@ -230,13 +289,35 @@ public class Report implements  java.io.Serializable{
         else return true;
     }
 
-    public String statusInHebrew(){
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("NEW", "הדיווח בטיפול מנהל");
-        map.put("CLOSED", "הטיפול בדיווח הסתיים");
-        map.put("CANCELED", "הדיווח בוטל");
-        map.put("SCANER_ON_THE_WAY", "סורק בדרך אליך");
-        return map.get(this.status);
+    public String statusInHebrew(boolean isUserManager, String scannerId){
+        if (isUserManager) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("NEW", "דיווח חדש");
+            map.put("SCANNER_ENLISTED", "סורק זמין");
+            map.put("MANAGER_ENLISTED", "בטיפול מנהל");
+            map.put("MANAGER_ASSIGNED_SCANNER", "סורק קיבל את הקריאה");
+            map.put("SCANNER_ON_THE_WAY", "סורק יצא לדרך");
+            map.put("CLOSED", "סגור");
+            map.put("CANCELED", "בוטל");
+
+            return map.get(this.status);
+        }
+        else{
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("NEW", "דיווח חדש");
+            map.put("SCANNER_ENLISTED", "ממתין לאישור מנהל");
+            map.put("MANAGER_ENLISTED", "ממתין לאישור מנהל");
+            map.put("MANAGER_ASSIGNED_SCANNER", "סורק אחר קיבל את הקריאה");
+            map.put("SCANNER_ON_THE_WAY", "סורק יצא לדרך");
+            map.put("CLOSED", "סגור");
+            map.put("CANCELED", "בוטל");
+
+            if (scannerId == assignedScanner){
+                map.put("MANAGER_ASSIGNED_SCANNER", "צא ליעד, דווח יציאה לדרך");
+            }
+            return map.get(this.status);
+        }
+
     }
 
     public String validate(){
@@ -355,6 +436,10 @@ public class Report implements  java.io.Serializable{
 
     public String getDuration() {
         return duration;
+    }
+
+    public String getDurationStr() {
+        return "5 דקות";
     }
 
     public void setDistancevalue(int distancevalue) {
