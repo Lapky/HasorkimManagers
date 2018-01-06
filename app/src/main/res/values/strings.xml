@@ -20,4 +20,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_base">BaseActivity</string>
+    <string name="all_reports">כל הדיווחים</string>
+    <string name="open_reports">רק דיווחים פתוחים</string>
+    <string name="report_details_status"><u>סטטוס</u></string>
 </resources>

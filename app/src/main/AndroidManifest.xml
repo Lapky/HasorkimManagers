@@ -32,7 +32,10 @@
         <activity android:name=".ReportListMapActivity" />
         <activity android:name=".ReportViewScannerActivity" />
         <activity android:name=".ReportViewManagerActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".MyReportActivity" />
+        <activity android:name=".StatisticsActivity" />
+
     </application>
 
 </manifest>
