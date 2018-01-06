@@ -46,4 +46,10 @@
     <string name="all_reports">כל הדיווחים</string>
     <string name="open_reports">רק דיווחים פתוחים</string>
     <string name="report_details_status"><u>סטטוס</u></string>
+    <string name="reports">דיווחים פעילים</string>
+    <string name="setting">הגדרות</string>
+    <string name="Share">שתף</string>
+    <string name="agri">מאגר משרד החקלאות</string>
+    <string name="Community">קהילה</string>
+    <string name="statistics">סטטיסטיקות</string>
 </resources>

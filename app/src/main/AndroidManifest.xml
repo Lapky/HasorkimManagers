@@ -22,13 +22,17 @@
             android:name=".LogInActivity"
             android:label="התחברות">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
-        <activity android:name=".ReportListActivity" />
+        <activity
+            android:name=".ReportListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".ReportListMapActivity" />
         <activity android:name=".ReportViewScannerActivity" />
         <activity android:name=".ReportViewManagerActivity" />
