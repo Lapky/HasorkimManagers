@@ -1,13 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<!--    <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Statistics"
+        android:text="@string/סטטיסטיקות"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/reportListColor"/>
+        android:textColor="@color/reportListColor"/>-->
+
+    <ProgressBar
+        android:id="@+id/statistics_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:indeterminate="true"
+        android:theme="@style/ProgressTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/statistics_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!--כמה דיווחים היו החודש-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/report_list_padding"
+            android:layout_margin="@dimen/standard_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/report_this_month"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/report_item_status_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/statistics_report_this_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/standard_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!--כמה דיווחים נסגרו בהצלחה החודש-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standard_padding"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/report_list_padding"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="57dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/report_closed_successfully_this_month"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/report_item_status_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/closed_successfully"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/standard_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!--דיווחים סה״כ שנפתחו באפליקציה-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standard_padding"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/report_list_padding"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="101dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/overall_open_reports"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/report_item_status_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/overall_open_reports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/standard_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!--זמן ממוצע מפתיחה סורק שיצא לדרך-->
+ <!--       <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standard_padding"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/report_list_padding"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="153dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/average_new_time"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/report_item_status_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/average_new_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/standard_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>-->
+
+
+    </LinearLayout>
+
+
+
+
 </android.support.constraint.ConstraintLayout>

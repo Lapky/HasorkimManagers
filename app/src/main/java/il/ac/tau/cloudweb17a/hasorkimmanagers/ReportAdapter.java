@@ -97,7 +97,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
         public void bindReport(Report report) {
             mReport = report;
-            StatusView.setText(report.getStatus());
+            StatusView.setText(report.statusInHebrew(getUser()));
             AddressView.setText(report.getAddress());
             timeView.setText(report.getStartTimeAsString());
             if(!getUser().getIsManager()) {
@@ -158,8 +158,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     final Report report = dataSnapshot.getValue(Report.class);
                     String key = dataSnapshot.getKey();
                     report.setId(key);
-
-                    report.setPotentialScanners();
 
                     if(isManager) {
                         if(!isOnlyOpen){
@@ -250,10 +248,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 Report report = dataSnapshot.getValue(Report.class);
                 String key = dataSnapshot.getKey();
                 report.setId(key);
-
-                report.setPotentialScanners();
-
-
                 //looking for report to update
                 int index = -1;
                 for (int i = 0; i < mDataset.size(); i++) {

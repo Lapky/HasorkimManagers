@@ -112,23 +112,29 @@ public class Report implements  java.io.Serializable{
 
 
     public void setPotentialScanners(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference reportsRef = ref.child("reports").child(this.id).child("potentialScanners");
-        potentialScanners = new HashSet<>();
-        reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
-                for (DataSnapshot userId : contactChildren) {
-                    potentialScanners.add(userId.getKey().toString());
+        if(this.id!=null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference reportsRef = ref.child("reports").child(this.id).child("potentialScanners");
+            potentialScanners = new HashSet<>();
+            reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
+                    for (DataSnapshot userId : contactChildren) {
+                        potentialScanners.add(userId.getKey().toString());
+                    }
+
+                    availableScanners = potentialScanners.size();
                 }
 
-                availableScanners = potentialScanners.size();
-            }
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError firebaseError) {
+                }
+            });
+        }
+        else{
+            Log.e(TAG,"id is null");
+        }
 
     }
 
@@ -225,6 +231,7 @@ public class Report implements  java.io.Serializable{
 
     public void setId(String id) {
         this.id = id;
+        this.setPotentialScanners();
     }
 
     public void setStatus(String status) {
@@ -353,8 +360,8 @@ public class Report implements  java.io.Serializable{
         else return true;
     }
 
-    public String statusInHebrew(boolean isUserManager, String scannerId){
-        if (isUserManager) {
+    public String statusInHebrew(User user){
+        if (user.getIsManager()) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("NEW", "דיווח חדש");
             map.put("SCANNER_ENLISTED", "סורק זמין");
@@ -376,7 +383,7 @@ public class Report implements  java.io.Serializable{
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
 
-            if (scannerId == assignedScanner){
+            if (user.getId()!=null && user.getId().equals(assignedScanner)){
                 map.put("MANAGER_ASSIGNED_SCANNER", "צא ליעד, דווח יציאה לדרך");
             }
             return map.get(this.getStatus());

@@ -58,4 +58,9 @@
     <string name="number_of_scanners">סורקים זמינים:</string>
     <string name="report_time">זמן הדיווח:</string>
     <string name="report_address">כתובת:</string>
+    <string name="סטטיסטיקות">Statistics</string>
+    <string name="report_this_month">דיווחים החודש</string>
+    <string name="report_closed_successfully_this_month">דיווחים נסגרו בהצלחה החודש</string>
+    <string name="overall_open_reports">סה\"כ דיווחים שנפתחו באפליקציה</string>
+    <string name="average_new_time">זמן ממוצע מפתיחת דיווח עד יציאה של סורק</string>
 </resources>

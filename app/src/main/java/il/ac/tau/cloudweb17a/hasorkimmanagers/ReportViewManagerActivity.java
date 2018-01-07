@@ -25,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
+
 public class ReportViewManagerActivity extends AppCompatActivity {
 
     //private DrawerLayout mDrawer;
@@ -60,7 +62,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         String reportStatus = report.getStatus();
 
         TextView managerReportStatus = findViewById(R.id.managerReportStatus);
-        managerReportStatus.setText(report.statusInHebrew(isManager, userId));
+        managerReportStatus.setText(report.statusInHebrew(getUser()));
 
         TextView managerReportLocation = findViewById(R.id.managerReportLocation);
         managerReportLocation.setText(report.getAddress());

@@ -57,6 +57,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                     //mRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.report_list_progress_bar).setVisibility(View.GONE);
                     reportListLayout.setVisibility(View.VISIBLE);
+                    Log.d(TAG,"set ui visible");
                 }
             };
 

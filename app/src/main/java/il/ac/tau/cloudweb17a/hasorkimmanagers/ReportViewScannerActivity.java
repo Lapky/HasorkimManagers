@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.Objects;
 
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
+
 public class ReportViewScannerActivity extends AppCompatActivity {
 
     private Report report;
@@ -25,8 +27,8 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_view_scanner);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-        isManager = (Boolean) getIntent().getSerializableExtra("isManager");
-        userId = (String) getIntent().getSerializableExtra("userId");
+        isManager = getUser().getIsManager();
+        userId = getUser().getId();
 
         boolean isScannerEnlisted = report.isScannerEnlisted(userId);
 
@@ -52,7 +54,7 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         }
 
         TextView activeReportStatus = findViewById(R.id.activeReportStatus);
-        activeReportStatus.setText(report.statusInHebrew(isManager, userId));
+        activeReportStatus.setText(report.statusInHebrew(getUser()));
 
         TextView activeReportLocation = findViewById(R.id.activeReportLocation);
         activeReportLocation.setText(report.getAddress());
@@ -142,14 +144,6 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             }
 
         });
-
-    }
-    @Override
-    public void onBackPressed()
-    {
-        super.onBackPressed();
-        startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
-        finish();
 
     }
 }
