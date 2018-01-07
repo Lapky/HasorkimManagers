@@ -45,6 +45,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_active_report);
+        setContentView(R.layout.activity_report_view_manager);
 
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
@@ -166,12 +167,14 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         //Log.d(TAG, scanner_name.getText().toString());
     }
 
+    /*
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(ReportViewManagerActivity.this, ReportListActivity.class));
         finish();
     }
+    */
 }
 
 

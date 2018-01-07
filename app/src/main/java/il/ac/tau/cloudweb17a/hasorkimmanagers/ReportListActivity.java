@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +34,7 @@ import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private LinearLayout reportListLayout;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -48,14 +51,14 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
             MyCallBackClass setUIVisible = new MyCallBackClass() {
                 @Override
                 public void execute() {
-                    mRecyclerView.setVisibility(View.VISIBLE);
+                    //mRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.report_list_progress_bar).setVisibility(View.GONE);
+                    reportListLayout.setVisibility(View.VISIBLE);
                 }
             };
 
 
             mAdapter = new ReportAdapter(isOnlyOpen, user.getIsManager(), getApplicationContext(), activity, setUIVisible, numberOfReports);
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
             mRecyclerView.setAdapter(mAdapter);
 
 
@@ -94,6 +97,9 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_report_list);
+
+        reportListLayout = findViewById(R.id.reports_list_layout);
+
         isOnlyOpenGroup = findViewById(R.id.list_type_buttons_group);
         isOnlyOpenGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -131,6 +137,9 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        ListItemDecoration decoration = new ListItemDecoration(this, Color.LTGRAY, 1f);
+        mRecyclerView.addItemDecoration(decoration);
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 

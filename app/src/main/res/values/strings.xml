@@ -44,7 +44,7 @@
     <string name="pref_default_radius">5</string>
     <string name="pref_title_notification_radius">קבע הגבלת התראות</string>
     <string name="all_reports">כל הדיווחים</string>
-    <string name="open_reports">רק דיווחים פתוחים</string>
+    <string name="open_reports">דיווחים פתוחים</string>
     <string name="report_details_status"><u>סטטוס</u></string>
     <string name="reports">דיווחים פעילים</string>
     <string name="setting">הגדרות</string>
@@ -52,4 +52,9 @@
     <string name="agri">מאגר משרד החקלאות</string>
     <string name="Community">קהילה</string>
     <string name="statistics">סטטיסטיקות</string>
+    <string name="distance_from_report_address">מרחק:</string>
+    <string name="report_status_in_list">סטטוס:</string>
+    <string name="number_of_scanners">סורקים זמינים:</string>
+    <string name="report_time">זמן הדיווח:</string>
+    <string name="report_address">כתובת:</string>
 </resources>

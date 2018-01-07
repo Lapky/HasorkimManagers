@@ -4,138 +4,138 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="@dimen/standard_padding"
-    android:paddingTop="@dimen/standard_padding">
+    android:paddingTop="@dimen/standard_padding"
+    android:background="@drawable/list_item_selected"
+    android:padding="@dimen/report_list_item_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/distanceReport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/standard_padding"
-            android:layout_weight="1"
-            android:paddingStart="@dimen/standard_padding"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/distanceReportTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:paddingStart="@dimen/standard_padding"
-            android:text="מרחק:"
-            android:textSize="@dimen/standard_padding"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/report_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="@dimen/standard_padding"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/report_list_padding">
 
         <TextView
             android:id="@+id/report_status_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingStart="@dimen/standard_padding"
-            android:text="סטטוס:"
-            android:textSize="@dimen/standard_padding"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/numberScanners"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/standard_padding"
+            android:text="@string/report_status_in_list"
+            android:textSize="@dimen/report_item_status_size"
             android:textColor="@android:color/black"
-            android:textSize="32sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/numberScannersTitle"
+            android:id="@+id/report_status"
+            android:gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:paddingStart="@dimen/standard_padding"
-            android:text="מספר סורקים:"
-            android:textSize="@dimen/standard_padding"
+            android:layout_weight="4.5"
+            android:textSize="@dimen/standard_text_size"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
             android:visibility="gone" />
-
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/report_list_padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/report_address"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/report_address"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/standard_padding"
-            android:textSize="@dimen/standard_padding"
+            android:layout_weight="3"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/report_time"
+            android:textSize="@dimen/standard_text_size"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/report_time"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:paddingStart="@dimen/standard_padding"
-            android:text="כתובת:"
-            android:textSize="@dimen/standard_padding"
+            android:layout_weight="3"
+            android:textSize="@dimen/standard_text_size"
             android:textStyle="bold" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/report_list_padding">
+
+        <TextView
+            android:id="@+id/numberScannersTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/number_of_scanners"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/numberScanners"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/report_list_padding">
 
         <TextView
-            android:id="@+id/report_time"
-            android:layout_width="wrap_content"
+            android:id="@+id/distanceReportTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/standard_padding"
-            android:textSize="@dimen/standard_padding"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:text="@string/distance_from_report_address"
+            android:textSize="@dimen/standard_text_size"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/distanceReport"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:paddingStart="@dimen/standard_padding"
-            android:text="זמן הדיווח:"
-            android:textSize="@dimen/standard_padding"
-            android:textStyle="bold" />
-
+            android:layout_weight="3"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

@@ -75,6 +75,7 @@ public class LogInActivity extends AppCompatActivity {
         Intent intent = new Intent(LogInActivity.this, ReportListActivity.class);
         intent.putExtra("token", idToken);
         startActivity(intent);
+        finish();
     }
 
     /**
