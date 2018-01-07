@@ -15,9 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
 
-        </activity>
         <activity
             android:name=".LogInActivity"
             android:label="התחברות">
@@ -28,12 +26,14 @@
             </intent-filter>
 
         </activity>
+
         <activity
             android:name=".ReportListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
 
-        <activity android:name=".ReportListMapActivity" />
+        </activity>
+
         <activity android:name=".ReportViewScannerActivity" />
         <activity android:name=".ReportViewManagerActivity" />
 
@@ -62,7 +62,10 @@
                 android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
         </activity>
 
-        <activity android:name=".MyReportActivity" />
+        <activity android:name=".MyReportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".StatisticsActivity" />
 
     </application>
