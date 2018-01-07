@@ -134,22 +134,32 @@ public class ReportViewManagerActivity extends BaseActivity {
 
         Button sendScanner = (Button)vwParentRow.getChildAt(3);
 
-        if (!Objects.equals(report.getAssignedScanner(), scannerNameString)){
+        String assignedScanner = report.getAssignedScanner();
 
-        report.reportUpdateAssignedScanner(scannerNameString);
-
-        sendScanner.setText("סורק נבחר");
-
-        vwParentRow.setBackgroundColor(Color.YELLOW);
-
-        report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER");
+        if (assignedScanner != null && !Objects.equals(assignedScanner, "") &&
+                !Objects.equals(assignedScanner, scannerNameString)){
+            sendScanner.setError("יכול להיות רק סורק מאושר אחד");
         }
         else{
-            report.reportUpdateAssignedScanner("");
-            sendScanner.setText("שלח");
-            vwParentRow.setBackgroundColor(Color.WHITE);
-            report.reportUpdateStatus("MANAGER_ENLISTED");
+
+            if (!Objects.equals(report.getAssignedScanner(), scannerNameString)){
+
+                report.reportUpdateAssignedScanner(scannerNameString);
+
+                sendScanner.setText("סורק נבחר");
+
+                vwParentRow.setBackgroundColor(Color.YELLOW);
+
+                report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER");
+            }
+            else{
+                report.reportUpdateAssignedScanner("");
+                sendScanner.setText("שלח");
+                vwParentRow.setBackgroundColor(Color.WHITE);
+                report.reportUpdateStatus("MANAGER_ENLISTED");
+            }
         }
+
 
         vwParentRow.refreshDrawableState();
 
