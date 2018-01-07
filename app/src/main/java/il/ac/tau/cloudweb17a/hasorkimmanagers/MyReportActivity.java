@@ -26,7 +26,7 @@ public class MyReportActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
-        findViewById(R.id.report_list_progress_bar).setVisibility(View.GONE);
+        findViewById(R.id.reports_list_layout).setVisibility(View.VISIBLE);
 
     }
 }

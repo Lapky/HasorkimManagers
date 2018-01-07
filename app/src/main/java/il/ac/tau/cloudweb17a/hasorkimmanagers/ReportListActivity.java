@@ -18,6 +18,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "ReportListLog";
     private LinearLayout reportListLayout;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -44,6 +46,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
     private int numberOfReports = 10;
     private int numberOfReportsToAdd = 10;
     ReportAdapter mAdapter;
+    NavigationView navigationView;
 
     MyCallBackClass showList = new MyCallBackClass() {
         @Override
@@ -127,7 +130,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         toggle.syncState();
 
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -151,6 +154,13 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         user.checkCreds(new MyCallBackClass() {
             @Override
             public void execute() {
+                if(getUser().getIsManager()) {
+                    navigationView.getMenu().getItem(1).setVisible(false);
+
+                }else{
+                    navigationView.getMenu().getItem(1).setVisible(true);
+                }
+
                 checkPermissions(showList);
             }
         });
@@ -207,10 +217,11 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         int id = item.getItemId();
 
         if (id == R.id.nav_reports) {
-
-
+            startActivity(new Intent(this, ReportListActivity.class));
+        } else if (id == R.id.nav_my_reports) {
+            startActivity(new Intent(this, MyReportActivity.class));
         } else if (id == R.id.nav_statistics) {
-
+            startActivity(new Intent(this, StatisticsActivity.class));
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.nav_agri) {
