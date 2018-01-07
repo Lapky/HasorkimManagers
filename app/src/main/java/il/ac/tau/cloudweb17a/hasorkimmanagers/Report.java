@@ -46,6 +46,8 @@ public class Report implements  java.io.Serializable{
 
     private String assignedScanner;
 
+    private String scannerOnTheWay;
+
     private int availableScanners;
 
     private Set<String> potentialScanners ;
@@ -322,6 +324,29 @@ public class Report implements  java.io.Serializable{
         reportsRef.updateChildren(reportMap);
     }
 
+    public void reportUpdateAssignedScanner(String userId){
+        this.setAssignedScanner(userId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        reportMap.put("assignedScanner", userId);
+        reportsRef.updateChildren(reportMap);
+
+    }
+
+    public void updateOnTheWayTimestamp(){
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
+                .format(new java.util.Date());
+
+        this.setScannerOnTheWay(timeStamp);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        reportMap.put("scannerOnTheWay", timeStamp);
+        reportsRef.updateChildren(reportMap);
+
+    }
+
     public boolean isOpenReport(){
         if ((Objects.equals(this.getStatus(), "CANCELED")) || (Objects.equals(this.getStatus(), "CLOSED")))
             return false;
@@ -508,6 +533,14 @@ public class Report implements  java.io.Serializable{
 
     public void setAssignedScanner(String assignedScanner) {
         this.assignedScanner = assignedScanner;
+    }
+
+    public String getScannerOnTheWay() {
+        return scannerOnTheWay;
+    }
+
+    public void setScannerOnTheWay(String scannerOnTheWay) {
+        this.scannerOnTheWay = scannerOnTheWay;
     }
 
 }

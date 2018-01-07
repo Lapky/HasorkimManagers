@@ -7,6 +7,7 @@
     android:paddingBottom="@dimen/standard_padding">
 
     <LinearLayout
+        android:id="@+id/scannerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -31,9 +32,22 @@
             android:textSize="24sp"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:maxLength="20"/>
 
-        <RadioButton
+        <TextView
+            android:id="@+id/scannerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/standard_padding"
+            android:textSize="24sp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/sendScanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,6 +55,8 @@
             android:text="שלח"
             android:textStyle="bold"
             android:textColor="@android:color/black"
+            android:focusable="false"
+            android:onClick="sendScannerHandler"
             />
 
 
