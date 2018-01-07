@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Report implements  java.io.Serializable{
@@ -42,7 +43,10 @@ public class Report implements  java.io.Serializable{
     private String freeText;
     private String phoneNumber;
     private String extraPhoneNumber;
+
     private String assignedScanner;
+
+    private String scannerOnTheWay;
 
     private int availableScanners;
 
@@ -56,6 +60,9 @@ public class Report implements  java.io.Serializable{
     private boolean isDogWithReporter;
     private String imageUrl;
 
+
+    private boolean isScannerEnlistedStatus;
+    private boolean isManagerEnlistedStatus;
 
 
     private double Lat;
@@ -80,7 +87,7 @@ public class Report implements  java.io.Serializable{
         Map<String,Object> potentialScannersMap = new HashMap<String,Object>();
 
         for (String scanner: potentialScanners){
-            potentialScannersMap.put(scanner, 1);
+            potentialScannersMap.put(scanner, this.getDuration());
         }
 
         reportMap.put("availableScanners", this.availableScanners);
@@ -161,10 +168,18 @@ public class Report implements  java.io.Serializable{
     }
 
     public String getAssignedScanner() {
+        if (assignedScanner == null) return "";
         return assignedScanner;
     }
 
-    public String getStatus() { return this.status; }
+    public String getStatus() {
+        if (Objects.equals(this.status, "NEW")){
+            if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
+            if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
+            return "NEW";
+        }
+        return this.status;
+    }
 
     public long getStartTime(){
         return this.startTime;
@@ -267,10 +282,25 @@ public class Report implements  java.io.Serializable{
     }
 
     public void reportUpdateStatus(String status){
+        String dbStatus = status;
+        if (Objects.equals(dbStatus, "SCANNER_ENLISTED")) {
+            dbStatus = "NEW";
+            this.setIsScannerEnlistedStatus(true);
+        }
+        if (Objects.equals(dbStatus, "MANAGER_ENLISTED")) {
+            dbStatus = "NEW";
+            this.setIsManagerEnlistedStatus(true);
+        }
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference reportsRef = ref.child("reports").child(this.id).child("status");
-        reportsRef.setValue(status);
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        reportMap.put("status", dbStatus);
+        reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
+        reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
+        reportsRef.updateChildren(reportMap);
     }
+
 
     public void reportUpdateExtraPhoneNumber(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -294,8 +324,31 @@ public class Report implements  java.io.Serializable{
         reportsRef.updateChildren(reportMap);
     }
 
+    public void reportUpdateAssignedScanner(String userId){
+        this.setAssignedScanner(userId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        reportMap.put("assignedScanner", userId);
+        reportsRef.updateChildren(reportMap);
+
+    }
+
+    public void updateOnTheWayTimestamp(){
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
+                .format(new java.util.Date());
+
+        this.setScannerOnTheWay(timeStamp);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        reportMap.put("scannerOnTheWay", timeStamp);
+        reportsRef.updateChildren(reportMap);
+
+    }
+
     public boolean isOpenReport(){
-        if ((Objects.equals(this.status, "CANCELED")) || (Objects.equals(this.status, "CLOSED")))
+        if ((Objects.equals(this.getStatus(), "CANCELED")) || (Objects.equals(this.getStatus(), "CLOSED")))
             return false;
         else return true;
     }
@@ -311,7 +364,7 @@ public class Report implements  java.io.Serializable{
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
 
-            return map.get(this.status);
+            return map.get(this.getStatus());
         }
         else{
             Map<String, String> map = new HashMap<String, String>();
@@ -326,7 +379,7 @@ public class Report implements  java.io.Serializable{
             if (scannerId == assignedScanner){
                 map.put("MANAGER_ASSIGNED_SCANNER", "צא ליעד, דווח יציאה לדרך");
             }
-            return map.get(this.status);
+            return map.get(this.getStatus());
         }
 
     }
@@ -396,6 +449,10 @@ public class Report implements  java.io.Serializable{
         return imageUrl;
     }
 
+    public String getDistanceStr() {
+        return "5";
+    }
+
     public String getAvailableScannersStr() {
         return String.valueOf(availableScanners);
     }
@@ -412,7 +469,8 @@ public class Report implements  java.io.Serializable{
     }
 
     public String getDuration() {
-        return duration;
+        return Integer.toString(ThreadLocalRandom.current().nextInt(3, 31));
+        //return duration;
     }
 
     public String getDurationStr() {
@@ -426,6 +484,35 @@ public class Report implements  java.io.Serializable{
     public int getDistancevalue() {
         return distancevalue;
     }
+
+    public boolean getIsScannerEnlistedStatus() {
+        return isScannerEnlistedStatus;
+    }
+
+    public void setIsScannerEnlistedStatus(boolean scannerEnlistedStatus) {
+        isScannerEnlistedStatus = scannerEnlistedStatus;
+    }
+
+    public boolean getIsManagerEnlistedStatus() {
+        return isManagerEnlistedStatus;
+    }
+
+    public void setIsManagerEnlistedStatus(boolean ManagerEnlistedStatus) {
+        isManagerEnlistedStatus = ManagerEnlistedStatus;
+    }
+
+    public void setAssignedScanner(String assignedScanner) {
+        this.assignedScanner = assignedScanner;
+    }
+
+    public String getScannerOnTheWay() {
+        return scannerOnTheWay;
+    }
+
+    public void setScannerOnTheWay(String scannerOnTheWay) {
+        this.scannerOnTheWay = scannerOnTheWay;
+    }
+
 
     private static long lastReportStartTime;
 

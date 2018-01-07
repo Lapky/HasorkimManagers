@@ -288,4 +288,15 @@
         android:textSize="32sp"
         android:visibility="gone"/>
 
+    <Button
+        android:id="@+id/scannerOnTheWay"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:text="יצאתי לדרך"
+        android:textSize="32sp"
+        android:visibility="gone"/>
+
+
 </LinearLayout>

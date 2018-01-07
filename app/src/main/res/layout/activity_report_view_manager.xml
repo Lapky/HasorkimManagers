@@ -8,16 +8,6 @@
     android:orientation="vertical"
     android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0sp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="דיווח מספר C128"
-        android:textSize="@dimen/standard_text_size"
-        android:textStyle="bold"
-        android:layout_marginTop="55sp"/>
-
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
@@ -34,7 +24,9 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:orientation="vertical"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            android:layout_marginTop="55sp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,11 +37,12 @@
                 android:layout_margin="@dimen/standard_padding">
 
                 <TextView
+                    android:id="@+id/managerReportStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="חיפוש סורק"
+                    android:text=""
                     android:textSize="32sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
@@ -59,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:gravity="end"
+                    android:gravity="right"
                     android:text="סטטוס:"
                     android:textSize="32sp"
                     android:textStyle="bold"
@@ -70,61 +63,110 @@
             </LinearLayout>
 
             <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:textStyle="bold"
-            android:layout_margin="@dimen/standard_padding">
-
-            <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0544764751"
+                android:layout_weight="8"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:textSize="@dimen/standard_text_size"
-                android:textColor="@android:color/black"/>
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/standard_padding">
 
-            <TextView
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:text="טלפון:"
-                android:textSize="@dimen/standard_text_size"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/managerReportLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="@dimen/standard_text_size"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="זמן פתיחה:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8sp"/>
+
+                <TextView
+                    android:id="@+id/managerReportOpenTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="@dimen/standard_text_size"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="כתובת:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8sp"/>
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:textStyle="bold"
                 android:layout_margin="@dimen/standard_padding">
 
                 <TextView
+                    android:id="@+id/managerReportPhoneNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="שחר"
-                    android:gravity="center"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal"
                     android:textStyle="bold"
-                    android:textSize="@dimen/standard_text_size"
                     android:textColor="@android:color/black"/>
 
                 <TextView
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="שם המדווח:"
-                    android:textSize="@dimen/standard_text_size"
+                    android:gravity="right"
+                    android:text="טלפון:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/managerReportReporterName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="שם:"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
             </LinearLayout>
@@ -139,10 +181,11 @@
                 android:layout_margin="@dimen/standard_padding">
 
                 <TextView
+                    android:id="@+id/managerReportCurrentScanner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="לפני 3 שעות"
+                    android:text=""
                     android:textSize="16sp"
                     android:gravity="center_horizontal"
                     android:textStyle="bold"
@@ -152,60 +195,33 @@
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="זמן דיווח:"
-                    android:textSize="@dimen/standard_text_size"
+                    android:gravity="right"
+                    android:text="סורק נוכחי:"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/managerReportExtraTextLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:textStyle="bold"
-                android:layout_margin="@dimen/standard_padding">
+                android:layout_margin="@dimen/standard_padding"
+                android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/managerReportExtraText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Street Sokolov 14, City Ramat-Gan"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="כתובת דיווח"
-                    android:gravity="end"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/standard_text_size"
-                    android:textColor="@android:color/black"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:textStyle="bold"
-                android:layout_margin="@dimen/standard_padding">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="הכלב נראה קצת חולה"
+                    android:text=""
                     android:textSize="16sp"
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
 
@@ -213,12 +229,11 @@
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="מידע נוסף:"
-                    android:textSize="@dimen/standard_text_size"
+                    android:gravity="right"
+                    android:text="הערות:"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
-
             </LinearLayout>
 
             <TextView
@@ -241,12 +256,13 @@
                     android:id="@+id/list_view_scanners"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="right"
+                    android:focusable="true"/>
             </android.support.v4.widget.NestedScrollView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200sp"
                 android:layout_weight="4"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -254,18 +270,19 @@
                 android:layout_margin="@dimen/standard_padding">
 
                 <ImageView
+                    android:id="@+id/managerReportImage"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="2"
-                    android:gravity="start"
+                    android:gravity="left"
                     android:src="@drawable/dog1" />
 
                 <TextView
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="תמונה דיווח:"
+                    android:gravity="right"
+                    android:text="תמונה:"
                     android:textSize="@dimen/standard_text_size"
                     android:textStyle="bold" />
             </LinearLayout>

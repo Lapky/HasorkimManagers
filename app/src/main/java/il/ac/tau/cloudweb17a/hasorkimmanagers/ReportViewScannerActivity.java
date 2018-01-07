@@ -32,6 +32,7 @@ public class ReportViewScannerActivity extends AppCompatActivity {
 
         Button buttonEnlist = findViewById(R.id.scannerAvailable);
         Button buttonUnenlist = findViewById(R.id.scannerCancelEnlistment);
+        Button scannerOnTheWay = findViewById(R.id.scannerOnTheWay);
 
         String reportStatus = report.getStatus();
 
@@ -103,6 +104,9 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         }
         if (report.isScannerEnlisted(userId)) buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
 
+        if (Objects.equals(report.getAssignedScanner(), userId))
+            scannerOnTheWay.setVisibility(LinearLayout.VISIBLE);
+
 
         buttonEnlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +126,17 @@ public class ReportViewScannerActivity extends AppCompatActivity {
                 report.subtrectFromPotentialScanners(userId);
                 if (report.getAvailableScanners() < 1) report.reportUpdateStatus("NEW");
 
+                startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
+                finish();
+            }
+
+        });
+
+        scannerOnTheWay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                report.updateOnTheWayTimestamp();
+                report.reportUpdateStatus("SCANNER_ON_THE_WAY");
                 startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
                 finish();
             }
