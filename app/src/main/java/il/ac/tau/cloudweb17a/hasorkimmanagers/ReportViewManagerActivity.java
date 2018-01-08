@@ -77,7 +77,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         managerReportPhoneNumber.setText(report.getPhoneNumber());
 
         String comments = report.getFreeText();
-        if (comments != null) {
+        if ((comments != null) && (!comments.isEmpty())) {
             LinearLayout commentsLayout = findViewById(R.id.managerReportExtraTextLayout);
             TextView closedReportExtraText = findViewById(R.id.managerReportExtraText);
             closedReportExtraText.setText(report.getFreeText());
@@ -86,7 +86,8 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
         TextView managerReportCurrentScanner = findViewById(R.id.managerReportCurrentScanner);
         String assignedScanner = report.getAssignedScanner();
-        managerReportCurrentScanner.setText(assignedScanner.substring(0, Math.min(assignedScanner.length(), 20)));
+        if (assignedScanner != "")
+            managerReportCurrentScanner.setText(assignedScanner.substring(0, Math.min(assignedScanner.length(), 20)));
 
         if (report.getImageUrl() != null) {
             bitmap = report.getBitmapFromURL(report.getImageUrl());

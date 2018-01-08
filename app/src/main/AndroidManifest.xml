@@ -30,12 +30,15 @@
         <activity
             android:name=".ReportListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        </activity>
+        <activity
+            android:name=".ReportViewScannerActivity"
+            android:label="פרטי דיווח" />
 
-        <activity android:name=".ReportViewScannerActivity" />
-        <activity android:name=".ReportViewManagerActivity" />
+        <activity
+            android:name=".ReportViewManagerActivity"
+            android:label="פרטי דיווח" />
 
         <service
             android:name=".MessagingService"
