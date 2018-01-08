@@ -122,6 +122,37 @@ public class ReportViewManagerActivity extends BaseActivity {
 
             }
         });
+
+        Button closeReport = findViewById(R.id.closeReport);
+
+        closeReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView closeCancelReportReason = findViewById(R.id.closeCancelReportReason);
+                report.reportUpdateCancellationText(closeCancelReportReason.getText().toString());
+                report.reportUpdateCancellationReporterType(isManager);
+                report.reportUpdateStatus("CLOSED");
+                startActivity(new Intent(ReportViewManagerActivity.this, ReportListActivity.class));
+                finish();
+            }
+
+        });
+
+        Button cancelReport = findViewById(R.id.cancelReport);
+
+        cancelReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView closeCancelReportReason = findViewById(R.id.closeCancelReportReason);
+                report.reportUpdateCancellationText(closeCancelReportReason.getText().toString());
+                report.reportUpdateCancellationReporterType(isManager);
+                report.reportUpdateStatus("CANCELED");
+                startActivity(new Intent(ReportViewManagerActivity.this, ReportListActivity.class));
+                finish();
+            }
+
+        });
+
     }
 
     public void sendScannerHandler(View view)

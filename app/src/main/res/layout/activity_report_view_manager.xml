@@ -302,4 +302,36 @@
         android:text="שמור"
         android:textSize="32sp" />
 
+    <Button
+        android:id="@+id/closeReport"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:text="סגור דיווח"
+        android:textSize="32sp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/cancelReport"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:text="בטל דיווח"
+        android:textSize="32sp"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/closeCancelReportReason"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="שם:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:visibility="gone"/>
+
 </LinearLayout>

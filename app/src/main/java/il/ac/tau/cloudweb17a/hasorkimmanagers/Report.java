@@ -54,6 +54,8 @@ public class Report implements  java.io.Serializable{
 
 
     private String cancellationText;
+
+    private String cancellationReporterType;
     private String userId;
 
     private boolean hasSimilarReports;
@@ -324,6 +326,22 @@ public class Report implements  java.io.Serializable{
         reportsRef.updateChildren(reportMap);
     }
 
+    public void reportUpdateCancellationReporterType(boolean isManager){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        if (isManager) {
+            this.setCancellationReporterType("Manager");
+            reportMap.put("cancellationReporterType", "Manager");
+        }
+        else {
+            this.setCancellationReporterType("Scanner");
+            reportMap.put("cancellationReporterType", "Scanner");
+        }
+        reportsRef.updateChildren(reportMap);
+    }
+
+
     public void reportUpdateAssignedScanner(String userId){
         this.setAssignedScanner(userId);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -541,6 +559,14 @@ public class Report implements  java.io.Serializable{
 
     public void setScannerOnTheWay(String scannerOnTheWay) {
         this.scannerOnTheWay = scannerOnTheWay;
+    }
+
+    public String getCancellationReporterType() {
+        return cancellationReporterType;
+    }
+
+    public void setCancellationReporterType(String cancellationReporterType) {
+        this.cancellationReporterType = cancellationReporterType;
     }
 
 }
