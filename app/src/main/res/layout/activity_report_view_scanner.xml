@@ -1,302 +1,255 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportViewScannerActivity"
     android:orientation="vertical"
-    android:gravity="center">
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0" />
+    android:padding="@dimen/report_view_padding"
+    tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportViewScannerActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:fillViewport="true">
+        android:layout_weight="9"
+        android:scrollbars="vertical">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:layout_marginTop="55sp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_margin="@dimen/standard_padding">
+                android:layout_marginBottom="@dimen/button_text_size">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/report_scanner_view_status"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/activeReportStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="32sp"
-                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:gravity="start"
+                    android:paddingStart="@dimen/report_list_item_padding"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="סטטוס:"
-                    android:textSize="32sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
-
-
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_margin="@dimen/standard_padding">
-
-                <TextView
-                    android:id="@+id/activeReportLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="@dimen/standard_text_size"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/activeReportLocationHeadLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="זמן פתיחה:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
+                    android:text="@string/report_scanner_view_address"
+                    android:textSize="@dimen/report_item_text_size"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/activeReportOpenTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="@dimen/standard_text_size"
-                    android:textStyle="bold"
+                    android:id="@+id/activeReportLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.8"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="כתובת:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
-
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_margin="@dimen/standard_padding">
+                android:layout_marginTop="@dimen/report_list_padding"
+                android:layout_marginBottom="@dimen/fab_margin">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/estimated_arrival_time"
+                    android:textSize="@dimen/report_item_text_size"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/activeReportArrivalTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="31 דקות"
-                    android:textSize="@dimen/standard_text_size"
-                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.8"
+                    android:text="@string/report_scanner_view_estimated_time_arrival"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/report_status_padding">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="זמן הגעה:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:text="@string/report_scanner_view_time"
+                    android:textSize="@dimen/report_item_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/activeReportOpenTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.8"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8sp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/activeReportReporterNameLayout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:gravity="center"
                 android:orientation="horizontal"
-                android:textStyle="bold"
-                android:layout_margin="@dimen/standard_padding">
+                android:paddingTop="@dimen/report_status_padding"
+                android:paddingBottom="@dimen/report_list_item_padding">
 
-                <TextView
-                    android:id="@+id/activeReportPhoneNumber"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=""
-                    android:textSize="16sp"
-                    android:gravity="center_horizontal"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="טלפון:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/report_scanner_view_name"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/activeReportReporterName"
+                    <TextView
+                        android:id="@+id/activeReportReporterName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/details_buttons_padding"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=""
-                    android:textSize="16sp"
-                    android:gravity="center_horizontal"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="שם:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/report_scanner_view_phone"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/activeReportPhoneNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/details_buttons_padding"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/activeReportExtraTextLayout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:gravity="center"
                 android:orientation="horizontal"
                 android:textStyle="bold"
-                android:layout_margin="@dimen/standard_padding"
+                android:paddingTop="@dimen/report_status_padding"
+                android:paddingBottom="@dimen/report_status_padding"
                 android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/report_view_scanner_comments"
+                    android:textSize="@dimen/report_item_text_size"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/activeReportExtraText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textSize="16sp"
-                    android:gravity="center_horizontal"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="הערות:"
-                    android:textSize="18sp"
+                    android:layout_weight="1.4"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/activeReportImageLayout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:gravity="center"
                 android:orientation="horizontal"
-                android:textStyle="bold"
-                android:layout_margin="@dimen/standard_padding">
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/report_status_padding"
+                android:paddingBottom="@dimen/report_status_padding"
+                android:textStyle="bold">
 
                 <ImageView
                     android:id="@+id/activeReportImage"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:gravity="left"
+                    android:layout_width="250dp"
+                    android:layout_height="225dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/dog1" />
-
-                <TextView
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="תמונה:"
-                    android:textSize="@dimen/standard_text_size"
-                    android:textStyle="bold" />
             </LinearLayout>
 
-
         </LinearLayout>
+
     </ScrollView>
 
     <Button
         android:id="@+id/scannerAvailable"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:text="פנוי לבקשה"
-        android:textSize="32sp" />
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/I_am_available_for_scan"
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/scannerCancelEnlistment"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:text="ביטול הרשמה לבקשה"
-        android:textSize="32sp"
-        android:visibility="gone"/>
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/unavailable_for_scan"
+        android:textSize="25sp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/scannerOnTheWay"
         style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:text="יצאתי לדרך"
-        android:textSize="32sp"
-        android:visibility="gone"/>
-
-
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/on_my_way_to_scan"
+        android:textSize="25sp"
+        android:visibility="gone" />
 </LinearLayout>

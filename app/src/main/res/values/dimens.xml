@@ -5,6 +5,7 @@
     <dimen name="standard_padding">16dp</dimen>
     <dimen name="report_item_status_size">17sp</dimen>
     <dimen name="report_item_distance_size">18sp</dimen>
+    <dimen name="report_item_text_size">17sp</dimen>
     <dimen name="standard_text_size">16sp</dimen>
     <dimen name="double_padding">32sp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
@@ -14,7 +15,9 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="report_date_padding">5dp</dimen>
+    <dimen name="report_status_padding">4dp</dimen>
     <dimen name="report_list_padding">2dp</dimen>
-    <dimen name="report_list_item_padding">10dp</dimen>
+    <dimen name="report_list_item_padding">8dp</dimen>
+    <dimen name="report_view_padding">10dp</dimen>
     <dimen name="details_buttons_padding">4dp</dimen>
 </resources>

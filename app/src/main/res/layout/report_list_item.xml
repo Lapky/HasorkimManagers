@@ -21,7 +21,6 @@
             android:layout_weight="1"
             android:text="@string/report_status_in_list"
             android:textSize="@dimen/report_item_status_size"
-            android:textColor="@android:color/black"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -30,7 +29,7 @@
             android:gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="4.5"
+            android:layout_weight="9"
             android:textSize="@dimen/standard_text_size"
             android:textColor="@android:color/black"
             android:textStyle="bold"
@@ -40,7 +39,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/report_list_padding">
 
@@ -56,9 +54,38 @@
             android:id="@+id/report_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="4.8"
             android:textSize="@dimen/standard_text_size"
+            android:textColor="@android:color/black"
             android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/report_list_padding">
+
+        <TextView
+            android:id="@+id/distanceReportTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/distance_from_report_address"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/distanceReport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/standard_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -78,8 +105,9 @@
             android:id="@+id/report_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="3.2"
             android:textSize="@dimen/standard_text_size"
+            android:textColor="@android:color/black"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -105,36 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/standard_text_size"
-            android:textStyle="bold"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/report_list_padding">
-
-        <TextView
-            android:id="@+id/distanceReportTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/distance_from_report_address"
-            android:textSize="@dimen/standard_text_size"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/distanceReport"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/standard_text_size"
+            android:textSize="@dimen/report_item_status_size"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>

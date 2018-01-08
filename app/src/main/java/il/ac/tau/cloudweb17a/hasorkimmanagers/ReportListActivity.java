@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -214,7 +215,9 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.nav_agri) {
-
+            Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.moag_website)));
+            if (websiteIntent.resolveActivity(getPackageManager()) != null)
+                startActivity(websiteIntent);
         } else if (id == R.id.nav_share) {
 
         }

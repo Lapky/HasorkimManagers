@@ -37,17 +37,19 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         String reportStatus = report.getStatus();
 
         if (!isScannerEnlisted){
+            /*
             TextView textView = findViewById(R.id.activeReportOpenTime);
-            textView.setVisibility(LinearLayout.GONE);
+            textView.setVisibility(View.GONE);
 
             textView = findViewById(R.id.activeReportLocationHeadLine);
-            textView.setVisibility(LinearLayout.GONE);
+            textView.setVisibility(View.GONE);
+            */
 
             LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
-            linearLayout.setVisibility(LinearLayout.GONE);
+            linearLayout.setVisibility(View.GONE);
 
             linearLayout = findViewById(R.id.activeReportImageLayout);
-            linearLayout.setVisibility(LinearLayout.GONE);
+            linearLayout.setVisibility(View.GONE);
 
         }
 
@@ -62,6 +64,14 @@ public class ReportViewScannerActivity extends AppCompatActivity {
 
         TextView activeReportArrivalTime = findViewById(R.id.activeReportArrivalTime);
         activeReportArrivalTime.setText(report.getDurationStr());
+
+        String comments = report.getFreeText();
+        if ((comments != null) && (!comments.isEmpty())) {
+            LinearLayout commentsLayout = findViewById(R.id.activeReportExtraTextLayout);
+            TextView closedReportExtraText = findViewById(R.id.activeReportExtraText);
+            closedReportExtraText.setText(report.getFreeText());
+            commentsLayout.setVisibility(View.VISIBLE);
+        }
 
         if (!report.isOpenReport())
         {
@@ -80,14 +90,15 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
             activeReportPhoneNumber.setText(report.getPhoneNumber());
 
-
+            /*
             String comments = report.getFreeText();
-            if (comments != null && isScannerEnlisted) {
+            if ((comments != null) && (!comments.isEmpty()) && isScannerEnlisted) {
                 LinearLayout commentsLayout = findViewById(R.id.activeReportExtraTextLayout);
                 TextView closedReportExtraText = findViewById(R.id.activeReportExtraText);
                 closedReportExtraText.setText(report.getFreeText());
                 commentsLayout.setVisibility(View.VISIBLE);
             }
+            */
 
             if (report.getImageUrl() != null && isScannerEnlisted) {
                 bitmap = report.getBitmapFromURL(report.getImageUrl());
@@ -96,7 +107,6 @@ public class ReportViewScannerActivity extends AppCompatActivity {
                 closedReportImage.setVisibility(View.VISIBLE);
             }
         }
-
         if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId))){
 
             buttonEnlist.setVisibility(LinearLayout.GONE);
@@ -144,6 +154,7 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         });
 
     }
+    /*
     @Override
     public void onBackPressed()
     {
@@ -152,6 +163,7 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         finish();
 
     }
+    */
 }
 
 
