@@ -432,26 +432,6 @@ public class Report implements  java.io.Serializable{
     }
 
 
-    public Bitmap getBitmapFromURL (String src){
-        try{
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (Exception e){
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String sStackTrace = sw.toString();
-            Log.w(TAG, sStackTrace);
-            return null;
-        }
-    }
-
-
     public String getImageUrl() {
         return imageUrl;
     }

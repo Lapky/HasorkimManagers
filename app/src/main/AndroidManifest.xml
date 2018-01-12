@@ -15,22 +15,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
         <activity
             android:name=".LogInActivity"
             android:label="התחברות">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 
         <activity
             android:name=".ReportListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ReportViewScannerActivity"
@@ -65,7 +65,8 @@
                 android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
         </activity>
 
-        <activity android:name=".MyReportActivity"
+        <activity
+            android:name=".MyReportActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

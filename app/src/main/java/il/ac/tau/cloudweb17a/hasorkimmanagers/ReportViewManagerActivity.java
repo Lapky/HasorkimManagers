@@ -1,21 +1,16 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,15 +24,9 @@ import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportViewManagerActivity extends AppCompatActivity {
 
-    //private DrawerLayout mDrawer;
-    private LayoutInflater layoutInflater;
-    private ViewGroup thisContainer;
-    private PopupWindow popupWindow;
-
     private Report report;
     private Boolean isManager;
     private String userId;
-    private Bitmap bitmap;
 
     final String TAG = "ReportViewManager";
 
@@ -46,14 +35,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_active_report);
         setContentView(R.layout.activity_report_view_manager);
-
-        layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        thisContainer = (ViewGroup) layoutInflater.inflate(R.layout.activity_report_view_manager, null);
-
-        //mDrawer.addView(thisContainer, 0);
 
         report = (Report) getIntent().getSerializableExtra("Report");
         isManager = (Boolean) getIntent().getSerializableExtra("isManager");
@@ -90,10 +72,9 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             managerReportCurrentScanner.setText(assignedScanner.substring(0, Math.min(assignedScanner.length(), 20)));
 
         if (report.getImageUrl() != null) {
-            bitmap = report.getBitmapFromURL(report.getImageUrl());
-            ImageView closedReportImage = findViewById(R.id.managerReportImage);
-            closedReportImage.setImageBitmap(bitmap);
-            closedReportImage.setVisibility(View.VISIBLE);
+            ImageView managerReportImage = findViewById(R.id.managerReportImage);
+            managerReportImage.setVisibility(View.VISIBLE);
+            Glide.with(this).load(report.getImageUrl()).into(managerReportImage);
         }
 
         scannerList = new ArrayList<>();

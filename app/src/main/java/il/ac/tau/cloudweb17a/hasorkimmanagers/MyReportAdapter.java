@@ -24,10 +24,6 @@ import java.util.Comparator;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
-/**
- * Created by hen on 06/01/2018.
- */
-
 class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHolder> {
 
     private ArrayList<Report> mDataset = new ArrayList<>();

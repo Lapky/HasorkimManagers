@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.Objects;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
@@ -19,7 +21,6 @@ public class ReportViewScannerActivity extends AppCompatActivity {
     private Report report;
     private Boolean isManager;
     private String userId;
-    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +104,9 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             */
 
             if (report.getImageUrl() != null && isScannerEnlisted) {
-                bitmap = report.getBitmapFromURL(report.getImageUrl());
-                ImageView closedReportImage = findViewById(R.id.activeReportImage);
-                closedReportImage.setImageBitmap(bitmap);
-                closedReportImage.setVisibility(View.VISIBLE);
+                ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+                scannerReportImage.setVisibility(View.VISIBLE);
+                Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
             }
         }
         if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId))){

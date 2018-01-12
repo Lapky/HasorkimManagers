@@ -21,8 +21,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/button_text_size">
+                android:layout_marginBottom="@dimen/button_text_size"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
@@ -62,8 +62,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.8"
-                    android:textSize="@dimen/report_item_text_size"
                     android:textColor="@android:color/black"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -71,9 +71,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/fab_margin"
                 android:layout_marginTop="@dimen/report_list_padding"
-                android:layout_marginBottom="@dimen/fab_margin">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
@@ -89,8 +89,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2.8"
                     android:text="@string/report_scanner_view_estimated_time_arrival"
-                    android:textSize="@dimen/report_item_text_size"
                     android:textColor="@android:color/black"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -113,8 +113,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.8"
-                    android:textSize="@dimen/report_item_text_size"
                     android:textColor="@android:color/black"
+                    android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -123,8 +123,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/report_status_padding"
-                android:paddingBottom="@dimen/report_list_item_padding">
+                android:paddingBottom="@dimen/report_list_item_padding"
+                android:paddingTop="@dimen/report_status_padding">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -144,8 +144,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/details_buttons_padding"
-                        android:textSize="@dimen/report_item_text_size"
                         android:textColor="@android:color/black"
+                        android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -167,8 +167,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/details_buttons_padding"
-                        android:textSize="@dimen/report_item_text_size"
                         android:textColor="@android:color/black"
+                        android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -179,9 +179,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:textStyle="bold"
-                android:paddingTop="@dimen/report_status_padding"
                 android:paddingBottom="@dimen/report_status_padding"
+                android:paddingTop="@dimen/report_status_padding"
+                android:textStyle="bold"
                 android:visibility="gone">
 
                 <TextView
@@ -197,27 +197,26 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.4"
+                    android:textColor="@android:color/black"
                     android:textSize="@dimen/report_item_text_size"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/activeReportImageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/report_status_padding"
+                android:orientation="horizontal"
                 android:paddingBottom="@dimen/report_status_padding"
+                android:paddingTop="@dimen/report_status_padding"
                 android:textStyle="bold">
 
                 <ImageView
-                    android:id="@+id/activeReportImage"
+                    android:id="@+id/scannerReportImage"
                     android:layout_width="250dp"
                     android:layout_height="225dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/dog1" />
+                    android:layout_gravity="center" />
             </LinearLayout>
 
         </LinearLayout>

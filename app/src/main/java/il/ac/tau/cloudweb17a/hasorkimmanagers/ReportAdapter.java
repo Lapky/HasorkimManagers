@@ -18,8 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,14 +32,10 @@ import static il.ac.tau.cloudweb17a.hasorkimmanagers.Report.setLastReportStartTi
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
-/**
- * Created by hen on 18/12/2017.
- */
-
 public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportViewHolder> {
     private final Context context;
     private final Activity activity;
-    private ArrayList<Report> mDataset= new ArrayList<>();
+    private ArrayList<Report> mDataset = new ArrayList<>();
     final String TAG = "ReportAdapter";
     private boolean isOnlyOpen;
     private boolean isManager;
@@ -59,7 +53,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         public final TextView numberScannersTitle;
         public final TextView distance;
         private final TextView distanceReportTitle;
-        final String TAG = "ViewHolder";
+        final String TAG = ReportViewHolder.class.getSimpleName();
         private final TextView StatusViewTitle;
         private Report mReport;
         private Context context;
@@ -75,7 +69,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             numberScanners = v.findViewById(R.id.numberScanners);
             numberScannersTitle = v.findViewById(R.id.numberScannersTitle);
             distance = v.findViewById(R.id.distanceReport);
-            distanceReportTitle=v.findViewById(R.id.distanceReportTitle);
+            distanceReportTitle = v.findViewById(R.id.distanceReportTitle);
             context = v.getContext();
         }
 
@@ -100,13 +94,12 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             StatusView.setText(report.statusInHebrew(getUser()));
             AddressView.setText(report.getAddress());
             timeView.setText(report.getStartTimeAsString());
-            if(!getUser().getIsManager()) {
+            if (!getUser().getIsManager()) {
                 distance.setVisibility(View.VISIBLE);
                 distanceReportTitle.setVisibility(View.VISIBLE);
                 distance.setText(report.getDistance());
 
-            }
-            else{
+            } else {
                 numberScanners.setVisibility(View.VISIBLE);
                 numberScannersTitle.setVisibility(View.VISIBLE);
                 StatusView.setVisibility(View.VISIBLE);
@@ -119,37 +112,34 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     }
 
 
-    class SortbyDistance implements Comparator<Report>
-    {
-        public int compare(Report a, Report b)
-        {
+    class SortbyDistance implements Comparator<Report> {
+        public int compare(Report a, Report b) {
             return a.getDistancevalue() - b.getDistancevalue();
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ReportAdapter(boolean isOnlyOpenP, boolean isManagerP, Context contextP, Activity activityP, final ReportListActivity.MyCallBackClass setUIVisible, int numberOfReports) {
-        this.isOnlyOpen =isOnlyOpenP;
-        this.isManager =isManagerP;
-        this.context =contextP;
-        this.activity =activityP;
+        this.isOnlyOpen = isOnlyOpenP;
+        this.isManager = isManagerP;
+        this.context = contextP;
+        this.activity = activityP;
 
         DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports");
         Query query;
-        if(isManager) {
+        if (isManager) {
             query = reportsRef.orderByChild("startTime").limitToFirst(numberOfReports);
-        }
-        else{
+        } else {
             query = reportsRef.orderByChild("status").equalTo("NEW");
         }
-        Log.d(TAG, "only open:" + isOnlyOpen+", is manager:"+isManager);
+        Log.d(TAG, "only open:" + isOnlyOpen + ", is manager:" + isManager);
 
-        updateList(query,setUIVisible);
+        updateList(query, setUIVisible);
 
 
     }
 
-    public void updateList(Query query, final ReportListActivity.MyCallBackClass setUIVisible){
+    public void updateList(Query query, final ReportListActivity.MyCallBackClass setUIVisible) {
         Log.d(TAG, "updating list");
         query.addChildEventListener(new ChildEventListener() {
             @Override
@@ -159,18 +149,17 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     String key = dataSnapshot.getKey();
                     report.setId(key);
 
-                    if(isManager) {
-                        if(!isOnlyOpen){
+                    if (isManager) {
+                        if (!isOnlyOpen) {
                             mDataset.add(report);
                             setLastReportStartTime(report.getStartTime());
-                        }
-                        else {
+                        } else {
                             if (report.isOpenReport()) {
                                 mDataset.add(report);
                                 setLastReportStartTime(report.getStartTime());
                             }
                         }
-                    }else {
+                    } else {
 
                         ArrayList<LatLong> locationList = new ArrayList<>();
                         LatLong thisLatLong = new LatLong();
@@ -188,7 +177,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                                         public void run() {
                                             //TextView dText = activity.findViewById(R.id.dText);
                                             //dText.setText(String.valueOf("gotten to callback: "+ distance+""+report.getId()));
-                                            if (mDataset.size()==0){
+                                            if (mDataset.size() == 0) {
                                                 setUIVisible.execute();
                                             }
                                             mDataset.add(report);
@@ -234,8 +223,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     //Log.d(TAG, "added a report");
                     //Collections.sort(mDataset, new SortbyId());
                     notifyDataSetChanged();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     return;
                 }
 
@@ -286,7 +274,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ReportViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
+    public ReportViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.report_list_item, parent, false);
@@ -302,7 +290,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     public void onBindViewHolder(ReportViewHolder holder, int position) {
         holder.bindReport(mDataset.get(position));
     }
-
 
 
     @Override
