@@ -28,7 +28,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
     private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
-    private Boolean isManager;
     private String userId;
 
     @Override
@@ -42,7 +41,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         mapFragment.getMapAsync(this);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-        isManager = getUser().getIsManager();
         userId = getUser().getId();
 
         boolean isScannerEnlisted = report.isScannerEnlisted(userId);

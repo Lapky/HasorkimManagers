@@ -2,7 +2,9 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -16,6 +18,11 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -29,6 +36,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
+
 public class MessagingService extends FirebaseMessagingService {
     private static final String TAG = MessagingService.class.getSimpleName();
     private double currLatitude;
@@ -37,6 +46,7 @@ public class MessagingService extends FirebaseMessagingService {
     private String lat;
     private String lon;
     private String address;
+    private String reportId;
     private static final OkHttpClient client = new OkHttpClient();
 
 
@@ -47,6 +57,7 @@ public class MessagingService extends FirebaseMessagingService {
             lat = remoteMessage.getData().get("lat");
             lon = remoteMessage.getData().get("long");
             address = remoteMessage.getData().get("address");
+            reportId = remoteMessage.getData().get("report");
 
             Log.d(TAG, "Message Data lat: " + lat);
             Log.d(TAG, "Message Data long: " + lon);
@@ -113,24 +124,57 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     private void notifyToUser() {
-        Notification n = new Notification.Builder(this)
-                .setContentTitle("התקבל דיווח חדש")
-                .setContentText("דיווח חדש בכתובת " + address)
-                .setSmallIcon(R.drawable.dog_icon)
-                .setColor(getResources().getColor(R.color.colorAccent))
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setAutoCancel(true)
-                .build();
+        DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(reportId);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Report report = dataSnapshot.getValue(Report.class);
+                report.setId(reportId);
 
-        if (notificationManager != null) {
-            notificationManager.notify(0, n);
-        }
+                Intent resultIntent;
+
+                if (getUser().getIsManager()) {
+                    resultIntent = new Intent(getApplicationContext(), ReportViewManagerActivity.class);
+                } else {
+                    resultIntent = new Intent(getApplicationContext(), ReportViewScannerActivity.class);
+                }
+                resultIntent.putExtra("Report", report);
+
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(
+                                getApplicationContext(),
+                                (int) System.currentTimeMillis(),
+                                resultIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+
+
+                Notification n = new Notification.Builder(MessagingService.this)
+                        .setContentTitle("התקבל דיווח חדש")
+                        .setContentText("דיווח חדש בכתובת " + address)
+                        .setSmallIcon(R.drawable.dog_icon)
+                        .setColor(getResources().getColor(R.color.colorAccent))
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setAutoCancel(true)
+                        .setContentIntent(resultPendingIntent)
+                        .build();
+
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                if (notificationManager != null) {
+                    notificationManager.notify(0, n);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
-
 
     private boolean IsLocationPermission() {
         Context context = this.getApplicationContext();

@@ -3,6 +3,7 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,8 +36,6 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
     private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
-    private Boolean isManager;
-    private String userId;
     private ListView listView;
 
     final String TAG = ReportViewManagerActivity.class.getSimpleName();
@@ -48,14 +47,11 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_view_manager);
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.manager_map);
         mapFragment.getMapAsync(this);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-        isManager = (Boolean) getIntent().getSerializableExtra("isManager");
-        userId = (String) getIntent().getSerializableExtra("userId");
 
         scannerList = new ArrayList<>();
         final ScannerAdapter adapter = new ScannerAdapter(this, scannerList);

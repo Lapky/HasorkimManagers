@@ -32,11 +32,21 @@
 
         <activity
             android:name=".ReportViewScannerActivity"
-            android:label="פרטי דיווח" />
+            android:label="פרטי דיווח"
+            android:parentActivityName=".ReportListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
+        </activity>
 
         <activity
             android:name=".ReportViewManagerActivity"
-            android:label="פרטי דיווח" />
+            android:label="פרטי דיווח"
+            android:parentActivityName=".ReportListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
+        </activity>
 
         <service
             android:name=".MessagingService"
