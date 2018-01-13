@@ -37,6 +37,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
     private Report report;
     private Boolean isManager;
     private String userId;
+    private ListView listView;
 
     final String TAG = ReportViewManagerActivity.class.getSimpleName();
 
@@ -55,6 +56,12 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         report = (Report) getIntent().getSerializableExtra("Report");
         isManager = (Boolean) getIntent().getSerializableExtra("isManager");
         userId = (String) getIntent().getSerializableExtra("userId");
+
+        scannerList = new ArrayList<>();
+        final ScannerAdapter adapter = new ScannerAdapter(this, scannerList);
+
+        listView = findViewById(R.id.list_view_scanners);
+        listView.setAdapter(adapter);
 
         String reportStatus = report.getStatus();
 
@@ -99,6 +106,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter.clear();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
 
                     final String userId = messageSnapshot.getKey();
@@ -113,14 +121,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot user : dataSnapshot.getChildren()) {
                                 User dbUser = user.getValue(User.class);
-                                scannerList.add(new Scanner(userId, dbUser.getName(), duration, isAssignedScanner));
-                                ScannerAdapter adapter = new ScannerAdapter(
-                                        ReportViewManagerActivity.this,
-                                        R.layout.scanner_list_item,
-                                        scannerList
-                                );
-                                ListView listView = findViewById(R.id.list_view_scanners);
-                                listView.setAdapter(adapter);
+                                adapter.add(new Scanner(userId, dbUser.getName(), duration, isAssignedScanner));
                             }
                         }
 

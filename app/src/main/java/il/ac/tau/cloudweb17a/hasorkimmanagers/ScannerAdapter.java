@@ -14,13 +14,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ScannerAdapter extends ArrayAdapter<Scanner> {
-    private final int listLayout;
 
-    public ScannerAdapter(Context context,
-                         int listLayout,
-                         ArrayList<Scanner> Scanners) {
-        super(context, listLayout, Scanners);
-        this.listLayout = listLayout;
+
+    public ScannerAdapter(Context context, ArrayList<Scanner> Scanners) {
+        super(context, 0, Scanners);
     }
 
     @Override
@@ -29,7 +26,7 @@ public class ScannerAdapter extends ArrayAdapter<Scanner> {
         Scanner scanner = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(listLayout, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.scanner_list_item, parent, false);
         }
         // Lookup view for data population
         LinearLayout scannerLayout = convertView.findViewById(R.id.scannerLayout);
@@ -43,12 +40,10 @@ public class ScannerAdapter extends ArrayAdapter<Scanner> {
         distance.setText(scanner.getDuration() + "דקות");
         // Return the completed view to render on screen
 
-        if (scanner.getIsAssignedScanner()){
+        if (scanner.getIsAssignedScanner()) {
             sendScanner.setText("סורק נבחר");
             scannerLayout.setBackgroundColor(Color.YELLOW);
         }
         return convertView;
     }
-
-
 }
