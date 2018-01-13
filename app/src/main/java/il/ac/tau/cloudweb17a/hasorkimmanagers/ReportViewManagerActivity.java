@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -100,23 +101,35 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
 
-                    String userId = messageSnapshot.getKey();
-                    String duration = messageSnapshot.getValue().toString();
-                    boolean isAssignedScanner = false;
-                    if (Objects.equals(userId, report.getAssignedScanner()))
-                        isAssignedScanner = true;
+                    final String userId = messageSnapshot.getKey();
+                    final String duration = messageSnapshot.getValue().toString();
+                    final boolean isAssignedScanner = Objects.equals(userId, report.getAssignedScanner());
 
-                    scannerList.add(new Scanner(userId, duration, isAssignedScanner));
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(userId);
+
+                    mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                User dbUser = user.getValue(User.class);
+                                scannerList.add(new Scanner(userId, dbUser.getName(), duration, isAssignedScanner));
+                                ScannerAdapter adapter = new ScannerAdapter(
+                                        ReportViewManagerActivity.this,
+                                        R.layout.scanner_list_item,
+                                        scannerList
+                                );
+                                ListView listView = findViewById(R.id.list_view_scanners);
+                                listView.setAdapter(adapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-
-                ScannerAdapter adapter = new ScannerAdapter(
-                        ReportViewManagerActivity.this,
-                        R.layout.scanner_list_item,
-                        scannerList
-                );
-                ListView listView = findViewById(R.id.list_view_scanners);
-                listView.setAdapter(adapter);
-
             }
 
             @Override

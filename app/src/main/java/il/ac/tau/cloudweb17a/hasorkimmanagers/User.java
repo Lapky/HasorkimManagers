@@ -10,28 +10,32 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-/**
- * Created by hen on 04/01/2018.
- */
-
-public class User  implements  java.io.Serializable{
+public class User implements java.io.Serializable {
 
 
     private static final String TAG = "USER_CLASS";
     private static User user;
 
     public String id;
+    private String name;
+    public boolean isApproved;
     public boolean isManager;
 
 
-    private User(){
+    private User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public static User getUser(){
-        if(user==null){
-            user = new User();
-            user.id= FirebaseInstanceId.getInstance().getToken();
+    private User(String id, String name, boolean isManager, boolean isApproved) {
+        this.id = id;
+        this.name = name;
+        this.isManager = isManager;
+        this.isApproved = isApproved;
+    }
+
+    public static User getUser() {
+        if (user == null) {
+            user = new User(FirebaseInstanceId.getInstance().getToken(), "Moshe", false, false);
         }
         return user;
     }
@@ -39,11 +43,18 @@ public class User  implements  java.io.Serializable{
     public String getId() {
         return id;
     }
-    public boolean getIsManager() {return isManager; }
 
-    public void setIsManager(boolean manager) {isManager = manager;}
+    public boolean getIsManager() {
+        return isManager;
+    }
 
-    public void setId(String id) {this.id = id;}
+    public void setIsManager(boolean manager) {
+        isManager = manager;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void checkCreds(final ReportListActivity.MyCallBackClass getReportList) {
 
@@ -51,13 +62,13 @@ public class User  implements  java.io.Serializable{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.getChildrenCount()==0){
+                if (dataSnapshot.getChildrenCount() == 0) {
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                     DatabaseReference userRef = ref.child("users");
                     userRef.push().setValue(getUser());
                     getReportList.execute();
                 }
-                if(dataSnapshot.getChildrenCount()>1){
+                if (dataSnapshot.getChildrenCount() > 1) {
                     Log.e(TAG, "found two or more users with same id in the db");
                 }
 
@@ -65,9 +76,9 @@ public class User  implements  java.io.Serializable{
                     User dbUser = UserSS.getValue(User.class);
                     //Log.d(TAG, "id:" +dbUser.id);
                     //Log.d(TAG, "is manager:" +dbUser.isManager);
-                    if(dbUser.id!=null && dbUser.id.equals(getUser().getId())){
+                    if (dbUser.id != null && dbUser.id.equals(getUser().getId())) {
                         //Log.d(TAG, "setting is manager:" +dbUser.isManager);
-                        getUser().setIsManager( dbUser.isManager);
+                        getUser().setIsManager(dbUser.isManager);
                         getReportList.execute();
                         //break;
                     }
@@ -80,9 +91,14 @@ public class User  implements  java.io.Serializable{
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
+
         Query mUserReference = FirebaseDatabase.getInstance().getReference()
                 .child("users").orderByChild("id").equalTo(this.id);
 
         mUserReference.addListenerForSingleValueEvent(postListener);
+    }
+
+    public String getName() {
+        return name;
     }
 }

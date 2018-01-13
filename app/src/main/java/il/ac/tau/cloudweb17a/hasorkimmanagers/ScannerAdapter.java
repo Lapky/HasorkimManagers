@@ -32,15 +32,15 @@ public class ScannerAdapter extends ArrayAdapter<Scanner> {
             convertView = LayoutInflater.from(getContext()).inflate(listLayout, parent, false);
         }
         // Lookup view for data population
-        LinearLayout scannerLayout = (LinearLayout) convertView.findViewById(R.id.scannerLayout);
-        TextView scannerName = (TextView) convertView.findViewById(R.id.scanner_name);
-        TextView scannerId = (TextView) convertView.findViewById(R.id.scannerId);
-        TextView distance = (TextView) convertView.findViewById(R.id.scanner_distance);
-        Button sendScanner = (Button) convertView.findViewById(R.id.sendScanner);
+        LinearLayout scannerLayout = convertView.findViewById(R.id.scannerLayout);
+        TextView scannerName = convertView.findViewById(R.id.scanner_name);
+        TextView scannerId = convertView.findViewById(R.id.scannerId);
+        TextView distance = convertView.findViewById(R.id.scanner_distance);
+        Button sendScanner = convertView.findViewById(R.id.sendScanner);
 
-        scannerName.setText(scanner.getUserId());
+        scannerName.setText(scanner.getName());
         scannerId.setText(scanner.getUserId());
-        distance.setText(scanner.getDuration() + " Min");
+        distance.setText(scanner.getDuration() + "דקות");
         // Return the completed view to render on screen
 
         if (scanner.getIsAssignedScanner()){
