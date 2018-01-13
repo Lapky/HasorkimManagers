@@ -11,6 +11,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,13 +28,16 @@ import java.util.Objects;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
-public class ReportViewManagerActivity extends AppCompatActivity {
+public class ReportViewManagerActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+    private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
     private Boolean isManager;
     private String userId;
 
-    final String TAG = "ReportViewManager";
+    final String TAG = ReportViewManagerActivity.class.getSimpleName();
 
     ArrayList<Scanner> scannerList;
 
@@ -36,6 +45,11 @@ public class ReportViewManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_view_manager);
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.manager_map);
+        mapFragment.getMapAsync(this);
 
         report = (Report) getIntent().getSerializableExtra("Report");
         isManager = (Boolean) getIntent().getSerializableExtra("isManager");
@@ -100,7 +114,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                         R.layout.scanner_list_item,
                         scannerList
                 );
-                ListView listView = (ListView) findViewById(R.id.list_view_scanners);
+                ListView listView = findViewById(R.id.list_view_scanners);
                 listView.setAdapter(adapter);
 
             }
@@ -149,6 +163,17 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
 
         //Log.d(TAG, scanner_name.getText().toString());
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+        LatLng location = new LatLng(report.getLat(), report.getLong());
+        mMap.addMarker(new MarkerOptions().position(location).title("מיקום הדיווח")).showInfoWindow();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
     }
 
     /*

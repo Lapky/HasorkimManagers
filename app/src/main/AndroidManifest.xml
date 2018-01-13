@@ -17,9 +17,7 @@
 
         <activity
             android:name=".LogInActivity"
-            android:label="התחברות">
-
-        </activity>
+            android:label="התחברות" />
 
         <activity
             android:name=".ReportListActivity"
@@ -69,8 +67,11 @@
             android:name=".MyReportActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".StatisticsActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
     </application>
 

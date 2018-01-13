@@ -1,22 +1,31 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Objects;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
-public class ReportViewScannerActivity extends AppCompatActivity {
+public class ReportViewScannerActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+    private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
     private Boolean isManager;
@@ -26,6 +35,11 @@ public class ReportViewScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_view_scanner);
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.scanner_map);
+        mapFragment.getMapAsync(this);
 
         report = (Report) getIntent().getSerializableExtra("Report");
         isManager = getUser().getIsManager();
@@ -39,7 +53,7 @@ public class ReportViewScannerActivity extends AppCompatActivity {
 
         String reportStatus = report.getStatus();
 
-        if (!isScannerEnlisted){
+        if (!isScannerEnlisted) {
             /*
             TextView textView = findViewById(R.id.activeReportOpenTime);
             textView.setVisibility(View.GONE);
@@ -49,9 +63,6 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             */
 
             LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
-            linearLayout.setVisibility(View.GONE);
-
-            linearLayout = findViewById(R.id.activeReportImageLayout);
             linearLayout.setVisibility(View.GONE);
 
         }
@@ -76,17 +87,11 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             commentsLayout.setVisibility(View.VISIBLE);
         }
 
-        if (!report.isOpenReport())
-        {
+        if (!report.isOpenReport()) {
             LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
             linearLayout.setVisibility(LinearLayout.GONE);
-
-            linearLayout = findViewById(R.id.activeReportImageLayout);
-            linearLayout.setVisibility(LinearLayout.GONE);
-
             buttonEnlist.setVisibility(LinearLayout.GONE);
-        }
-        else {
+        } else {
             TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
             activeReportReporterName.setText(report.getReporterName());
 
@@ -104,12 +109,14 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             */
 
             if (report.getImageUrl() != null && isScannerEnlisted) {
+                FrameLayout mapLayout = findViewById(R.id.scannerMapLayout);
                 ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+                mapLayout.setVisibility(View.VISIBLE);
                 scannerReportImage.setVisibility(View.VISIBLE);
                 Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
             }
         }
-        if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId))){
+        if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId))) {
 
             buttonEnlist.setVisibility(LinearLayout.GONE);
 
@@ -124,7 +131,8 @@ public class ReportViewScannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 report.addToPotentialScanners(userId);
-                if (Objects.equals(report.getStatus(), "NEW")) report.reportUpdateStatus("SCANNER_ENLISTED");
+                if (Objects.equals(report.getStatus(), "NEW"))
+                    report.reportUpdateStatus("SCANNER_ENLISTED");
 
                 startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
                 finish();
@@ -156,6 +164,17 @@ public class ReportViewScannerActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+        LatLng location = new LatLng(report.getLat(), report.getLong());
+        mMap.addMarker(new MarkerOptions().position(location).title("מיקום הדיווח")).showInfoWindow();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
+    }
+
     /*
     @Override
     public void onBackPressed()
