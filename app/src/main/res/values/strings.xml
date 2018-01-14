@@ -87,4 +87,8 @@
     <string name="comments_were_not_reported">לא דווחו הערות לדיווח</string>
     <string name="scanner_was_not_assigned">לא בוצעה השמה של סורק</string>
     <string name="moag_website">http://www.moag.gov.il/Pages/DogSearch.aspx</string>
+    <string name="choose_scanner">בחר סורק/ת</string>
+    <string name="scanner_was_chosen">בטל סורק/ת</string>
+    <string name="scanner_list_name">שם:</string>
+    <string name="scanner_list_distance">מרחק:</string>
 </resources>

@@ -30,6 +30,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
+
 
 public class Report implements  java.io.Serializable{
 
@@ -62,7 +64,7 @@ public class Report implements  java.io.Serializable{
 
 
     private boolean isScannerEnlistedStatus;
-    private boolean isManagerEnlistedStatus;
+    //private boolean isManagerEnlistedStatus;
 
 
     private double Lat;
@@ -178,14 +180,23 @@ public class Report implements  java.io.Serializable{
         return assignedScanner;
     }
 
+
     public String getStatus() {
+        /*
         if (Objects.equals(this.status, "NEW")){
-            if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
-            if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
+            //if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
+            //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
+            //if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
             return "NEW";
         }
+        */
         return this.status;
     }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 
     public long getStartTime(){
         return this.startTime;
@@ -232,10 +243,6 @@ public class Report implements  java.io.Serializable{
     public void setId(String id) {
         this.id = id;
         this.setPotentialScanners();
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public void setStartTime() {
@@ -294,17 +301,20 @@ public class Report implements  java.io.Serializable{
             dbStatus = "NEW";
             this.setIsScannerEnlistedStatus(true);
         }
+
+        /*
         if (Objects.equals(dbStatus, "MANAGER_ENLISTED")) {
             dbStatus = "NEW";
             this.setIsManagerEnlistedStatus(true);
         }
+        */
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String,Object> reportMap = new HashMap<>();
         reportMap.put("status", dbStatus);
         reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
-        reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
+        //reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
         reportsRef.updateChildren(reportMap);
     }
 
@@ -364,7 +374,7 @@ public class Report implements  java.io.Serializable{
         if (user.getIsManager()) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("NEW", "דיווח חדש");
-            map.put("SCANNER_ENLISTED", "סורק זמין");
+            map.put("SCANNER_ENLISTED", "קיים סורק זמין");
             map.put("MANAGER_ENLISTED", "בטיפול מנהל");
             map.put("MANAGER_ASSIGNED_SCANNER", "סורק קיבל את הקריאה");
             map.put("SCANNER_ON_THE_WAY", "סורק יצא לדרך");
@@ -420,7 +430,7 @@ public class Report implements  java.io.Serializable{
         return "Report{" +
                 "id='" + id + '\'' +
                 ", reportyName='" + reporterName + '\'' +
-                ", status='" + status + '\'' +
+                ", status='" + getStatus() + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", address='" + address + '\'' +
                 ", freeText='" + freeText + '\'' +
@@ -480,6 +490,7 @@ public class Report implements  java.io.Serializable{
         isScannerEnlistedStatus = scannerEnlistedStatus;
     }
 
+    /*
     public boolean getIsManagerEnlistedStatus() {
         return isManagerEnlistedStatus;
     }
@@ -487,6 +498,7 @@ public class Report implements  java.io.Serializable{
     public void setIsManagerEnlistedStatus(boolean ManagerEnlistedStatus) {
         isManagerEnlistedStatus = ManagerEnlistedStatus;
     }
+    */
 
     public void setAssignedScanner(String assignedScanner) {
         this.assignedScanner = assignedScanner;

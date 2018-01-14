@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/report_view_padding"
+    android:paddingTop="@dimen/report_view_padding"
+    android:paddingStart="@dimen/report_view_padding"
+    android:paddingEnd="@dimen/report_view_padding"
+    android:paddingBottom="@dimen/details_buttons_padding"
     tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportViewManagerActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="4"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -22,7 +25,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/standard_padding"
+                android:layout_marginBottom="@dimen/report_view_padding"
                 android:orientation="horizontal">
 
                 <TextView
@@ -39,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:gravity="start"
-                    android:paddingStart="@dimen/report_list_item_padding"
+                    android:paddingStart="@dimen/report_status_padding"
                     android:textColor="@android:color/black"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -184,11 +187,11 @@
                 android:layout_gravity="center"
                 android:visibility="gone" />
 
+            <!--
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/report_view_padding"
                 android:paddingTop="@dimen/report_status_padding"
                 android:textStyle="bold">
 
@@ -210,6 +213,7 @@
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
             </LinearLayout>
+            -->
 
         </LinearLayout>
 
@@ -217,23 +221,25 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2.9"
         android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/report_list_item_padding"
-        android:gravity="center"
-        android:text="@string/report_view_manager_available_scanners"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/report_list_item_padding"
+            android:gravity="center"
+            android:text="@string/report_view_manager_available_scanners"
+            android:textColor="@android:color/black"
+            android:paddingBottom="@dimen/report_status_padding"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <ListView
-        android:id="@+id/list_view_scanners"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <ListView
+            android:id="@+id/list_view_scanners"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -241,7 +247,7 @@
         android:id="@+id/managerMapLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_weight="2.4">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -259,6 +265,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:gravity="center"
         android:text="@string/save_report"
         android:textSize="25sp" />
 

@@ -37,13 +37,15 @@ public class ScannerAdapter extends ArrayAdapter<Scanner> {
 
         scannerName.setText(scanner.getName());
         scannerId.setText(scanner.getUserId());
-        distance.setText(scanner.getDuration() + "דקות");
+        distance.setText(scanner.getDuration() + " דקות");
+        sendScanner.setBackgroundColor(Color.LTGRAY);
         // Return the completed view to render on screen
 
         if (scanner.getIsAssignedScanner()) {
-            sendScanner.setText("סורק נבחר");
-            scannerLayout.setBackgroundColor(Color.YELLOW);
+            sendScanner.setBackgroundColor(Color.CYAN);
+            sendScanner.setText(R.string.scanner_was_chosen);
         }
+
         return convertView;
     }
 }

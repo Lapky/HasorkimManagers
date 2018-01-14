@@ -35,7 +35,7 @@ public class User implements java.io.Serializable {
 
     public static User getUser() {
         if (user == null) {
-            user = new User(FirebaseInstanceId.getInstance().getToken(), "Moshe", false, false);
+            user = new User(FirebaseInstanceId.getInstance().getToken(), "שחר", true, false);
         }
         return user;
     }

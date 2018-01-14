@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="8"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -36,9 +36,9 @@
                     android:id="@+id/activeReportStatus"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.8"
                     android:gravity="start"
-                    android:paddingStart="@dimen/report_list_item_padding"
+                    android:paddingStart="@dimen/report_status_padding"
                     android:textColor="@android:color/black"
                     android:textSize="26sp"
                     android:textStyle="bold" />
@@ -217,7 +217,7 @@
         android:id="@+id/scannerMapLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="3.5"
         android:visibility="gone">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -240,22 +240,22 @@
         android:textSize="25sp" />
 
     <Button
+        android:id="@+id/scannerOnTheWay"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/on_my_way_to_scan"
+        android:textSize="25sp"
+        android:visibility="gone" />
+
+    <Button
         android:id="@+id/scannerCancelEnlistment"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/unavailable_for_scan"
-        android:textSize="25sp"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/scannerOnTheWay"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/on_my_way_to_scan"
         android:textSize="25sp"
         android:visibility="gone" />
 </LinearLayout>

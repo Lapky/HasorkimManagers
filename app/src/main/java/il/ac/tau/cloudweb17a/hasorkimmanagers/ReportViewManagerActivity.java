@@ -1,9 +1,9 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.support.v4.app.FragmentActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,11 +32,10 @@ import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportViewManagerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
     private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
-    private ListView listView;
+    TextView managerReportCurrentScanner;
 
     final String TAG = ReportViewManagerActivity.class.getSimpleName();
 
@@ -56,12 +55,12 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         scannerList = new ArrayList<>();
         final ScannerAdapter adapter = new ScannerAdapter(this, scannerList);
 
-        listView = findViewById(R.id.list_view_scanners);
+        ListView listView = findViewById(R.id.list_view_scanners);
         listView.setAdapter(adapter);
 
-        String reportStatus = report.getStatus();
+        //String reportStatus = report.getStatus();
 
-        TextView managerReportStatus = findViewById(R.id.managerReportStatus);
+        final TextView managerReportStatus = findViewById(R.id.managerReportStatus);
         managerReportStatus.setText(report.statusInHebrew(getUser()));
 
         TextView managerReportLocation = findViewById(R.id.managerReportLocation);
@@ -84,22 +83,32 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
             commentsLayout.setVisibility(View.VISIBLE);
         }
 
-        TextView managerReportCurrentScanner = findViewById(R.id.managerReportCurrentScanner);
-        String assignedScanner = report.getAssignedScanner();
-        if (assignedScanner != "")
-            managerReportCurrentScanner.setText(assignedScanner.substring(0, Math.min(assignedScanner.length(), 20)));
-
         if (report.getImageUrl() != null) {
             ImageView managerReportImage = findViewById(R.id.managerReportImage);
             managerReportImage.setVisibility(View.VISIBLE);
             Glide.with(this).load(report.getImageUrl()).into(managerReportImage);
         }
 
+        DatabaseReference statusManagerRef = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("status");
+
+        statusManagerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                managerReportStatus.setText(report.statusInHebrew(getUser()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         scannerList = new ArrayList<>();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance()
+        DatabaseReference listRef = FirebaseDatabase.getInstance()
                 .getReference("reports").child(report.getId()).child("potentialScanners");
-        ref.addValueEventListener(new ValueEventListener() {
+        listRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 adapter.clear();
@@ -138,11 +147,11 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
 
     public void sendScannerHandler(View view) {
         LinearLayout vwParentRow = (LinearLayout) view.getParent();
-        TextView scanner_name = (TextView) vwParentRow.getChildAt(2);
+        TextView scanner_name = (TextView) vwParentRow.getChildAt(1);
 
         String scannerNameString = scanner_name.getText().toString();
 
-        Button sendScanner = (Button) vwParentRow.getChildAt(3);
+        Button sendScanner = (Button) vwParentRow.getChildAt(2);
 
         String assignedScanner = report.getAssignedScanner();
 
@@ -152,25 +161,31 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         } else {
 
             if (!Objects.equals(report.getAssignedScanner(), scannerNameString)) {
-
                 report.reportUpdateAssignedScanner(scannerNameString);
-
-                sendScanner.setText("סורק נבחר");
-
-                vwParentRow.setBackgroundColor(Color.YELLOW);
-
+                sendScanner.setText(R.string.scanner_was_chosen);
+                report.setStatus("MANAGER_ASSIGNED_SCANNER");
                 report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER");
-            } else {
+                view.setBackgroundColor(Color.CYAN);
+            }
+            /*
+            else {
                 report.reportUpdateAssignedScanner("");
-                sendScanner.setText("שלח");
+                sendScanner.setText(R.string.choose_scanner);
                 vwParentRow.setBackgroundColor(Color.WHITE);
+                report.setStatus("MANAGER_ENLISTED");
                 report.reportUpdateStatus("MANAGER_ENLISTED");
+            }
+            */
+            else {
+                report.reportUpdateAssignedScanner("");
+                sendScanner.setText(R.string.choose_scanner);
+                report.setStatus("NEW");
+                report.reportUpdateStatus("NEW");
+                view.setBackgroundColor(Color.LTGRAY);
             }
         }
 
-
         vwParentRow.refreshDrawableState();
-
 
         //Log.d(TAG, scanner_name.getText().toString());
     }
@@ -178,7 +193,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        GoogleMap mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
         LatLng location = new LatLng(report.getLat(), report.getLong());

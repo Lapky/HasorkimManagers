@@ -114,12 +114,12 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
                 Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
             }
         }
-        if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId))) {
 
+        if ((Objects.equals(reportStatus, "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId)))
             buttonEnlist.setVisibility(LinearLayout.GONE);
 
-        }
-        if (report.isScannerEnlisted(userId)) buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
+        if (report.isScannerEnlisted(userId))
+            buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
 
         if (Objects.equals(report.getAssignedScanner(), userId))
             scannerOnTheWay.setVisibility(LinearLayout.VISIBLE);
@@ -143,6 +143,9 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             public void onClick(View view) {
                 report.subtrectFromPotentialScanners(userId);
                 if (report.getAvailableScanners() < 1) report.reportUpdateStatus("NEW");
+
+                if (Objects.equals(report.getAssignedScanner(), userId))
+                    report.reportUpdateAssignedScanner("");
 
                 startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
                 finish();
