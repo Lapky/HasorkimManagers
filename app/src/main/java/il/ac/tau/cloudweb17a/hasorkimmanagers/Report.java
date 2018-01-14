@@ -1,7 +1,5 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 
@@ -12,23 +10,16 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
@@ -182,14 +173,14 @@ public class Report implements  java.io.Serializable{
 
 
     public String getStatus() {
-        /*
+
         if (Objects.equals(this.status, "NEW")){
-            //if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
+            if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
             //if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
             return "NEW";
         }
-        */
+
         return this.status;
     }
 
@@ -295,7 +286,7 @@ public class Report implements  java.io.Serializable{
         this.incrementalReportId = nextIncrementalId;
     }
 
-    public void reportUpdateStatus(String status){
+    public void reportUpdateStatus(String status, ReportListActivity.MyCallBackClass myCallBackClass){
         String dbStatus = status;
         if (Objects.equals(dbStatus, "SCANNER_ENLISTED")) {
             dbStatus = "NEW";
@@ -316,6 +307,8 @@ public class Report implements  java.io.Serializable{
         reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
         //reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
         reportsRef.updateChildren(reportMap);
+        if(myCallBackClass!=null)
+            myCallBackClass.execute();
     }
 
 
@@ -370,7 +363,8 @@ public class Report implements  java.io.Serializable{
         else return true;
     }
 
-    public String statusInHebrew(User user){
+    public String statusInHebrew(){
+        User user = getUser();
         if (user.getIsManager()) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("NEW", "דיווח חדש");
@@ -466,13 +460,10 @@ public class Report implements  java.io.Serializable{
     }
 
     public String getDuration() {
-        return Integer.toString(ThreadLocalRandom.current().nextInt(3, 31));
-        //return duration;
+        //return Integer.toString(ThreadLocalRandom.current().nextInt(3, 31));
+        return duration;
     }
 
-    public String getDurationStr() {
-        return "5 דקות";
-    }
 
     public void setDistancevalue(int distancevalue) {
         this.distancevalue = distancevalue;
@@ -522,5 +513,9 @@ public class Report implements  java.io.Serializable{
     public static long getLastReportStartTime() {
 
         return lastReportStartTime;
+    }
+
+    public boolean isAssignedScanner(String userId) {
+        return Objects.equals(getAssignedScanner(), userId);
     }
 }

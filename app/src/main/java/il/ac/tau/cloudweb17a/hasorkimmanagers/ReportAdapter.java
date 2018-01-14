@@ -89,13 +89,13 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
         public void bindReport(Report report) {
             mReport = report;
-            StatusView.setText(report.statusInHebrew(getUser()));
+            StatusView.setText(report.statusInHebrew());
             AddressView.setText(report.getAddress());
             timeView.setText(report.getStartTimeAsString());
             if (!getUser().getIsManager()) {
                 distance.setVisibility(View.VISIBLE);
                 distanceReportTitle.setVisibility(View.VISIBLE);
-                distance.setText(report.getDistance());
+                distance.setText(report.getDuration());
 
             } else {
                 numberScanners.setVisibility(View.VISIBLE);

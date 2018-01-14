@@ -1,6 +1,5 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
-import android.support.v4.app.FragmentActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportViewManagerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -61,7 +58,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         //String reportStatus = report.getStatus();
 
         final TextView managerReportStatus = findViewById(R.id.managerReportStatus);
-        managerReportStatus.setText(report.statusInHebrew(getUser()));
+        managerReportStatus.setText(report.statusInHebrew());
 
         TextView managerReportLocation = findViewById(R.id.managerReportLocation);
         managerReportLocation.setText(report.getAddress());
@@ -95,7 +92,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         statusManagerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                managerReportStatus.setText(report.statusInHebrew(getUser()));
+                managerReportStatus.setText(report.statusInHebrew());
             }
 
             @Override
@@ -164,7 +161,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
                 report.reportUpdateAssignedScanner(scannerNameString);
                 sendScanner.setText(R.string.scanner_was_chosen);
                 report.setStatus("MANAGER_ASSIGNED_SCANNER");
-                report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER");
+                report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER", null);
                 view.setBackgroundColor(Color.CYAN);
             }
             /*
@@ -180,7 +177,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
                 report.reportUpdateAssignedScanner("");
                 sendScanner.setText(R.string.choose_scanner);
                 report.setStatus("NEW");
-                report.reportUpdateStatus("NEW");
+                report.reportUpdateStatus("NEW", null);
                 view.setBackgroundColor(Color.LTGRAY);
             }
         }

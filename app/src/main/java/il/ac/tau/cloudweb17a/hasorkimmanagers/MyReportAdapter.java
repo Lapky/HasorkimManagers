@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +64,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
 
         public void bindReport(Report report) {
             mReport = report;
-            StatusView.setText(report.getStatus());
+            StatusView.setText(report.statusInHebrew());
             AddressView.setText(report.getAddress());
 
             String reportTime = report.getStartTimeAsString();
@@ -92,6 +93,24 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
                 .orderByChild("assignedScanner").equalTo(getUser().getId());
         //.orderByChild("startTime")
         //.limitToLast(10);
+
+
+        lastQuery.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        mProgressBar.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        //add no reports view
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            }
+        );
+
         lastQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
