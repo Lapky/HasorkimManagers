@@ -220,6 +220,7 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/availableScannersLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2.9"
@@ -243,11 +244,73 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/closed_or_cancelled_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/closing_or_cancellation_reason_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:textStyle="bold">
+
+            <TextView
+                android:id="@+id/closing_or_cancellation_headline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="@dimen/report_item_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/closing_or_cancellation_reason"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.1"
+                android:textSize="@dimen/report_item_text_size"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/report_canceled_by"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+            android:orientation="horizontal"
+            android:layout_below="@+id/closing_or_cancellation_reason_layout"
+            android:textStyle="bold"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/report_cancelled_by_headline"
+                android:textSize="@dimen/report_item_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cancellation_user_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.1"
+                android:textSize="@dimen/report_item_text_size"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/managerMapLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.4">
+        android:layout_weight="2">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -259,14 +322,32 @@
 
     </FrameLayout>
 
-    <Button
-        android:id="@+id/scannerAvailable"
-        style="@style/Widget.AppCompat.Button.Colored"
+    <LinearLayout
+        android:id="@+id/viewManagerButtonsLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/save_report"
-        android:textSize="25sp" />
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/closeReportButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="OnCloseReportButtonClick"
+            android:text="@string/manager_close_report"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/deleteReportButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="OnCancelReportButtonClick"
+            android:text="@string/manager_delete_report"
+            android:textSize="25sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

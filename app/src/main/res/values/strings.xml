@@ -45,7 +45,7 @@
     <string name="pref_title_notification_radius">קבע הגבלת התראות</string>
     <string name="all_reports">כל הדיווחים</string>
     <string name="open_reports">דיווחים פתוחים</string>
-    <string name="report_details_status"><u>סטטוס</u></string>
+    <string name="report_details_status"><u>סטטוס</u>:</string>
     <string name="reports">דיווחים פעילים</string>
     <string name="my_reports">הדיווחים שלי</string>
     <string name="setting">הגדרות</string>
@@ -82,7 +82,7 @@
     <string name="report_view_manager_phone_number">טלפון:</string>
     <string name="report_current_assigned_scanner">סורק נוכחי:</string>
     <string name="report_view_manager_comments">הערות המדווח/ת:</string>
-    <string name="save_report">שמור</string>
+    <string name="manager_close_report">סגור דיווח</string>
     <string name="report_view_manager_available_scanners"><u>רשימת סורקים זמינים</u></string>
     <string name="comments_were_not_reported">לא דווחו הערות לדיווח</string>
     <string name="scanner_was_not_assigned">לא בוצעה השמה של סורק</string>
@@ -91,4 +91,15 @@
     <string name="scanner_was_chosen">בטל סורק/ת</string>
     <string name="scanner_list_name">שם:</string>
     <string name="scanner_list_distance">מרחק:</string>
+    <string name="manager_delete_report">בטל דיווח</string>
+    <string name="close_report_dialog">סגירת הדיווח</string>
+    <string name="close_report_dialog_message">אנא הכנס את סיבת הסגירה</string>
+    <string name="close_report_in_dialog">סגור דיווח</string>
+    <string name="cancel_report_dialog">ביטול הדיווח</string>
+    <string name="cancel_report_dialog_message">אנא הכנס את סיבת הביטול</string>
+    <string name="cancel_report_in_dialog">בטל דיווח</string>
+    <string name="go_back_in_dialog">חזור</string>
+    <string name="closing_reason_headline">סיבת הסגירה:</string>
+    <string name="cancellation_reason_headline">סיבת הביטול:</string>
+    <string name="report_cancelled_by_headline">בוטל על ידי:</string>
 </resources>

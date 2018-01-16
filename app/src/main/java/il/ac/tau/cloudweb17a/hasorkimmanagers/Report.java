@@ -46,7 +46,9 @@ public class Report implements  java.io.Serializable{
     private Set<String> potentialScanners ;
 
 
+    private String closingText;
     private String cancellationText;
+    private String cancellationUserType;
     private String userId;
 
     private boolean hasSimilarReports;
@@ -131,6 +133,10 @@ public class Report implements  java.io.Serializable{
 
     }
 
+    public int getPotentialScannersSize() {
+        return this.potentialScanners.size();
+    }
+
 
     public Report(){
         // Default constructor required for calls to DataSnapshot.getValue(Report.class)
@@ -206,6 +212,10 @@ public class Report implements  java.io.Serializable{
         return cancellationText;
     }
 
+    public String getClosingText() {
+        return closingText;
+    }
+
     public int getIncrementalReportId() { return incrementalReportId; }
 
     /*
@@ -246,6 +256,10 @@ public class Report implements  java.io.Serializable{
 
     public void setCancellationText(String cancellationText) {
         this.cancellationText = cancellationText;
+    }
+
+    public void setClosingText(String closingText) {
+        this.closingText = closingText;
     }
 
     public double getLat() {
@@ -326,11 +340,29 @@ public class Report implements  java.io.Serializable{
         reportsRef.setValue(this.incrementalReportId);
     }
 
+    public void reportUpdateClosingText(String closingText){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String,Object> reportMap = new HashMap<String,Object>();
+        setClosingText(closingText);
+        reportMap.put("closingText", closingText);
+        reportsRef.updateChildren(reportMap);
+    }
+
     public void reportUpdateCancellationText(String cancellationText){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String,Object> reportMap = new HashMap<String,Object>();
+        setCancellationText(cancellationText);
         reportMap.put("cancellationText", cancellationText);
+        reportsRef.updateChildren(reportMap);
+    }
+
+    public void reportUpdateCancellationManagerType() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String, Object> reportMap = new HashMap<String, Object>();
+        reportMap.put("cancellationUserType", "מנהל");
         reportsRef.updateChildren(reportMap);
     }
 
@@ -370,7 +402,7 @@ public class Report implements  java.io.Serializable{
             map.put("NEW", "דיווח חדש");
             map.put("SCANNER_ENLISTED", "קיים סורק זמין");
             map.put("MANAGER_ENLISTED", "בטיפול מנהל");
-            map.put("MANAGER_ASSIGNED_SCANNER", "סורק קיבל את הקריאה");
+            map.put("MANAGER_ASSIGNED_SCANNER", "נבחר סורק לקריאה");
             map.put("SCANNER_ON_THE_WAY", "סורק יצא לדרך");
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
@@ -382,7 +414,7 @@ public class Report implements  java.io.Serializable{
             map.put("NEW", "דיווח חדש");
             map.put("SCANNER_ENLISTED", "ממתין לאישור מנהל");
             map.put("MANAGER_ENLISTED", "ממתין לאישור מנהל");
-            map.put("MANAGER_ASSIGNED_SCANNER", "סורק אחר קיבל את הקריאה");
+            map.put("MANAGER_ASSIGNED_SCANNER", "סורק אחר נבחר לקריאה");
             map.put("SCANNER_ON_THE_WAY", "סורק יצא לדרך");
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
@@ -517,5 +549,13 @@ public class Report implements  java.io.Serializable{
 
     public boolean isAssignedScanner(String userId) {
         return Objects.equals(getAssignedScanner(), userId);
+    }
+
+    public String getCancellationUserType() {
+        return cancellationUserType;
+    }
+
+    public void setCancellationUserType(String cancellationUserType) {
+        this.cancellationUserType = cancellationUserType;
     }
 }

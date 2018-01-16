@@ -1,13 +1,18 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -93,6 +98,7 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 managerReportStatus.setText(report.statusInHebrew());
+                updateInactiveReport(report.getStatus());
             }
 
             @Override
@@ -140,6 +146,103 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
 
             }
         });
+    }
+
+    private void updateInactiveReport(String status) {
+        if ((status.equals("CLOSED")) || (status.equals("CANCELED"))) {
+            LinearLayout managerButtons = findViewById(R.id.viewManagerButtonsLayout);
+            LinearLayout availableScannersList = findViewById(R.id.availableScannersLayout);
+            managerButtons.setVisibility(View.GONE);
+            availableScannersList.setVisibility(View.GONE);
+
+            TextView closing_or_cancellation_reason = findViewById(R.id.closing_or_cancellation_reason);
+            TextView closing_or_cancellation_headline = findViewById(R.id.closing_or_cancellation_headline);
+
+            if (status.equals("CLOSED")) {
+                closing_or_cancellation_headline.setText(R.string.closing_reason_headline);
+                closing_or_cancellation_reason.setText(report.getClosingText());
+            }
+            else {
+                closing_or_cancellation_headline.setText(R.string.cancellation_reason_headline);
+                closing_or_cancellation_reason.setText(report.getCancellationText());
+
+                TextView cancellation_user_type = findViewById(R.id.cancellation_user_type);
+                cancellation_user_type.setText(report.getCancellationUserType());
+
+                LinearLayout report_cancelled_by = findViewById(R.id.report_canceled_by);
+                report_cancelled_by.setVisibility(View.VISIBLE);
+            }
+
+            RelativeLayout closing_or_cancellation_reason_layout = findViewById(R.id.closed_or_cancelled_relative_layout);
+            closing_or_cancellation_reason_layout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * The listener for the "cancel report" button
+     */
+    public void OnCloseReportButtonClick(View v) {
+        TextView title = new TextView(ReportViewManagerActivity.this);
+        final EditText editText = new EditText(ReportViewManagerActivity.this);
+
+        title.setText(R.string.close_report_dialog);
+        title.setPadding(10, 50, 64, 9);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+        new AlertDialog.Builder(ReportViewManagerActivity.this)
+                .setMessage(R.string.close_report_dialog_message)
+                .setCustomTitle(title)
+                .setView(editText)
+                .setPositiveButton(getResources().getString(R.string.close_report_in_dialog), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String closeReportText = editText.getText().toString();
+
+                        report.reportUpdateClosingText(closeReportText);
+                        report.setStatus("CLOSED");
+                        report.reportUpdateStatus("CLOSED", null);
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.go_back_in_dialog), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .create().show();
+    }
+
+    /**
+     * The listener for the "cancel report" button
+     */
+    public void OnCancelReportButtonClick(View v) {
+        TextView title = new TextView(ReportViewManagerActivity.this);
+        final EditText editText = new EditText(ReportViewManagerActivity.this);
+
+        title.setText(R.string.cancel_report_dialog);
+        title.setPadding(10, 50, 64, 9);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+        new AlertDialog.Builder(ReportViewManagerActivity.this)
+                .setMessage(R.string.cancel_report_dialog_message)
+                .setCustomTitle(title)
+                .setView(editText)
+                .setPositiveButton(getResources().getString(R.string.cancel_report_in_dialog), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String cancelReportText = editText.getText().toString();
+
+                        report.reportUpdateCancellationText(cancelReportText);
+                        report.reportUpdateCancellationManagerType();
+                        report.setStatus("CANCELED");
+                        report.reportUpdateStatus("CANCELED", null);
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.go_back_in_dialog), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .create().show();
     }
 
     public void sendScannerHandler(View view) {

@@ -105,6 +105,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             }
 
             numberScanners.setText(Integer.toString(report.getAvailableScanners()));
+            //String potentialScanners = Integer.toString(report.getPotentialScannersSize());
+            //numberScanners.setText(potentialScanners);
         }
 
     }

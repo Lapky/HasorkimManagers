@@ -37,7 +37,7 @@ public class ScannerAdapter extends ArrayAdapter<Scanner> {
 
         scannerName.setText(scanner.getName());
         scannerId.setText(scanner.getUserId());
-        distance.setText(scanner.getDuration() + " דקות");
+        distance.setText(scanner.getDuration());
         sendScanner.setBackgroundColor(Color.LTGRAY);
         // Return the completed view to render on screen
 

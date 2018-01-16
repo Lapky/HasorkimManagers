@@ -4,14 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/report_view_padding"
+    android:paddingTop="@dimen/report_view_padding"
+    android:paddingStart="@dimen/report_view_padding"
+    android:paddingEnd="@dimen/report_view_padding"
+    android:paddingBottom="@dimen/details_buttons_padding"
     tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportViewScannerActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:scrollbars="vertical">
+        android:layout_weight="6"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="@dimen/report_list_item_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -217,7 +221,7 @@
         android:id="@+id/scannerMapLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3.5"
+        android:layout_weight="2"
         android:visibility="gone">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -245,6 +249,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_gravity="center"
         android:text="@string/on_my_way_to_scan"
         android:textSize="25sp"
         android:visibility="gone" />
@@ -255,6 +260,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_gravity="center"
         android:text="@string/unavailable_for_scan"
         android:textSize="25sp"
         android:visibility="gone" />
