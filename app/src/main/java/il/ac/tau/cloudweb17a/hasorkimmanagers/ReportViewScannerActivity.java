@@ -118,7 +118,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         userId = getUser().getId();
 
         isScannerEnlisted = report.isScannerEnlisted(userId);
-
+        report.setIsScannerEnlistedStatus(isScannerEnlisted);
 
         if (report.getImageUrl() != null && isScannerEnlisted) {
             FrameLayout mapLayout = findViewById(R.id.scannerMapLayout);

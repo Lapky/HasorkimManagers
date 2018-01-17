@@ -97,6 +97,8 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         statusManagerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                String status = dataSnapshot.getValue(String.class);
+                report.setStatus(status);
                 managerReportStatus.setText(report.statusInHebrew());
                 updateInactiveReport(report.getStatus());
             }
