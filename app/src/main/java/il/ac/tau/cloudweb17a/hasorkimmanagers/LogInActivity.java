@@ -71,7 +71,6 @@ public class LogInActivity extends AppCompatActivity {
 
     public void GoToReportList(String idToken) {
         getLocationPermission();
-        FirebaseMessaging.getInstance().subscribeToTopic("new_report");
         Intent intent = new Intent(LogInActivity.this, ReportListActivity.class);
         intent.putExtra("token", idToken);
         startActivity(intent);

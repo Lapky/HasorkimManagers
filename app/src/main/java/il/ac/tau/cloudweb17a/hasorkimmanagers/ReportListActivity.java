@@ -29,6 +29,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.Report.getLastReportStartTime;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
@@ -149,6 +150,8 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         activity = this;
+
+        FirebaseMessaging.getInstance().subscribeToTopic("new_report");
 
         //setting up a user object for the list
         user = getUser();
