@@ -396,6 +396,10 @@ public class Report implements  java.io.Serializable{
     }
 
     public String statusInHebrew(){
+        return translateStatus(this.getStatus());
+    }
+
+    public String translateStatus(String status){
         User user = getUser();
         if (user.getIsManager()) {
             Map<String, String> map = new HashMap<String, String>();
@@ -407,7 +411,7 @@ public class Report implements  java.io.Serializable{
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
 
-            return map.get(this.getStatus());
+            return map.get(status);
         }
         else{
             Map<String, String> map = new HashMap<String, String>();
@@ -422,7 +426,7 @@ public class Report implements  java.io.Serializable{
             if (user.getId()!=null && user.getId().equals(assignedScanner)){
                 map.put("MANAGER_ASSIGNED_SCANNER", "צא ליעד, דווח יציאה לדרך");
             }
-            return map.get(this.getStatus());
+            return map.get(status);
         }
 
     }
