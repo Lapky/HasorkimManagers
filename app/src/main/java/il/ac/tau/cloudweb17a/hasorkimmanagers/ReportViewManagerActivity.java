@@ -1,7 +1,6 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -16,12 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ReportViewManagerActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class ReportViewManagerActivity extends AppCompatActivity {
 
     private static final int DEFAULT_ZOOM = 15;
 
@@ -47,10 +40,6 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_view_manager);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.manager_map);
-        mapFragment.getMapAsync(this);
 
         report = (Report) getIntent().getSerializableExtra("Report");
 
@@ -157,19 +146,60 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
             managerButtons.setVisibility(View.GONE);
             availableScannersList.setVisibility(View.GONE);
 
-            TextView closing_or_cancellation_reason = findViewById(R.id.closing_or_cancellation_reason);
+            final TextView closing_or_cancellation_reason = findViewById(R.id.closing_or_cancellation_reason);
             TextView closing_or_cancellation_headline = findViewById(R.id.closing_or_cancellation_headline);
 
             if (status.equals("CLOSED")) {
                 closing_or_cancellation_headline.setText(R.string.closing_reason_headline);
-                closing_or_cancellation_reason.setText(report.getClosingText());
+                final Query queryCancelText = FirebaseDatabase.getInstance()
+                        .getReference("reports").child(report.getId()).child("closingText");
+
+                queryCancelText.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        closing_or_cancellation_reason.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
             else {
                 closing_or_cancellation_headline.setText(R.string.cancellation_reason_headline);
-                closing_or_cancellation_reason.setText(report.getCancellationText());
 
-                TextView cancellation_user_type = findViewById(R.id.cancellation_user_type);
-                cancellation_user_type.setText(report.getCancellationUserType());
+                final Query queryCancelText = FirebaseDatabase.getInstance()
+                        .getReference("reports").child(report.getId()).child("cancellationText");
+
+                Query queryCancelUserType = FirebaseDatabase.getInstance()
+                        .getReference("reports").child(report.getId()).child("cancellationUserType");
+
+                queryCancelText.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        closing_or_cancellation_reason.setText(dataSnapshot.getValue(String.class));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                final TextView cancellation_user_type = findViewById(R.id.cancellation_user_type);
+                queryCancelUserType.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        cancellation_user_type.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 LinearLayout report_cancelled_by = findViewById(R.id.report_canceled_by);
                 report_cancelled_by.setVisibility(View.VISIBLE);
@@ -290,17 +320,6 @@ public class ReportViewManagerActivity extends AppCompatActivity implements OnMa
         vwParentRow.refreshDrawableState();
 
         //Log.d(TAG, scanner_name.getText().toString());
-    }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        GoogleMap mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng location = new LatLng(report.getLat(), report.getLong());
-        mMap.addMarker(new MarkerOptions().position(location).title("מיקום הדיווח")).showInfoWindow();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
     }
 
     /*

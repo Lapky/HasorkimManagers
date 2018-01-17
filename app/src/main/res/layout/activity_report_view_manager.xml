@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="6"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -182,38 +182,12 @@
 
             <ImageView
                 android:id="@+id/managerReportImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-
-            <!--
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/report_status_padding"
-                android:textStyle="bold">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/report_current_assigned_scanner"
-                    android:textSize="@dimen/report_item_text_size"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/managerReportCurrentScanner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.6"
-                    android:text="@string/scanner_was_not_assigned"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/report_item_text_size"
-                    android:textStyle="bold" />
-            </LinearLayout>
-            -->
+                android:layout_gravity="center"
+                android:maxHeight="200dp"
+                android:maxWidth="200dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -305,22 +279,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/managerMapLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2">
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/manager_map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportViewManagerActivity" />
-
-    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/viewManagerButtonsLayout"

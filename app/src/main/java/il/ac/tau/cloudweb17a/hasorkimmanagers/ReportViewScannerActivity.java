@@ -121,9 +121,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         report.setIsScannerEnlistedStatus(isScannerEnlisted);
 
         if (report.getImageUrl() != null && isScannerEnlisted) {
-            FrameLayout mapLayout = findViewById(R.id.scannerMapLayout);
             ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
-            mapLayout.setVisibility(View.VISIBLE);
             scannerReportImage.setVisibility(View.VISIBLE);
             Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
         }
