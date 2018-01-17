@@ -92,10 +92,17 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         else
             buttonUnenlist.setVisibility(LinearLayout.GONE);
 
-        if (Objects.equals(report.getAssignedScanner(), userId) && !Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY"))
+        if (Objects.equals(report.getAssignedScanner(), userId) && !Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")){
             scannerOnTheWay.setVisibility(LinearLayout.VISIBLE);
+        }
         else
             scannerOnTheWay.setVisibility(LinearLayout.GONE);
+
+        if (Objects.equals(report.getAssignedScanner(), userId)){
+            ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+            scannerReportImage.setVisibility(View.VISIBLE);
+            Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
+        }
     }
 
     Button buttonEnlist;
@@ -119,13 +126,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
         isScannerEnlisted = report.isScannerEnlisted(userId);
         report.setIsScannerEnlistedStatus(isScannerEnlisted);
-
-        if (report.getImageUrl() != null && isScannerEnlisted) {
-            ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
-            scannerReportImage.setVisibility(View.VISIBLE);
-            Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
-        }
-
 
 
         DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance().getReference("reports").child(report.getId()).child("assignedScanner");
