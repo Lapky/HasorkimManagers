@@ -2,7 +2,6 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.util.Log;
 
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +23,7 @@ import java.util.Set;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 
-public class Report implements  java.io.Serializable{
+public class Report implements java.io.Serializable {
 
 
     private String id;
@@ -36,6 +35,7 @@ public class Report implements  java.io.Serializable{
     private String freeText;
     private String phoneNumber;
     private String extraPhoneNumber;
+    private String photoPath;
 
     private String assignedScanner;
 
@@ -43,7 +43,7 @@ public class Report implements  java.io.Serializable{
 
     private int availableScanners;
 
-    private Set<String> potentialScanners ;
+    private Set<String> potentialScanners;
 
 
     private String closingText;
@@ -60,8 +60,8 @@ public class Report implements  java.io.Serializable{
     //private boolean isManagerEnlistedStatus;
 
 
-    private double Lat;
-    private double Long;
+    private double latitude;
+    private double longitude;
 
     private String distance;
     private String duration;
@@ -70,7 +70,7 @@ public class Report implements  java.io.Serializable{
     private static final String TAG = "Report";
     private int distancevalue;
 
-    private void changePotentialScanners(String userId, int change){
+    private void changePotentialScanners(String userId, int change) {
         if (change == 0) potentialScanners.remove(userId);
         else if (change == 1) potentialScanners.add(userId);
 
@@ -78,10 +78,10 @@ public class Report implements  java.io.Serializable{
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
-        Map<String,Object> potentialScannersMap = new HashMap<String,Object>();
+        Map<String, Object> reportMap = new HashMap<>();
+        Map<String, Object> potentialScannersMap = new HashMap<>();
 
-        for (String scanner: potentialScanners){
+        for (String scanner : potentialScanners) {
             potentialScannersMap.put(scanner, this.getDuration());
         }
 
@@ -91,23 +91,23 @@ public class Report implements  java.io.Serializable{
         reportsRef.updateChildren(reportMap);
     }
 
-    public void addToPotentialScanners(String userId){
+    public void addToPotentialScanners(String userId) {
         this.changePotentialScanners(userId, 1);
     }
 
 
-    public void subtrectFromPotentialScanners(String userId){
+    public void subtrectFromPotentialScanners(String userId) {
         this.changePotentialScanners(userId, 0);
     }
 
 
-    public boolean isScannerEnlisted(String userId){
+    public boolean isScannerEnlisted(String userId) {
         return potentialScanners.contains(userId);
     }
 
 
-    public void setPotentialScanners(){
-        if(this.id!=null) {
+    public void setPotentialScanners() {
+        if (this.id != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             DatabaseReference reportsRef = ref.child("reports").child(this.id).child("potentialScanners");
             potentialScanners = new HashSet<>();
@@ -126,9 +126,8 @@ public class Report implements  java.io.Serializable{
                 public void onCancelled(DatabaseError firebaseError) {
                 }
             });
-        }
-        else{
-            Log.e(TAG,"id is null");
+        } else {
+            Log.e(TAG, "id is null");
         }
 
     }
@@ -138,7 +137,7 @@ public class Report implements  java.io.Serializable{
     }
 
 
-    public Report(){
+    public Report() {
         // Default constructor required for calls to DataSnapshot.getValue(Report.class)
 
         //this.setPotentialScanners();
@@ -154,7 +153,9 @@ public class Report implements  java.io.Serializable{
     }
 
 
-    public String getId() {return id;   }
+    public String getId() {
+        return id;
+    }
 
     public String getReporterName() {
         return reporterName;
@@ -180,7 +181,7 @@ public class Report implements  java.io.Serializable{
 
     public String getStatus() {
 
-        if (Objects.equals(this.status, "NEW")){
+        if (Objects.equals(this.status, "NEW")) {
             if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
             //if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
@@ -195,7 +196,7 @@ public class Report implements  java.io.Serializable{
     }
 
 
-    public long getStartTime(){
+    public long getStartTime() {
         return this.startTime;
     }
 
@@ -204,9 +205,17 @@ public class Report implements  java.io.Serializable{
         return format.format(new Date(-this.startTime));
     }
 
-    public String getAddress() { return this.address; }
-    public String getUserId() {return userId;   }
-    public int getAvailableScanners() { return this.availableScanners; }
+    public String getAddress() {
+        return this.address;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public int getAvailableScanners() {
+        return this.availableScanners;
+    }
 
     public String getCancellationText() {
         return cancellationText;
@@ -216,7 +225,9 @@ public class Report implements  java.io.Serializable{
         return closingText;
     }
 
-    public int getIncrementalReportId() { return incrementalReportId; }
+    public int getIncrementalReportId() {
+        return incrementalReportId;
+    }
 
     /*
     public void persistReport(){
@@ -234,7 +245,7 @@ public class Report implements  java.io.Serializable{
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber=phoneNumber;
+        this.phoneNumber = phoneNumber;
     }
 
     public void setMoreInformation(String moreInformation) {
@@ -247,7 +258,7 @@ public class Report implements  java.io.Serializable{
     }
 
     public void setStartTime() {
-        this.startTime =  -Calendar.getInstance().getTime().getTime();
+        this.startTime = -Calendar.getInstance().getTime().getTime();
     }
 
     public void setAddress(String address) {
@@ -260,22 +271,6 @@ public class Report implements  java.io.Serializable{
 
     public void setClosingText(String closingText) {
         this.closingText = closingText;
-    }
-
-    public double getLat() {
-        return Lat;
-    }
-
-    public double getLong() {
-        return Long;
-    }
-
-    public void setLat(double lat) {
-        Lat = lat;
-    }
-
-    public void setLong(double aLong) {
-        Long = aLong;
     }
 
     @Exclude
@@ -292,6 +287,7 @@ public class Report implements  java.io.Serializable{
                     nextIncrementalId = lastReport.getIncrementalReportId() + 1;
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError firebaseError) {
             }
@@ -300,7 +296,7 @@ public class Report implements  java.io.Serializable{
         this.incrementalReportId = nextIncrementalId;
     }
 
-    public void reportUpdateStatus(String status, ReportListActivity.MyCallBackClass myCallBackClass){
+    public void reportUpdateStatus(String status, ReportListActivity.MyCallBackClass myCallBackClass) {
         String dbStatus = status;
         if (Objects.equals(dbStatus, "SCANNER_ENLISTED")) {
             dbStatus = "NEW";
@@ -316,43 +312,43 @@ public class Report implements  java.io.Serializable{
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<>();
+        Map<String, Object> reportMap = new HashMap<>();
         reportMap.put("status", dbStatus);
         reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
         //reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
         reportsRef.updateChildren(reportMap);
-        if(myCallBackClass!=null)
+        if (myCallBackClass != null)
             myCallBackClass.execute();
     }
 
 
-    public void reportUpdateExtraPhoneNumber(){
+    public void reportUpdateExtraPhoneNumber() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String, Object> reportMap = new HashMap<String, Object>();
         reportMap.put("extraPhoneNumber", this.extraPhoneNumber);
         reportsRef.updateChildren(reportMap);
     }
 
-    public void reportUpdateIncrementalReportId(){
+    public void reportUpdateIncrementalReportId() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id).child("incrementalReportId");
         reportsRef.setValue(this.incrementalReportId);
     }
 
-    public void reportUpdateClosingText(String closingText){
+    public void reportUpdateClosingText(String closingText) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String, Object> reportMap = new HashMap<String, Object>();
         setClosingText(closingText);
         reportMap.put("closingText", closingText);
         reportsRef.updateChildren(reportMap);
     }
 
-    public void reportUpdateCancellationText(String cancellationText){
+    public void reportUpdateCancellationText(String cancellationText) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String, Object> reportMap = new HashMap<String, Object>();
         setCancellationText(cancellationText);
         reportMap.put("cancellationText", cancellationText);
         reportsRef.updateChildren(reportMap);
@@ -366,40 +362,40 @@ public class Report implements  java.io.Serializable{
         reportsRef.updateChildren(reportMap);
     }
 
-    public void reportUpdateAssignedScanner(String userId){
+    public void reportUpdateAssignedScanner(String userId) {
         this.setAssignedScanner(userId);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String, Object> reportMap = new HashMap<String, Object>();
         reportMap.put("assignedScanner", userId);
         reportsRef.updateChildren(reportMap);
 
     }
 
-    public void updateOnTheWayTimestamp(){
+    public void updateOnTheWayTimestamp() {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
                 .format(new java.util.Date());
 
         this.setScannerOnTheWay(timeStamp);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String,Object> reportMap = new HashMap<String,Object>();
+        Map<String, Object> reportMap = new HashMap<String, Object>();
         reportMap.put("scannerOnTheWay", timeStamp);
         reportsRef.updateChildren(reportMap);
 
     }
 
-    public boolean isOpenReport(){
+    public boolean isOpenReport() {
         if ((Objects.equals(this.getStatus(), "CANCELED")) || (Objects.equals(this.getStatus(), "CLOSED")))
             return false;
         else return true;
     }
 
-    public String statusInHebrew(){
+    public String statusInHebrew() {
         return translateStatus(this.getStatus());
     }
 
-    public String translateStatus(String status){
+    public String translateStatus(String status) {
         User user = getUser();
         if (user.getIsManager()) {
             Map<String, String> map = new HashMap<String, String>();
@@ -412,8 +408,7 @@ public class Report implements  java.io.Serializable{
             map.put("CANCELED", "בוטל");
 
             return map.get(status);
-        }
-        else{
+        } else {
             Map<String, String> map = new HashMap<String, String>();
             map.put("NEW", "דיווח חדש");
             map.put("SCANNER_ENLISTED", "ממתין לאישור מנהל");
@@ -423,7 +418,7 @@ public class Report implements  java.io.Serializable{
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
 
-            if (user.getId()!=null && user.getId().equals(assignedScanner)){
+            if (user.getId() != null && user.getId().equals(assignedScanner)) {
                 map.put("MANAGER_ASSIGNED_SCANNER", "צא ליעד, דווח יציאה לדרך");
             }
             return map.get(status);
@@ -431,28 +426,27 @@ public class Report implements  java.io.Serializable{
 
     }
 
-    public String validate(){
-        String error ="";
-        if(reporterName.equals("")){
-            error = error+ "חסר שם ";
+    public String validate() {
+        String error = "";
+        if (reporterName.equals("")) {
+            error = error + "חסר שם ";
         }
-        if(phoneNumber.equals("")){
-            error = error+ "חסר מספר טלפון ";
-        }else {
+        if (phoneNumber.equals("")) {
+            error = error + "חסר מספר טלפון ";
+        } else {
             if (!phoneNumber.matches("^([0-9]{10})|([0-9]{3}-[0-9]{7})|([0-9]{2}-[0-9]{7})$")) {
                 error = error + "מספר טלפון לא תקין";
             }
         }
-        if(address.equals("")){
-            error = error+ "חסרה כתובת ";
+        if (address.equals("")) {
+            error = error + "חסרה כתובת ";
         }
         return error;
     }
 
-    public boolean isHasSimilarReports(){
+    public boolean isHasSimilarReports() {
         return this.hasSimilarReports;
     }
-
 
 
     @Override
@@ -487,6 +481,7 @@ public class Report implements  java.io.Serializable{
     public void setDistance(String distance) {
         this.distance = distance;
     }
+
     public void setDuration(String duration) {
         this.duration = duration;
     }
@@ -561,5 +556,29 @@ public class Report implements  java.io.Serializable{
 
     public void setCancellationUserType(String cancellationUserType) {
         this.cancellationUserType = cancellationUserType;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 }

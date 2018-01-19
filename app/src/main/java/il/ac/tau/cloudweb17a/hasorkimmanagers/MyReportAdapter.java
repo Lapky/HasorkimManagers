@@ -18,9 +18,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
@@ -29,6 +35,8 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
 
     private ArrayList<Report> mDataset = new ArrayList<>();
     final String TAG = ReportAdapter.class.getSimpleName();
+    private final Context context;
+
 
 
     // Provide a reference to the views for each data item
@@ -86,7 +94,9 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyReportAdapter(final ProgressBar mProgressBar, final RecyclerView mRecyclerView) {
+    public MyReportAdapter(final ProgressBar mProgressBar, final RecyclerView mRecyclerView, final Context context) {
+
+        this.context = context;
 
         DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports");
         Query lastQuery = reportsRef
@@ -114,7 +124,44 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
         lastQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Report report = dataSnapshot.getValue(Report.class);
+                final Report report = dataSnapshot.getValue(Report.class);
+
+                ArrayList<LatLong> locationList = new ArrayList<>();
+                LatLong thisLatLong = new LatLong();
+                thisLatLong.Lat = report.getLatitude();
+                thisLatLong.Long = report.getLongitude();
+                locationList.add(thisLatLong);
+
+                distanceService.getDistanceRequest(locationList, context.getString(R.string.google_maps_key)).enqueue(
+                        new Callback() {
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.e(TAG, "no response from distances");
+                                //probably should retry
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                ResponseBody responseBody = response.body();
+                                String[] parsedDate = distanceService.parseJSON(responseBody.string());
+                                if (parsedDate == null) {
+                                    Log.d(TAG, "couldn't get distance");
+                                    //TODO decide what to do here
+                                    report.setDistance("");
+                                    report.setDuration("");
+                                    report.setDistancevalue(1000000000);
+
+                                } else {
+                                    report.setDistance(parsedDate[0]);
+                                    report.setDuration(parsedDate[1]);
+                                    report.setDistancevalue(Integer.parseInt(parsedDate[2]));
+                                }
+                            }
+                        }
+                );
+
                 String key = dataSnapshot.getKey();
                 report.setId(key);
                 mDataset.add(report);
@@ -122,6 +169,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
                 mProgressBar.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 notifyDataSetChanged();
+
             }
 
             @Override

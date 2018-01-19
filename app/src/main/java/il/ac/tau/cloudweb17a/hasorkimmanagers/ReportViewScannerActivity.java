@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,8 +47,8 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             linearLayout.setVisibility(View.VISIBLE);
 
         TextView activeReportStatus = findViewById(R.id.activeReportStatus);
-        String status =report.statusInHebrew();
-        Log.d(TAG,status);
+        String status = report.statusInHebrew();
+        Log.d(TAG, status);
         activeReportStatus.setText(status);
 
 
@@ -75,11 +74,11 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             linearLayout.setVisibility(LinearLayout.GONE);
             buttonEnlist.setVisibility(LinearLayout.GONE);
         } else {*/
-            TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
-            activeReportReporterName.setText(report.getReporterName());
+        TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
+        activeReportReporterName.setText(report.getReporterName());
 
-            TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
-            activeReportPhoneNumber.setText(report.getPhoneNumber());
+        TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
+        activeReportPhoneNumber.setText(report.getPhoneNumber());
         /*}*/
 
         if ((Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId)))
@@ -92,16 +91,19 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         else
             buttonUnenlist.setVisibility(LinearLayout.GONE);
 
-        if (Objects.equals(report.getAssignedScanner(), userId) && !Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")){
+        if (Objects.equals(report.getAssignedScanner(), userId) && !Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) {
             scannerOnTheWay.setVisibility(LinearLayout.VISIBLE);
-        }
-        else
+        } else
             scannerOnTheWay.setVisibility(LinearLayout.GONE);
 
-        if (Objects.equals(report.getAssignedScanner(), userId)){
+        if (Objects.equals(report.getAssignedScanner(), userId)) {
             ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
             scannerReportImage.setVisibility(View.VISIBLE);
-            Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
+            try {
+                Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
+            } catch (Exception ignored) {
+
+            }
         }
     }
 
@@ -110,11 +112,10 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
     Button scannerOnTheWay;
     boolean isScannerEnlisted;
 
-        @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_view_scanner);
-
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -129,7 +130,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
 
         DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance().getReference("reports").child(report.getId()).child("assignedScanner");
-            assignedScannerRef.addValueEventListener(new ValueEventListener() {
+        assignedScannerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String assignedScanner = dataSnapshot.getValue(String.class);
@@ -143,24 +144,23 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             }
         });
 
-            DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference("reports").child(report.getId()).child("status");
-            statusRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String status = dataSnapshot.getValue(String.class);
-                    report.setStatus(status);
-                    refreshUI();
-                }
+        DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference("reports").child(report.getId()).child("status");
+        statusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String status = dataSnapshot.getValue(String.class);
+                report.setStatus(status);
+                refreshUI();
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
 
 
-
-        buttonEnlist= findViewById(R.id.scannerAvailable);
+        buttonEnlist = findViewById(R.id.scannerAvailable);
         buttonUnenlist = findViewById(R.id.scannerCancelEnlistment);
         scannerOnTheWay = findViewById(R.id.scannerOnTheWay);
 
@@ -170,7 +170,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             public void onClick(View view) {
                 report.addToPotentialScanners(userId);
                 if (Objects.equals(report.getStatus(), "NEW"))
-                    report.reportUpdateStatus("SCANNER_ENLISTED",new ReportListActivity.MyCallBackClass() {
+                    report.reportUpdateStatus("SCANNER_ENLISTED", new ReportListActivity.MyCallBackClass() {
                         @Override
                         public void execute() {
                             refreshUI();
@@ -184,18 +184,17 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             @Override
             public void onClick(View view) {
                 report.subtrectFromPotentialScanners(userId);
-                report.setIsScannerEnlistedStatus(false) ;
-                if (report.getAvailableScanners() < 1) report.reportUpdateStatus("NEW", new ReportListActivity.MyCallBackClass() {
-                    @Override
-                    public void execute() {
-                        refreshUI();
-                    }
-                });
+                report.setIsScannerEnlistedStatus(false);
+                if (report.getAvailableScanners() < 1)
+                    report.reportUpdateStatus("NEW", new ReportListActivity.MyCallBackClass() {
+                        @Override
+                        public void execute() {
+                            refreshUI();
+                        }
+                    });
 
                 if (Objects.equals(report.getAssignedScanner(), userId))
                     report.reportUpdateAssignedScanner("");
-
-
             }
 
         });
@@ -222,15 +221,14 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng location = new LatLng(report.getLat(), report.getLong());
+        LatLng location = new LatLng(report.getLatitude(), report.getLongitude());
         mMap.addMarker(new MarkerOptions().position(location).title("מיקום הדיווח")).showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
     }
 
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
         finish();

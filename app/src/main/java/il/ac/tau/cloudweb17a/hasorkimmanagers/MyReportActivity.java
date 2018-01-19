@@ -22,7 +22,7 @@ public class MyReportActivity extends AppCompatActivity {
 
         ProgressBar mProgressBar = findViewById(R.id.report_list_progress_bar);
 
-        RecyclerView.Adapter mAdapter = new MyReportAdapter(mProgressBar,mRecyclerView);
+        RecyclerView.Adapter mAdapter = new MyReportAdapter(mProgressBar,mRecyclerView, getApplicationContext());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 

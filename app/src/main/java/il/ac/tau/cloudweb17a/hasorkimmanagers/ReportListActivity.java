@@ -151,8 +151,6 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
 
         activity = this;
 
-        FirebaseMessaging.getInstance().subscribeToTopic("new_report");
-
         //setting up a user object for the list
         user = getUser();
 

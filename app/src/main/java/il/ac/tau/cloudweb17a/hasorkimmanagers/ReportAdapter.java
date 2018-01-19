@@ -183,8 +183,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
                         ArrayList<LatLong> locationList = new ArrayList<>();
                         LatLong thisLatLong = new LatLong();
-                        thisLatLong.Lat = report.getLat();
-                        thisLatLong.Long = report.getLong();
+                        thisLatLong.Lat = report.getLatitude();
+                        thisLatLong.Long = report.getLongitude();
                         locationList.add(thisLatLong);
 
 
