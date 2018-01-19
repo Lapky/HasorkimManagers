@@ -2,6 +2,7 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.StringRes;
@@ -38,39 +39,44 @@ public class LogInActivity extends AppCompatActivity {
 
         mRootView = findViewById(R.id.root);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            // already signed in
-            auth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
-                @Override
-                public void onSuccess(GetTokenResult result) {
-                    String idToken = result.getToken();
-                    //Do whatever
-                    GoToReportList(idToken);
-                }
-            });
-
+        if (isEmulator()) {
+            GoToReportList("");
         } else {
-            // not signed in
-            Bundle params = new Bundle();
-            params.putString(AuthUI.EXTRA_DEFAULT_COUNTRY_CODE, "il");
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null) {
+                // already signed in
+                auth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                    @Override
+                    public void onSuccess(GetTokenResult result) {
+                        String idToken = result.getToken();
+                        //Do whatever
+                        GoToReportList(idToken);
+                    }
+                });
 
-            startActivityForResult(
-                    // Get an instance of AuthUI based on the default app
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(
-                                    Collections.singletonList(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).setParams(params).build()))
-                            .setIsSmartLockEnabled(false)
-                            .build(),
-                    RC_SIGN_IN);
+            } else {
+                // not signed in
+                Bundle params = new Bundle();
+                params.putString(AuthUI.EXTRA_DEFAULT_COUNTRY_CODE, "il");
 
+                startActivityForResult(
+                        // Get an instance of AuthUI based on the default app
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(
+                                        Collections.singletonList(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).setParams(params).build()))
+                                .setIsSmartLockEnabled(false)
+                                .build(),
+                        RC_SIGN_IN);
+
+            }
         }
     }
 
 
     public void GoToReportList(String idToken) {
         getLocationPermission();
+        FirebaseMessaging.getInstance().subscribeToTopic("new_report");
         Intent intent = new Intent(LogInActivity.this, ReportListActivity.class);
         intent.putExtra("token", idToken);
         startActivity(intent);
@@ -132,6 +138,17 @@ public class LogInActivity extends AppCompatActivity {
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
         Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+    }
+
+    public static boolean isEmulator() {
+        return Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || "google_sdk".equals(Build.PRODUCT);
     }
 
 }
