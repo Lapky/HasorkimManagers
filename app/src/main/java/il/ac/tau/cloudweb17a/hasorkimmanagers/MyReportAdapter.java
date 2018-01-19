@@ -149,8 +149,8 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
                                 if (parsedDate == null) {
                                     Log.d(TAG, "couldn't get distance");
                                     //TODO decide what to do here
-                                    report.setDistance("");
-                                    report.setDuration("");
+                                    report.setDistance("לא ידוע");
+                                    report.setDuration("לא ידוע");
                                     report.setDistancevalue(1000000000);
 
                                 } else {
