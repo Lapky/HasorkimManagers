@@ -4,13 +4,14 @@ public class Scanner {
 
     private final String userId;
     private String duration;
-    private boolean isAssignedScanner;
+
+    private boolean assignedScanner;
     private String name;
 
-    Scanner(String userId, String name, String duration, boolean isAssignedScanner) {
+    Scanner(String userId, String name, String duration, boolean assignedScanner) {
         this.userId = userId;
         this.duration = duration;
-        this.isAssignedScanner = isAssignedScanner;
+        this.assignedScanner = assignedScanner;
         this.name = name;
     }
 
@@ -30,8 +31,12 @@ public class Scanner {
         return duration;
     }
 
-    public boolean getIsAssignedScanner() {
-        return isAssignedScanner;
+    public boolean isAssignedScanner() {
+        return assignedScanner;
+    }
+
+    public void setAssignedScanner(boolean assignedScanner) {
+        this.assignedScanner = assignedScanner;
     }
 
     public String getName() {

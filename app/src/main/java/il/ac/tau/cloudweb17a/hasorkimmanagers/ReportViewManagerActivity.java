@@ -27,10 +27,8 @@ import java.util.Objects;
 
 public class ReportViewManagerActivity extends AppCompatActivity {
 
-    private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
-    TextView managerReportCurrentScanner;
 
     final String TAG = ReportViewManagerActivity.class.getSimpleName();
 
@@ -106,6 +104,22 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 adapter.clear();
+
+                DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance()
+                        .getReference("reports").child(report.getId()).child("assignedScanner");
+
+                assignedScannerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        report.setAssignedScanner(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
 
                     final String userId = messageSnapshot.getKey();
@@ -166,8 +180,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                     }
                 });
 
-            }
-            else {
+            } else {
                 closing_or_cancellation_headline.setText(R.string.cancellation_reason_headline);
 
                 final Query queryCancelText = FirebaseDatabase.getInstance()
@@ -291,24 +304,13 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                 !Objects.equals(assignedScanner, scannerNameString)) {
             sendScanner.setError("יכול להיות רק סורק מאושר אחד");
         } else {
-
             if (!Objects.equals(report.getAssignedScanner(), scannerNameString)) {
                 report.reportUpdateAssignedScanner(scannerNameString);
                 sendScanner.setText(R.string.scanner_was_chosen);
                 report.setStatus("MANAGER_ASSIGNED_SCANNER");
                 report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER", null);
                 view.setBackgroundColor(Color.CYAN);
-            }
-            /*
-            else {
-                report.reportUpdateAssignedScanner("");
-                sendScanner.setText(R.string.choose_scanner);
-                vwParentRow.setBackgroundColor(Color.WHITE);
-                report.setStatus("MANAGER_ENLISTED");
-                report.reportUpdateStatus("MANAGER_ENLISTED");
-            }
-            */
-            else {
+            } else {
                 report.reportUpdateAssignedScanner("");
                 sendScanner.setText(R.string.choose_scanner);
                 report.setStatus("NEW");

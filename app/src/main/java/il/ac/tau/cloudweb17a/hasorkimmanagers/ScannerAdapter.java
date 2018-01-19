@@ -41,7 +41,7 @@ public class ScannerAdapter extends ArrayAdapter<Scanner> {
         sendScanner.setBackgroundColor(Color.LTGRAY);
         // Return the completed view to render on screen
 
-        if (scanner.getIsAssignedScanner()) {
+        if (scanner.isAssignedScanner()) {
             sendScanner.setBackgroundColor(Color.CYAN);
             sendScanner.setText(R.string.scanner_was_chosen);
         }
