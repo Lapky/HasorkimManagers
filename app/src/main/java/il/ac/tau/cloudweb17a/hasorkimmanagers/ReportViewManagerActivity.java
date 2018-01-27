@@ -452,15 +452,6 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         }
         imagePath = savedImagePath;
     }
-
-    /*
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(ReportViewManagerActivity.this, ReportListActivity.class));
-        finish();
-    }
-    */
 }
 
 

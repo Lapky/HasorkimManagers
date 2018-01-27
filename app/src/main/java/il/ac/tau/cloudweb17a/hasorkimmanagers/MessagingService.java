@@ -47,36 +47,44 @@ public class MessagingService extends FirebaseMessagingService {
     private String lon;
     private String address;
     private String reportId;
+    private String title;
     private static final OkHttpClient client = new OkHttpClient();
 
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if (remoteMessage.getData() != null) {
+        if (remoteMessage.getData() == null) {
+            return;
+        }
+
+        reportId = remoteMessage.getData().get("report");
+
+        if (remoteMessage.getData().get("type").equals("notifyManagersAndScannersNewReport")) {
             lat = remoteMessage.getData().get("lat");
             lon = remoteMessage.getData().get("long");
             address = remoteMessage.getData().get("address");
-            reportId = remoteMessage.getData().get("report");
 
             Log.d(TAG, "Message Data lat: " + lat);
             Log.d(TAG, "Message Data long: " + lon);
             Log.d(TAG, "Message Data address: " + address);
-        } else {
-            return;
-        }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        radius = prefs.getString("radius", "");
 
-        if (prefs.getBoolean("notifications_new_message", false)) {
-            if (prefs.getBoolean("notifications_radius", false)) {
-                if (IsLocationPermission()) {
-                    notifyIfInRadius();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            radius = prefs.getString("radius", "");
+
+            if (prefs.getBoolean("notifications_new_message", false)) {
+                if (prefs.getBoolean("notifications_radius", false)) {
+                    if (IsLocationPermission()) {
+                        notifyIfInRadius();
+                    }
+                } else {
+                    notifyNewReport();
                 }
-            } else {
-                notifyToUser();
             }
+        } else if (remoteMessage.getData().get("type").equals("notifyScannerEnlisted")) {
+            title = remoteMessage.getData().get("title");
+            notifyScannerEnlisted();
         }
     }
 
@@ -115,7 +123,7 @@ public class MessagingService extends FirebaseMessagingService {
 
                     if (distances != null) {
                         if (distances.get(0) <= Integer.valueOf(radius)) {
-                            notifyToUser();
+                            notifyNewReport();
                         }
                     }
                 }
@@ -123,7 +131,7 @@ public class MessagingService extends FirebaseMessagingService {
         });
     }
 
-    private void notifyToUser() {
+    private void notifyNewReport() {
         DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(reportId);
 
         reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -153,6 +161,54 @@ public class MessagingService extends FirebaseMessagingService {
                 Notification n = new Notification.Builder(MessagingService.this)
                         .setContentTitle("התקבל דיווח חדש")
                         .setContentText("דיווח חדש בכתובת " + address)
+                        .setSmallIcon(R.drawable.dog_icon)
+                        .setColor(getResources().getColor(R.color.colorAccent))
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setAutoCancel(true)
+                        .setContentIntent(resultPendingIntent)
+                        .build();
+
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                if (notificationManager != null) {
+                    notificationManager.notify(0, n);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void notifyScannerEnlisted() {
+        DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(reportId);
+
+        reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Report report = dataSnapshot.getValue(Report.class);
+                report.setId(reportId);
+
+                Intent resultIntent = new Intent(getApplicationContext(), ReportViewScannerActivity.class);
+
+                resultIntent.putExtra("Report", report);
+
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(
+                                getApplicationContext(),
+                                (int) System.currentTimeMillis(),
+                                resultIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+
+
+                Notification n = new Notification.Builder(MessagingService.this)
+                        .setContentTitle(title)
+                        .setContentText("אנא סמן יצאתי לדרך כשאתה מוכן")
                         .setSmallIcon(R.drawable.dog_icon)
                         .setColor(getResources().getColor(R.color.colorAccent))
                         .setPriority(Notification.PRIORITY_HIGH)
