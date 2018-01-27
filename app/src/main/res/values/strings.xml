@@ -102,4 +102,6 @@
     <string name="closing_reason_headline">סיבת הסגירה:</string>
     <string name="cancellation_reason_headline">סיבת הביטול:</string>
     <string name="report_cancelled_by_headline">בוטל על ידי:</string>
+    <string name="share">שתף</string>
+    <string name="need_permission">לא ניתן יהיה לשתף את תמונת הדיווח ללא הרשאה זו</string>
 </resources>

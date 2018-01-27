@@ -15,7 +15,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +28,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.Report.getLastReportStartTime;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
@@ -59,7 +57,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                     //mRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.report_list_progress_bar).setVisibility(View.GONE);
                     reportListLayout.setVisibility(View.VISIBLE);
-                    Log.d(TAG,"set ui visible");
+                    Log.d(TAG, "set ui visible");
                 }
             };
 
@@ -157,10 +155,10 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         user.checkCreds(new MyCallBackClass() {
             @Override
             public void execute() {
-                if(getUser().getIsManager()) {
+                if (getUser().getIsManager()) {
                     navigationView.getMenu().getItem(1).setVisible(false);
 
-                }else{
+                } else {
                     navigationView.getMenu().getItem(1).setVisible(true);
                 }
 
@@ -232,7 +230,11 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
             if (websiteIntent.resolveActivity(getPackageManager()) != null)
                 startActivity(websiteIntent);
         } else if (id == R.id.nav_share) {
-
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "דווחו על כלבים אבודים דרך אפליקציית הסורקים" + "\nhttps://play.google.com/store/apps/details?id=il.ac.tau.cloudweb17a.hasorkim");
+            shareIntent.setType("text/plain");
+            startActivity(shareIntent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

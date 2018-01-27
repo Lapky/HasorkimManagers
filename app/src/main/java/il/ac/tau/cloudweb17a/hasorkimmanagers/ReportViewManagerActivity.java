@@ -1,10 +1,23 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,8 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,15 +38,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
+
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class ReportViewManagerActivity extends AppCompatActivity {
 
 
     private Report report;
-
+    private ShareActionProvider mShareActionProvider;
     final String TAG = ReportViewManagerActivity.class.getSimpleName();
+    private String imagePath = null;
+
+    private static final int EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 102;
 
     ArrayList<Scanner> scannerList;
 
@@ -151,6 +177,47 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
             }
         });
+
+        requestPermission();
+    }
+
+
+    private void requestPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
+        } else {
+            downloadImage();
+        }
+    }
+
+    private void downloadImage() {
+        if (report.getImageUrl() != null) {
+            Glide.with(this).asBitmap().load(report.getImageUrl()).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    saveImage(resource);
+                    setShareIntent();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: {
+                if ((grantResults.length > 0) &&
+                        (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    downloadImage();
+                } else Toast.makeText(this, R.string.need_permission,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void updateInactiveReport(String status) {
@@ -322,6 +389,68 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         vwParentRow.refreshDrawableState();
 
         //Log.d(TAG, scanner_name.getText().toString());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        setShareIntent();
+
+        // Return true to display menu
+        return true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent() {
+        Intent shareIntent = new Intent();
+        shareIntent.setType("text/plain");
+
+        if (imagePath != null) {
+            Uri photoURI = FileProvider.getUriForFile(ReportViewManagerActivity.this,
+                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                    new File(imagePath));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
+            shareIntent.setType("image/jpeg");
+        }
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "אני מנהל דיווח על כלב אבוד ברחוב " + report.getAddress() + " דרך אפליקציית הסורקים" +
+                "\n" +
+                "רוצה לדווח גם?" +
+                " הורד את האפליקיה https://play.google.com/store/apps/details?id=il.ac.tau.cloudweb17a.hasorkim");
+        mShareActionProvider.setShareIntent(shareIntent);
+    }
+
+    private void saveImage(Bitmap image) {
+        String savedImagePath = null;
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + ".jpg";
+        File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+        boolean success = true;
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs();
+        }
+        if (success) {
+            File imageFile = new File(storageDir, imageFileName);
+            savedImagePath = imageFile.getAbsolutePath();
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        imagePath = savedImagePath;
     }
 
     /*

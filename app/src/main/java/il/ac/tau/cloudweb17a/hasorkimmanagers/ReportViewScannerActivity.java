@@ -1,16 +1,30 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,18 +37,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportViewScannerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "ReportViewScanner";
-    private GoogleMap mMap;
+    private static final String TAG = ReportViewScannerActivity.class.getSimpleName();
+    private ShareActionProvider mShareActionProvider;
+    private static final int EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 102;
+
+
     private static final int DEFAULT_ZOOM = 15;
 
     private Report report;
     private String userId;
+    private String imagePath = null;
 
 
     public void refreshUI() {
@@ -107,6 +131,44 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         }
     }
 
+    private void requestPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
+        } else {
+            downloadImage();
+        }
+    }
+
+    private void downloadImage() {
+        if (report.getImageUrl() != null) {
+            Glide.with(this).asBitmap().load(report.getImageUrl()).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    saveImage(resource);
+                    setShareIntent();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: {
+                if ((grantResults.length > 0) &&
+                        (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    downloadImage();
+                } else Toast.makeText(this, R.string.need_permission,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     Button buttonEnlist;
     Button buttonUnenlist;
     Button scannerOnTheWay;
@@ -116,7 +178,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_view_scanner);
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.scanner_map);
@@ -214,16 +275,79 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
         });
 
+        requestPermission();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        GoogleMap mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
         LatLng location = new LatLng(report.getLatitude(), report.getLongitude());
         mMap.addMarker(new MarkerOptions().position(location).title("מיקום הדיווח")).showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        setShareIntent();
+
+        // Return true to display menu
+        return true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent() {
+        Intent shareIntent = new Intent();
+        shareIntent.setType("text/plain");
+
+        if (imagePath != null) {
+            Uri photoURI = FileProvider.getUriForFile(ReportViewScannerActivity.this,
+                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                    new File(imagePath));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
+            shareIntent.setType("image/jpeg");
+        }
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "יצאתי לסרוק כלב אבוד ברחוב " + report.getAddress() + " דרך אפליקציית הסורקים" +
+                "\n" +
+                "רוצה לדווח גם?" +
+                " הורד את האפליקיה https://play.google.com/store/apps/details?id=il.ac.tau.cloudweb17a.hasorkim");
+        mShareActionProvider.setShareIntent(shareIntent);
+    }
+
+    private void saveImage(Bitmap image) {
+        String savedImagePath = null;
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + ".jpg";
+        File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+        boolean success = true;
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs();
+        }
+        if (success) {
+            File imageFile = new File(storageDir, imageFileName);
+            savedImagePath = imageFile.getAbsolutePath();
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        imagePath = savedImagePath;
     }
 
 
