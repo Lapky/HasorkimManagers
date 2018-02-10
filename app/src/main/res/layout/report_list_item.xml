@@ -80,32 +80,59 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/scanners_number_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/report_address"
             android:paddingTop="@dimen/report_date_padding"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/numberScannersTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/number_of_scanners"
                 android:textSize="@dimen/standard_text_size"
                 android:textStyle="bold"
-                android:textColor="@color/reportListColor"
-                android:visibility="gone" />
+                android:textColor="@color/reportListColor" />
 
             <TextView
-                android:id="@+id/numberScanners"
+                android:id="@+id/scanners_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.2"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/standard_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/manager_in_charge_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scanners_number_layout"
+            android:paddingTop="@dimen/report_date_padding"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/manager_of_report"
+                android:textSize="@dimen/standard_text_size"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:textColor="@color/reportListColor" />
+
+            <TextView
+                android:id="@+id/manager_in_charge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/standard_text_size"
+                android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
 

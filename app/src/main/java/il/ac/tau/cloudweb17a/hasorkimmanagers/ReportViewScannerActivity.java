@@ -349,16 +349,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         }
         imagePath = savedImagePath;
     }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
-        finish();
-
-    }
-
 }
 
 

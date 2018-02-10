@@ -54,8 +54,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         private final TextView timeView;
         private final TextView dateView;
         private final TextView arrowNavigation;
-        private final TextView numberScanners;
-        private final TextView numberScannersTitle;
+        private final LinearLayout scannersNumberLayout;
+        private final TextView scannersNumber;
+        private final LinearLayout mangaerInChargeLayout;
+        private final TextView mangaerInCharge;
         private final TextView distance;
         private final TextView distanceReportTitle;
         private Report mReport;
@@ -71,8 +73,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             timeView = v.findViewById(R.id.report_time);
             dateView = v.findViewById(R.id.report_date);
             arrowNavigation = v.findViewById(R.id.arrow_navigation);
-            numberScanners = v.findViewById(R.id.numberScanners);
-            numberScannersTitle = v.findViewById(R.id.numberScannersTitle);
+            scannersNumberLayout = v.findViewById(R.id.scanners_number_layout);
+            scannersNumber = v.findViewById(R.id.scanners_number);
+            mangaerInChargeLayout = v.findViewById(R.id.manager_in_charge_layout);
+            mangaerInCharge = v.findViewById(R.id.manager_in_charge);
             distance = v.findViewById(R.id.distanceReport);
             distanceReportTitle = v.findViewById(R.id.distanceReportTitle);
             context = v.getContext();
@@ -108,24 +112,46 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 distanceReportTitle.setVisibility(View.VISIBLE);
                 distance.setText(report.getDuration());
 
-            } else {
+            }
+            else {
                 if (!(report.getStatus().equals("CLOSED") || report.getStatus().equals("CANCELED"))) {
                     String numOfScanners = Integer.toString(report.getAvailableScanners());
-                    numberScanners.setText(numOfScanners);
-                    numberScanners.setVisibility(View.VISIBLE);
-                    numberScannersTitle.setVisibility(View.VISIBLE);
+                    scannersNumber.setText(numOfScanners);
+                    scannersNumberLayout.setVisibility(View.VISIBLE);
                     arrowNavigation.setPadding(0,42,0,0);
                 }
 
                 StatusLayout.setVisibility(View.VISIBLE);
+
+                String managerInChargeName = report.getManagerInCharge();
+                if (!managerInChargeName.equals("")) {
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(managerInChargeName);
+
+                    mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                User dbUser = user.getValue(User.class);
+                                String managerName = dbUser.getName();
+                                mangaerInCharge.setText(managerName);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    mangaerInChargeLayout.setVisibility(View.VISIBLE);
+                    arrowNavigation.setPadding(0,66,0,0);
+                }
+                else
+                    mangaerInChargeLayout.setVisibility(View.GONE);
             }
-
-            //String potentialScanners = Integer.toString(report.getPotentialScannersSize());
-            //numberScanners.setText(potentialScanners);
         }
-
     }
-
 
     class SortbyDistance implements Comparator<Report> {
         public int compare(Report a, Report b) {
