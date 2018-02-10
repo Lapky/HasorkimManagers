@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -47,26 +48,29 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     // you provide access to all the views for a data item in a view holder
 
     public static class ReportViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView StatusView;
-        public final TextView AddressView;
-        public final TextView timeView;
-        public final TextView numberScanners;
-        public final TextView numberScannersTitle;
-        public final TextView distance;
+        private final LinearLayout StatusLayout;
+        private final TextView StatusView;
+        private final TextView AddressView;
+        private final TextView timeView;
+        private final TextView dateView;
+        private final TextView arrowNavigation;
+        private final TextView numberScanners;
+        private final TextView numberScannersTitle;
+        private final TextView distance;
         private final TextView distanceReportTitle;
-        final String TAG = ReportViewHolder.class.getSimpleName();
-        private final TextView StatusViewTitle;
         private Report mReport;
         private Context context;
-
+        final String TAG = ReportViewHolder.class.getSimpleName();
 
         public ReportViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
+            StatusLayout = v.findViewById(R.id.status_layout);
             StatusView = v.findViewById(R.id.report_status);
-            StatusViewTitle = v.findViewById(R.id.report_status_title);
             AddressView = v.findViewById(R.id.report_address);
             timeView = v.findViewById(R.id.report_time);
+            dateView = v.findViewById(R.id.report_date);
+            arrowNavigation = v.findViewById(R.id.arrow_navigation);
             numberScanners = v.findViewById(R.id.numberScanners);
             numberScannersTitle = v.findViewById(R.id.numberScannersTitle);
             distance = v.findViewById(R.id.distanceReport);
@@ -92,20 +96,30 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             mReport = report;
             StatusView.setText(report.statusInHebrew());
             AddressView.setText(report.getAddress());
-            timeView.setText(report.getStartTimeAsString());
+
+            String reportTime = report.getStartTimeAsString();
+            String time = " ," + reportTime.substring(0, 5);
+            String date = reportTime.substring(6, reportTime.length());
+            timeView.setText(time);
+            dateView.setText(date);
+
             if (!getUser().getIsManager()) {
                 distance.setVisibility(View.VISIBLE);
                 distanceReportTitle.setVisibility(View.VISIBLE);
                 distance.setText(report.getDuration());
 
             } else {
-                numberScanners.setVisibility(View.VISIBLE);
-                numberScannersTitle.setVisibility(View.VISIBLE);
-                StatusView.setVisibility(View.VISIBLE);
-                StatusViewTitle.setVisibility(View.VISIBLE);
+                if (!(report.getStatus().equals("CLOSED") || report.getStatus().equals("CANCELED"))) {
+                    String numOfScanners = Integer.toString(report.getAvailableScanners());
+                    numberScanners.setText(numOfScanners);
+                    numberScanners.setVisibility(View.VISIBLE);
+                    numberScannersTitle.setVisibility(View.VISIBLE);
+                    arrowNavigation.setPadding(0,42,0,0);
+                }
+
+                StatusLayout.setVisibility(View.VISIBLE);
             }
 
-            numberScanners.setText(Integer.toString(report.getAvailableScanners()));
             //String potentialScanners = Integer.toString(report.getPotentialScannersSize());
             //numberScanners.setText(potentialScanners);
         }

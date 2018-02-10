@@ -57,8 +57,7 @@ public class Report implements java.io.Serializable {
 
 
     private boolean isScannerEnlistedStatus;
-    //private boolean isManagerEnlistedStatus;
-
+    private String managerInCharge;
 
     private double latitude;
     private double longitude;
@@ -372,6 +371,19 @@ public class Report implements java.io.Serializable {
 
     }
 
+    /**
+     *
+     * @param userId
+     */
+    public void reportUpdateManagerInCharge(String userId) {
+        this.setManagerInCharge(userId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String, Object> reportMap = new HashMap<>();
+        reportMap.put("managerInCharge", userId);
+        reportsRef.updateChildren(reportMap);
+    }
+
     public void updateOnTheWayTimestamp() {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
                 .format(new java.util.Date());
@@ -580,5 +592,13 @@ public class Report implements java.io.Serializable {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public String getManagerInCharge() {
+        return managerInCharge;
+    }
+
+    public void setManagerInCharge(String managerInCharge) {
+        this.managerInCharge = managerInCharge;
     }
 }

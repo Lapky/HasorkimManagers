@@ -44,13 +44,14 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
     // you provide access to all the views for a data item in a view holder
 
     public static class ReportViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView StatusView;
-        final TextView AddressView;
-        final TextView dateView;
-        final TextView timeView;
-        final String TAG = "ViewHolder";
+        private final TextView StatusView;
+        private final TextView AddressView;
+        private final TextView dateView;
+        private final TextView timeView;
+        private final TextView arrowNavigation;
         private Report mReport;
         private Context context;
+        final String TAG = "ViewHolder";
 
         public ReportViewHolder(View v) {
             super(v);
@@ -59,6 +60,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
             AddressView = v.findViewById(R.id.report_address);
             dateView = v.findViewById(R.id.report_date);
             timeView = v.findViewById(R.id.report_time);
+            arrowNavigation = v.findViewById(R.id.arrow_navigation);
             context = v.getContext();
         }
 
@@ -76,10 +78,13 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
             AddressView.setText(report.getAddress());
 
             String reportTime = report.getStartTimeAsString();
+            String time = " ," + reportTime.substring(0, 5);
             String date = reportTime.substring(6, reportTime.length());
-            String time = reportTime.substring(0, 5);
-            dateView.setText(date);
             timeView.setText(time);
+            dateView.setText(date);
+
+            if (report.getStatus().equals("MANAGER_ASSIGNED_SCANNER"))
+                arrowNavigation.setPadding(0,42,0,0);
         }
 
     }

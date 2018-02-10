@@ -42,7 +42,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
     private FusedLocationProviderClient mFusedLocationProviderClient;
     RadioGroup isOnlyOpenGroup;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean isOnlyOpen = false;
+    private boolean isOnlyOpen = true;
     private int numberOfReports = 10;
     private int numberOfReportsToAdd = 10;
     ReportAdapter mAdapter;

@@ -37,30 +37,32 @@
                 android:visibility="gone">
 
                 <RadioButton
-                    android:id="@+id/all_reports_button"
+                    android:id="@+id/open_reports_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:text="@string/open_reports"
                     android:paddingEnd="@dimen/double_padding"
-                    android:text="@string/all_reports"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <RadioButton
-                    android:id="@+id/open_reports_button"
+                    android:id="@+id/all_reports_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="@string/open_reports"
+                    android:text="@string/all_reports"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+
             </RadioGroup>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="23"
+                android:layout_weight="28"
                 android:scrollbars="vertical" />
 
         </LinearLayout>

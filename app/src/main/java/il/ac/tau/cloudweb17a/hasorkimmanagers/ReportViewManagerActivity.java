@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
+import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
 public class ReportViewManagerActivity extends AppCompatActivity {
 
@@ -55,10 +56,9 @@ public class ReportViewManagerActivity extends AppCompatActivity {
     private ShareActionProvider mShareActionProvider;
     final String TAG = ReportViewManagerActivity.class.getSimpleName();
     private String imagePath = null;
-
     private static final int EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 102;
-
     ArrayList<Scanner> scannerList;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_view_manager);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-
+        userId = getUser().getId();
         scannerList = new ArrayList<>();
         final ScannerAdapter adapter = new ScannerAdapter(this, scannerList);
 
@@ -89,6 +89,8 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
         TextView managerReportPhoneNumber = findViewById(R.id.managerReportPhoneNumber);
         managerReportPhoneNumber.setText(report.getPhoneNumber());
+
+        final TextView managerInChargeName = findViewById(R.id.manager_in_charge_name);
 
         String comments = report.getFreeText();
         if ((comments != null) && (!comments.isEmpty())) {
@@ -178,7 +180,49 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             }
         });
 
-        requestPermission();
+        DatabaseReference managerRef = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("managerInCharge");
+
+        managerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String userId = dataSnapshot.getValue().toString();
+
+                if (!report.getManagerInCharge().equals(userId))
+                    report.setManagerInCharge(userId);
+
+                if (userId.equals("")) {
+                    managerInChargeName.setText("");
+                    return;
+                }
+
+                Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                        .child("users").orderByChild("id").equalTo(userId);
+
+                mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot user : dataSnapshot.getChildren()) {
+                            User dbUser = user.getValue(User.class);
+                            String managerName = dbUser.getName();
+                            managerInChargeName.setText(managerName);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        requestPermission(); // TODO is there a reason this is here? (Shahar)
     }
 
 
@@ -290,9 +334,35 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * The listener for the "cancel report" button
-     */
+    public void OnManageReportButtonClick(View v) {
+        String managerInCharge = report.getManagerInCharge();
+
+        if (managerInCharge.equals(userId))
+            return;
+
+        if (managerInCharge.equals(""))
+            report.reportUpdateManagerInCharge(userId);
+        else {
+            TextView title = new TextView(this);
+            title.setText(R.string.attention);
+            title.setPadding(10, 50, 64, 9);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(20);
+
+            new AlertDialog.Builder(this).setMessage(R.string.replacing_manager_message)
+                    .setCustomTitle(title)
+                    .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    }).setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    report.reportUpdateManagerInCharge(userId);
+                }
+            }).create().show();
+        }
+    }
+
     public void OnCloseReportButtonClick(View v) {
         TextView title = new TextView(ReportViewManagerActivity.this);
         final EditText editText = new EditText(ReportViewManagerActivity.this);
@@ -323,9 +393,6 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                 .create().show();
     }
 
-    /**
-     * The listener for the "cancel report" button
-     */
     public void OnCancelReportButtonClick(View v) {
         TextView title = new TextView(ReportViewManagerActivity.this);
         final EditText editText = new EditText(ReportViewManagerActivity.this);

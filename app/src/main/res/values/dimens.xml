@@ -16,8 +16,10 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="report_date_padding">5dp</dimen>
     <dimen name="report_status_padding">4dp</dimen>
+    <dimen name="report_item_padding">3dp</dimen>
     <dimen name="report_list_padding">2dp</dimen>
     <dimen name="report_list_item_padding">8dp</dimen>
     <dimen name="report_view_padding">10dp</dimen>
     <dimen name="details_buttons_padding">4dp</dimen>
+    <dimen name="date_and_time_size">12sp</dimen>
 </resources>
