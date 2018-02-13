@@ -91,6 +91,10 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         managerReportPhoneNumber.setText(report.getPhoneNumber());
 
         final TextView managerInChargeName = findViewById(R.id.manager_in_charge_name);
+        final Button setManager = findViewById(R.id.setManager);
+        setManager.setVisibility(View.VISIBLE);
+        final Button deleteManager = findViewById(R.id.deleteManager);
+        deleteManager.setVisibility(View.GONE);
 
         String comments = report.getFreeText();
         if ((comments != null) && (!comments.isEmpty())) {
@@ -182,38 +186,45 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
         DatabaseReference managerRef = FirebaseDatabase.getInstance()
                 .getReference("reports").child(report.getId()).child("managerInCharge");
-
         managerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final String userId = dataSnapshot.getValue().toString();
+                final String currentManagerId = dataSnapshot.getValue().toString();
 
-                if (!report.getManagerInCharge().equals(userId))
-                    report.setManagerInCharge(userId);
+                if (!report.getManagerInCharge().equals(currentManagerId))
+                    report.setManagerInCharge(currentManagerId);
 
-                if (userId.equals("")) {
+                if (currentManagerId.equals(""))
                     managerInChargeName.setText("");
-                    return;
+                else {
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(currentManagerId);
+
+                    mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                User dbUser = user.getValue(User.class);
+                                String managerName = dbUser.getName();
+                                managerInChargeName.setText(managerName);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
-                Query mUserReference = FirebaseDatabase.getInstance().getReference()
-                        .child("users").orderByChild("id").equalTo(userId);
-
-                mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot user : dataSnapshot.getChildren()) {
-                            User dbUser = user.getValue(User.class);
-                            String managerName = dbUser.getName();
-                            managerInChargeName.setText(managerName);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                if (currentManagerId.equals(userId)) {
+                    setManager.setVisibility(View.GONE);
+                    deleteManager.setVisibility(View.VISIBLE);
+                }
+                else {
+                    setManager.setVisibility(View.VISIBLE);
+                    deleteManager.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -334,7 +345,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         }
     }
 
-    public void OnManageReportButtonClick(View v) {
+    public void OnSetManageReportButtonClick(View v) {
         String managerInCharge = report.getManagerInCharge();
 
         if (managerInCharge.equals(userId))
@@ -361,6 +372,26 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                 }
             }).create().show();
         }
+    }
+
+    public void OnDeleteManageReportButtonClick(View v) {
+        TextView title = new TextView(this);
+        title.setText(R.string.attention);
+        title.setPadding(10, 50, 64, 9);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+
+        new AlertDialog.Builder(this).setMessage(R.string.deleting_manager_message)
+                .setCustomTitle(title)
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                }).setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                report.reportUpdateManagerInCharge("");
+            }
+        }).create().show();
     }
 
     public void OnCloseReportButtonClick(View v) {
@@ -443,13 +474,13 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                 sendScanner.setText(R.string.scanner_was_chosen);
                 report.setStatus("MANAGER_ASSIGNED_SCANNER");
                 report.reportUpdateStatus("MANAGER_ASSIGNED_SCANNER", null);
-                view.setBackgroundColor(Color.CYAN);
+                view.setBackgroundColor(getResources().getColor(R.color.deleteScannerColor));
             } else {
                 report.reportUpdateAssignedScanner("");
                 sendScanner.setText(R.string.choose_scanner);
                 report.setStatus("NEW");
                 report.reportUpdateStatus("NEW", null);
-                view.setBackgroundColor(Color.LTGRAY);
+                view.setBackgroundColor(getResources().getColor(R.color.setScannerColor));
             }
         }
 

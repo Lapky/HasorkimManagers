@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_reports"
             android:icon="@drawable/ic_event_note_black_24dp"
-            android:title="@string/reports" />
+            android:title="@string/new_reports" />
 
         <item
             android:id="@+id/nav_my_reports"

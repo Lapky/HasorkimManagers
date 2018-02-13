@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="5.6"
         android:scrollbars="vertical"
         android:layout_marginBottom="@dimen/report_list_item_padding">
 
@@ -65,7 +65,7 @@
                     android:id="@+id/activeReportLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.8"
+                    android:layout_weight="1.4"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
@@ -91,7 +91,7 @@
                     android:id="@+id/activeReportArrivalTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.8"
+                    android:layout_weight="1.4"
                     android:text="@string/report_scanner_view_estimated_time_arrival"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/report_item_text_size"
@@ -116,7 +116,7 @@
                     android:id="@+id/activeReportOpenTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.8"
+                    android:layout_weight="1.4"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
@@ -206,7 +206,36 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/managerInChargeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/report_status_padding"
+                android:paddingTop="@dimen/report_status_padding"
+                android:textStyle="bold"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/manager_of_report"
+                    android:textSize="@dimen/report_item_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/managerInChargeName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.4"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/report_item_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <ImageView
+                android:paddingTop="@dimen/report_status_padding"
                 android:id="@+id/scannerReportImage"
                 android:layout_width="250dp"
                 android:layout_height="225dp"
@@ -221,7 +250,7 @@
         android:id="@+id/scannerMapLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_weight="2.7">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -238,29 +267,38 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.1"
         android:text="@string/I_am_available_for_scan"
-        android:textSize="@dimen/button_text_size" />
+        android:textSize="@dimen/button_text_size"
+        android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/scannerOnTheWay"
-        style="@style/Widget.AppCompat.Button.Colored"
+    <LinearLayout
+        android:id="@+id/enlistedScannerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:text="@string/on_my_way_to_scan"
-        android:textSize="@dimen/button_text_size"
-        android:visibility="gone" />
+        android:layout_weight="1.1"
+        android:visibility="gone">
 
-    <Button
-        android:id="@+id/scannerCancelEnlistment"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:text="@string/unavailable_for_scan"
-        android:textSize="@dimen/button_text_size"
-        android:visibility="gone" />
+        <Button
+            android:id="@+id/scannerOnTheWay"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/on_my_way_to_scan"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/scannerCancelEnlistment"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:text="@string/unavailable_for_scan"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
 </LinearLayout>

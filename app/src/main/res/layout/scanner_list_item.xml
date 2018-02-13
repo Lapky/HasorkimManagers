@@ -81,6 +81,7 @@
         android:onClick="sendScannerHandler"
         android:text="@string/choose_scanner"
         android:textColor="@android:color/black"
+        android:background="@color/setScannerColor"
         android:textSize="16sp"
         android:textStyle="bold" />
 

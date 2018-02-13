@@ -35,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
@@ -106,19 +107,24 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         /*}*/
 
         if ((Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId)))
-            buttonEnlist.setVisibility(LinearLayout.GONE);
-        else
-            buttonEnlist.setVisibility(LinearLayout.VISIBLE);
+            buttonEnlist.setVisibility(View.GONE);
+        else {
+            buttonEnlist.setVisibility(View.VISIBLE);
+            enlistedScannerLayout.setVisibility(View.GONE);
+        }
 
-        if (report.isScannerEnlisted(userId))
-            buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
+        if (report.isScannerEnlisted(userId)) {
+            buttonUnenlist.setVisibility(View.VISIBLE);
+            enlistedScannerLayout.setVisibility(View.VISIBLE);
+        }
         else
-            buttonUnenlist.setVisibility(LinearLayout.GONE);
+            buttonUnenlist.setVisibility(View.GONE);
 
         if (Objects.equals(report.getAssignedScanner(), userId) && !Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) {
-            scannerOnTheWay.setVisibility(LinearLayout.VISIBLE);
+            scannerOnTheWay.setVisibility(View.VISIBLE);
+            enlistedScannerLayout.setVisibility(View.VISIBLE);
         } else
-            scannerOnTheWay.setVisibility(LinearLayout.GONE);
+            scannerOnTheWay.setVisibility(View.GONE);
 
         if (Objects.equals(report.getAssignedScanner(), userId)) {
             ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
@@ -173,6 +179,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
     Button buttonUnenlist;
     Button scannerOnTheWay;
     boolean isScannerEnlisted;
+    LinearLayout enlistedScannerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +231,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         buttonEnlist = findViewById(R.id.scannerAvailable);
         buttonUnenlist = findViewById(R.id.scannerCancelEnlistment);
         scannerOnTheWay = findViewById(R.id.scannerOnTheWay);
-
+        enlistedScannerLayout = findViewById(R.id.enlistedScannerLayout);
 
         buttonEnlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,7 +282,49 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
         });
 
-        requestPermission();
+        final LinearLayout managerInChargeLayout = findViewById(R.id.managerInChargeLayout);
+        final TextView managerInChargeName = findViewById(R.id.managerInChargeName);
+
+        DatabaseReference managerRef = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("managerInCharge");
+        managerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String currentManagerId = dataSnapshot.getValue().toString();
+
+                if (currentManagerId.equals(""))
+                    managerInChargeLayout.setVisibility(View.GONE);
+                else {
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(currentManagerId);
+
+                    mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                User dbUser = user.getValue(User.class);
+                                String managerName = dbUser.getName();
+                                managerInChargeName.setText(managerName);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    managerInChargeLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        requestPermission(); // TODO is there a reason this is here? (Shahar)
     }
 
     @Override

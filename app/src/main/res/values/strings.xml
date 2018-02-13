@@ -45,7 +45,7 @@
     <string name="pref_title_notification_radius">קבע הגבלת התראות</string>
     <string name="all_reports">כל הדיווחים</string>
     <string name="open_reports">דיווחים פתוחים</string>
-    <string name="reports">דיווחים פעילים</string>
+    <string name="new_reports">דיווחים חדשים</string>
     <string name="my_reports">הדיווחים שלי</string>
     <string name="setting">הגדרות</string>
     <string name="Share">שתף</string>
@@ -63,7 +63,7 @@
     <string name="overall_open_reports">סה\"כ דיווחים שנפתחו באפליקציה</string>
     <string name="average_new_time">זמן ממוצע מפתיחת דיווח עד יציאה של סורק</string>
     <string name="I_am_available_for_scan">אני פנוי/ה לסריקה</string>
-    <string name="unavailable_for_scan">ביטול הרשמה לסריקה</string>
+    <string name="unavailable_for_scan">ביטול הרשמה</string>
     <string name="on_my_way_to_scan">יצאתי לדרך</string>
     <string name="report_scanner_view_photo">תמונה:</string>
     <string name="report_scanner_view_name">שם:</string>
@@ -72,7 +72,7 @@
     <string name="report_scanner_view_status">סטטוס:</string>
     <string name="report_scanner_view_address">כתובת:</string>
     <string name="report_scanner_view_time">זמן פתיחה:</string>
-    <string name="estimated_arrival_time">זמן הגעה משוער:</string>
+    <string name="estimated_arrival_time">זמן נסיעה משוער:</string>
     <string name="report_scanner_view_estimated_time_arrival">לא ניתן לחשב זמן הגעה</string>
     <string name="report_manager_view_status">סטטוס:</string>
     <string name="report_manager_view_address">כתובת:</string>
@@ -107,6 +107,9 @@
     <string name="confirm">אישור</string>
     <string name="attention"><b>שים/י לב!</b></string>
     <string name="replacing_manager_message">כבר קיים מנהל אשר הדיווח בטיפולו. האם את/ה בטוח/ה שברצונך להחליף את המנהל הנוכחי?</string>
+    <string name="deleting_manager_message">האם את/ה בטוח/ה שברצונך למחוק את שמך מניהול הדיווח? לחיצה על אישור תשאיר את שם מנהל הדיווח ריק</string>
     <string name="take_charge_of_report">ניהול דיווח</string>
     <string name="manager_of_report">מנהל/ת הדיווח:</string>
+    <string name="delete_charge_of_report">ביטול ניהול</string>
+    <string name="to_my_reports_list">לרשימת הדיווחים שלי</string>
 </resources>
