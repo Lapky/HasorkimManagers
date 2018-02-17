@@ -88,7 +88,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                             }
                         }
                 );
-                isOnlyOpenGroup.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,170));
+                isOnlyOpenGroup.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,165));
                 isOnlyOpenGroup.setVisibility(View.VISIBLE);
                 setUIVisible.execute();
             }

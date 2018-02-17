@@ -12,4 +12,5 @@
     <color name="reportListColor">#37474F</color>
     <color name="setScannerColor">#BDBDBD</color>
     <color name="deleteScannerColor">#00FFFF</color>
+    <color name="statisticsColor">#00E676</color>
 </resources>

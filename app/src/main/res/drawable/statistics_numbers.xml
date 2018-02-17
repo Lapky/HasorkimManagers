@@ -1,0 +1,15 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@color/statisticsColor"/>
+
+    <stroke
+        android:width="2dp"
+        android:color="@android:color/black"/>
+
+    <corners
+        android:bottomLeftRadius="@dimen/statistics_text_circle_radius"
+        android:bottomRightRadius="@dimen/statistics_text_circle_radius"
+        android:topLeftRadius="@dimen/statistics_text_circle_radius"
+        android:topRightRadius="@dimen/statistics_text_circle_radius" />
+
+</shape>

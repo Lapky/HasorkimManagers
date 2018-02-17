@@ -22,4 +22,7 @@
     <dimen name="report_view_padding">10dp</dimen>
     <dimen name="details_buttons_padding">4dp</dimen>
     <dimen name="date_and_time_size">12sp</dimen>
+    <dimen name="statistics_text_size">22sp</dimen>
+    <dimen name="statistics_text_circle_size">80dp</dimen>
+    <dimen name="statistics_text_circle_radius">40dp</dimen>
 </resources>
