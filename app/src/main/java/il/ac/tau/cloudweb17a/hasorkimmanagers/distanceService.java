@@ -145,10 +145,6 @@ public class distanceService {
 
                         Log.d(TAG, "get curr location: "+ Double.toString(myLatLong.Lat) + "," + Double.toString(myLatLong.Long));
                     }
-                    else {
-                        System.out.println("Current location is null. Using defaults.");
-                        System.out.println("Exception: " + task.getException());
-                    }
 
                     showList.execute();
                 }
