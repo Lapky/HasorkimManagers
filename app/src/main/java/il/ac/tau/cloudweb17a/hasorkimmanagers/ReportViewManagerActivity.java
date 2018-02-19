@@ -66,7 +66,6 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_view_manager);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-
         scannerList = new ArrayList<>();
         final ScannerAdapter adapter = new ScannerAdapter(this, scannerList);
 
@@ -89,15 +88,6 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
         TextView managerReportPhoneNumber = findViewById(R.id.managerReportPhoneNumber);
         managerReportPhoneNumber.setText(report.getPhoneNumber());
-
-        Boolean isDogWithReporter = report.getIsDogWithReporter();
-        if (isDogWithReporter) {
-            TextView managerReportIsDogWithReporter_Yes = findViewById(R.id.managerReportIsDogWithReporter_Yes);
-            TextView managerReportIsDogWithReporter_No = findViewById(R.id.managerReportIsDogWithReporter_No);
-
-            managerReportIsDogWithReporter_Yes.setVisibility(View.VISIBLE);
-            managerReportIsDogWithReporter_No.setVisibility(View.GONE);
-        }
 
         String comments = report.getFreeText();
         if ((comments != null) && (!comments.isEmpty())) {

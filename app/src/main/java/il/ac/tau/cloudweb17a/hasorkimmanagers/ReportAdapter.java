@@ -78,7 +78,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         public void onClick(View v) {
 
             Intent intent;
-
             if (getUser().getIsManager())
                 intent = new Intent(context, ReportViewManagerActivity.class);
             else

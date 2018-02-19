@@ -191,7 +191,10 @@ public class Report implements java.io.Serializable {
         return this.status;
     }
 
+    private String previousStatus;
+
     public void setStatus(String status) {
+        this.previousStatus = this.status;
         this.status = status;
     }
 
@@ -296,7 +299,23 @@ public class Report implements java.io.Serializable {
         this.incrementalReportId = nextIncrementalId;
     }
 
+    public void logReportUpdateStatus(String status){
+
+        User user = getUser();
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SS")
+                .format(new java.util.Date());
+
+        DatabaseReference logRef = FirebaseDatabase.getInstance().getReference("status_logs")
+                .child(this.getId()).child(timeStamp);
+
+        logRef.child("report").setValue(this);
+        logRef.child("user").setValue(user);
+        logRef.child("oldStatus").setValue(this.previousStatus);
+        logRef.child("newStatus").setValue(status);
+    }
     public void reportUpdateStatus(String status, ReportListActivity.MyCallBackClass myCallBackClass) {
+        this.logReportUpdateStatus(status);
+
         String dbStatus = status;
         if (Objects.equals(dbStatus, "SCANNER_ENLISTED")) {
             dbStatus = "NEW";
