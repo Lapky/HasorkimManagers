@@ -90,6 +90,15 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         TextView managerReportPhoneNumber = findViewById(R.id.managerReportPhoneNumber);
         managerReportPhoneNumber.setText(report.getPhoneNumber());
 
+        Boolean isDogWithReporter = report.getIsDogWithReporter();
+        if (isDogWithReporter) {
+            TextView managerReportIsDogWithReporter_Yes = findViewById(R.id.managerReportIsDogWithReporter_Yes);
+            TextView managerReportIsDogWithReporter_No = findViewById(R.id.managerReportIsDogWithReporter_No);
+
+            managerReportIsDogWithReporter_Yes.setVisibility(View.VISIBLE);
+            managerReportIsDogWithReporter_No.setVisibility(View.GONE);
+        }
+
         String comments = report.getFreeText();
         if ((comments != null) && (!comments.isEmpty())) {
             LinearLayout commentsLayout = findViewById(R.id.managerReportExtraTextLayout);
