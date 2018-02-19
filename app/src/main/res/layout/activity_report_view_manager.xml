@@ -4,16 +4,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="@dimen/report_view_padding"
+    android:paddingTop="@dimen/nav_header_vertical_spacing"
     android:paddingStart="@dimen/report_view_padding"
     android:paddingEnd="@dimen/report_view_padding"
     android:paddingBottom="@dimen/details_buttons_padding"
     tools:context="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportViewManagerActivity">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/report_list_item_padding"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/report_manager_view_status"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/managerReportStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="@dimen/manager_view_status_padding"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <ScrollView
+        android:id="@+id/report_details_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5.5"
+        android:layout_weight="5"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -25,39 +52,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/report_view_padding"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/report_manager_view_status"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/managerReportStatus"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:gravity="start"
-                    android:paddingStart="@dimen/report_status_padding"
-                    android:textColor="@android:color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/report_status_padding">
+                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:layout_marginBottom="@dimen/report_status_padding">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8sp"
                     android:layout_weight="1"
                     android:text="@string/report_manager_view_address"
                     android:textSize="@dimen/report_item_text_size"
@@ -67,7 +68,7 @@
                     android:id="@+id/managerReportLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4.5"
+                    android:layout_weight="2.6"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
@@ -76,8 +77,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/report_status_padding"
-                android:orientation="horizontal">
+                android:paddingBottom="@dimen/report_view_padding"
+                android:orientation="horizontal"
+                android:background="@drawable/manger_view_border">
 
                 <TextView
                     android:layout_width="0dp"
@@ -91,93 +93,147 @@
                     android:id="@+id/managerReportOpenTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.8"
+                    android:layout_weight="2.6"
                     android:textColor="@android:color/black"
-                    android:textSize="@dimen/report_item_text_size"
+                    android:textSize="@dimen/standard_text_size"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/report_list_item_padding"
-                android:layout_marginTop="@dimen/report_status_padding"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:paddingBottom="@dimen/report_view_padding">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="@string/report_view_manager_reporter_name"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/managerReportReporterName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/details_buttons_padding"
+                        android:layout_weight="2.6"
+                        android:gravity="right"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/report_status_padding"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="@string/report_view_manager_phone_number"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/managerReportPhoneNumber"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/details_buttons_padding"
+                        android:layout_weight="2.6"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/managerReportExtraTextLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/report_list_item_padding"
-                android:paddingTop="@dimen/report_status_padding"
-                android:textStyle="bold">
-
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/managerReportExtraPhoneNumberLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/report_view_manager_comments"
-                    android:textSize="@dimen/report_item_text_size"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/managerReportExtraText"
-                    android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/report_view_manager_extra_phone_number"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/managerReportExtraPhoneNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.6"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/managerReportExtraTextLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
-                    android:text="@string/comments_were_not_reported"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/report_item_text_size"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="@dimen/report_status_padding"
+                    android:orientation="horizontal"
+                    android:textStyle="bold"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/report_view_manager_comments"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/managerReportExtraText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.45"
+                        android:gravity="right"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/managerReportIsDogWithReporter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/report_status_padding"
+                    android:textStyle="bold">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.55"
+                        android:text="@string/is_dog_with_reporter"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/isDogWithReporter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/report_item_distance_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <ImageView
@@ -185,8 +241,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:maxHeight="200dp"
-                android:maxWidth="200dp"
+                android:paddingTop="@dimen/report_status_padding"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/report_photo_description"
+                android:maxHeight="@dimen/image_manager_view"
+                android:maxWidth="@dimen/image_manager_view"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -197,18 +256,21 @@
         android:id="@+id/availableScannersLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:layout_weight="2.5"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/report_list_item_padding"
+        android:layout_marginBottom="@dimen/report_list_item_padding"
+        android:background="@drawable/available_scanners_border">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/report_list_item_padding"
+            android:paddingTop="@dimen/report_list_item_padding"
             android:gravity="center"
             android:text="@string/report_view_manager_available_scanners"
             android:textColor="@android:color/black"
-            android:paddingBottom="@dimen/report_status_padding"
-            android:textSize="20sp"
+            android:paddingBottom="@dimen/scanners_list_padding"
+            android:textSize="@dimen/available_scanner_title"
             android:textStyle="bold" />
 
         <ListView
@@ -281,10 +343,12 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/managing_report"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/report_item_padding"
+        android:background="@drawable/available_scanners_border">
 
         <TextView
             android:layout_width="0dp"
@@ -314,8 +378,8 @@
             android:onClick="OnSetManageReportButtonClick"
             android:text="@string/take_charge_of_report"
             android:textColor="@android:color/black"
-
-            android:textSize="@dimen/standard_text_size"
+            android:background="@color/setScannerColor"
+            android:textSize="@dimen/report_item_text_size"
             android:textStyle="bold" />
 
         <Button
@@ -327,7 +391,7 @@
             android:onClick="OnDeleteManageReportButtonClick"
             android:text="@string/delete_charge_of_report"
             android:textColor="@android:color/black"
-
+            android:background="@color/setScannerColor"
             android:textSize="@dimen/standard_text_size"
             android:textStyle="bold" />
     </LinearLayout>
@@ -335,8 +399,7 @@
     <LinearLayout
         android:id="@+id/viewManagerButtonsLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/closeReportButton"
@@ -346,7 +409,7 @@
             android:layout_weight="1"
             android:onClick="OnCloseReportButtonClick"
             android:text="@string/manager_close_report"
-            android:textSize="@dimen/button_text_size"
+            android:textSize="@dimen/managers_buttons_size"
             android:textStyle="bold"/>
 
         <Button
@@ -357,7 +420,7 @@
             android:layout_weight="1"
             android:onClick="OnCancelReportButtonClick"
             android:text="@string/manager_delete_report"
-            android:textSize="@dimen/button_text_size"
+            android:textSize="@dimen/managers_buttons_size"
             android:textStyle="bold"/>
 
     </LinearLayout>

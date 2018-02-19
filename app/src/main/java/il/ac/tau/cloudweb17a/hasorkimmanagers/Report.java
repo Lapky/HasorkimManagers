@@ -46,7 +46,6 @@ public class Report implements java.io.Serializable {
     private Set<String> potentialScanners;
 
 
-    private String closingText;
     private String cancellationText;
     private String cancellationUserType;
     private String userId;
@@ -183,7 +182,6 @@ public class Report implements java.io.Serializable {
         if (Objects.equals(this.status, "NEW")) {
             if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
-            //if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
             return "NEW";
         }
 
@@ -218,10 +216,6 @@ public class Report implements java.io.Serializable {
 
     public String getCancellationText() {
         return cancellationText;
-    }
-
-    public String getClosingText() {
-        return closingText;
     }
 
     public int getIncrementalReportId() {
@@ -268,10 +262,6 @@ public class Report implements java.io.Serializable {
         this.cancellationText = cancellationText;
     }
 
-    public void setClosingText(String closingText) {
-        this.closingText = closingText;
-    }
-
     @Exclude
     public void setIncrementalReportId() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -302,19 +292,11 @@ public class Report implements java.io.Serializable {
             this.setIsScannerEnlistedStatus(true);
         }
 
-        /*
-        if (Objects.equals(dbStatus, "MANAGER_ENLISTED")) {
-            dbStatus = "NEW";
-            this.setIsManagerEnlistedStatus(true);
-        }
-        */
-
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String, Object> reportMap = new HashMap<>();
         reportMap.put("status", dbStatus);
         reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
-        //reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
         reportsRef.updateChildren(reportMap);
         if (myCallBackClass != null)
             myCallBackClass.execute();
@@ -336,12 +318,7 @@ public class Report implements java.io.Serializable {
     }
 
     public void reportUpdateClosingText(String closingText) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String, Object> reportMap = new HashMap<String, Object>();
-        setClosingText(closingText);
-        reportMap.put("closingText", closingText);
-        reportsRef.updateChildren(reportMap);
+        reportUpdateCancellationText(closingText);
     }
 
     public void reportUpdateCancellationText(String cancellationText) {
@@ -523,16 +500,6 @@ public class Report implements java.io.Serializable {
     public void setIsScannerEnlistedStatus(boolean scannerEnlistedStatus) {
         isScannerEnlistedStatus = scannerEnlistedStatus;
     }
-
-    /*
-    public boolean getIsManagerEnlistedStatus() {
-        return isManagerEnlistedStatus;
-    }
-
-    public void setIsManagerEnlistedStatus(boolean ManagerEnlistedStatus) {
-        isManagerEnlistedStatus = ManagerEnlistedStatus;
-    }
-    */
 
     public void setAssignedScanner(String assignedScanner) {
         this.assignedScanner = assignedScanner;

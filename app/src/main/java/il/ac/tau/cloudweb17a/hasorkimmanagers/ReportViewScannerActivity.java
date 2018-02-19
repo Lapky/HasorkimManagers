@@ -254,15 +254,12 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
                 report.subtrectFromPotentialScanners(userId);
                 report.setIsScannerEnlistedStatus(false);
                 if (report.getAvailableScanners() < 1)
-                    report.reportUpdateStatus("NEW", new ReportListActivity.MyCallBackClass() {
-                        @Override
-                        public void execute() {
-                            refreshUI();
-                        }
-                    });
+                    report.reportUpdateStatus("NEW", null);
 
                 if (Objects.equals(report.getAssignedScanner(), userId))
                     report.reportUpdateAssignedScanner("");
+
+                refreshUI();
             }
 
         });

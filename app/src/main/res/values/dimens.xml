@@ -2,6 +2,7 @@
 <resources>
     <dimen name="new_report_size">36sp</dimen>
     <dimen name="button_text_size">24sp</dimen>
+    <dimen name="managers_buttons_size">22sp</dimen>
     <dimen name="standard_padding">16dp</dimen>
     <dimen name="report_item_status_size">17sp</dimen>
     <dimen name="report_item_distance_size">18sp</dimen>
@@ -18,11 +19,15 @@
     <dimen name="report_status_padding">4dp</dimen>
     <dimen name="report_item_padding">3dp</dimen>
     <dimen name="report_list_padding">2dp</dimen>
+    <dimen name="scanners_list_padding">1dp</dimen>
     <dimen name="report_list_item_padding">8dp</dimen>
     <dimen name="report_view_padding">10dp</dimen>
+    <dimen name="manager_view_status_padding">13dp</dimen>
     <dimen name="details_buttons_padding">4dp</dimen>
     <dimen name="date_and_time_size">12sp</dimen>
     <dimen name="statistics_text_size">22sp</dimen>
     <dimen name="statistics_text_circle_size">80dp</dimen>
     <dimen name="statistics_text_circle_radius">40dp</dimen>
+    <dimen name="image_manager_view">120dp</dimen>
+    <dimen name="available_scanner_title">20sp</dimen>
 </resources>

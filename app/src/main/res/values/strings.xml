@@ -79,10 +79,10 @@
     <string name="report_view_manager_open_time">זמן פתיחה:</string>
     <string name="report_view_manager_reporter_name">שם:</string>
     <string name="report_view_manager_phone_number">טלפון:</string>
+    <string name="report_view_manager_extra_phone_number">טלפון נוסף:</string>
     <string name="report_current_assigned_scanner">סורק נוכחי:</string>
     <string name="report_view_manager_comments">הערות המדווח/ת:</string>
     <string name="report_view_manager_available_scanners"><u>רשימת סורקים זמינים</u></string>
-    <string name="comments_were_not_reported">לא דווחו הערות לדיווח</string>
     <string name="scanner_was_not_assigned">לא בוצעה השמה של סורק</string>
     <string name="moag_website">http://www.moag.gov.il/Pages/DogSearch.aspx</string>
     <string name="choose_scanner">בחר סורק/ת</string>
@@ -112,4 +112,8 @@
     <string name="manager_of_report">מנהל/ת הדיווח:</string>
     <string name="delete_charge_of_report">ביטול ניהול</string>
     <string name="to_my_reports_list">לרשימת הדיווחים שלי</string>
+    <string name="report_photo_description">The dog\'s photo</string>
+    <string name="is_dog_with_reporter">האם סומן בדיווח שהכלב קשור?</string>
+    <string name="dog_is_with_reporter">כן</string>
+    <string name="dog_is_not_with_reporter">לא</string>
 </resources>

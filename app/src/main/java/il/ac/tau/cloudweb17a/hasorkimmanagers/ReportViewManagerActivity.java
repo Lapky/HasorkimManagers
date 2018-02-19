@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +83,11 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         managerReportLocation.setText(report.getAddress());
 
         TextView managerReportOpenTime = findViewById(R.id.managerReportOpenTime);
-        managerReportOpenTime.setText(report.getStartTimeAsString());
+        //managerReportOpenTime.setText(report.getStartTimeAsString());
+
+        String reportTime = report.getStartTimeAsString();
+        reportTime = (reportTime.substring(6, reportTime.length()) + " ," + reportTime.substring(0, 5));
+        managerReportOpenTime.setText(reportTime);
 
         TextView managerReportReporterName = findViewById(R.id.managerReportReporterName);
         managerReportReporterName.setText(report.getReporterName());
@@ -90,24 +95,65 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         TextView managerReportPhoneNumber = findViewById(R.id.managerReportPhoneNumber);
         managerReportPhoneNumber.setText(report.getPhoneNumber());
 
+        final LinearLayout managerReportExtraPhoneNumberLayout = findViewById(R.id.managerReportExtraPhoneNumberLayout);
+        final TextView managerReportExtraPhoneNumber = findViewById(R.id.managerReportExtraPhoneNumber);
+
         final TextView managerInChargeName = findViewById(R.id.manager_in_charge_name);
         final Button setManager = findViewById(R.id.setManager);
         setManager.setVisibility(View.VISIBLE);
         final Button deleteManager = findViewById(R.id.deleteManager);
         deleteManager.setVisibility(View.GONE);
+        deleteManager.setVisibility(View.GONE);
+
+        DatabaseReference statusExtraPhoneNumber = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("extraPhoneNumber");
+
+        statusExtraPhoneNumber.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String extraPhoneNumber = dataSnapshot.getValue(String.class);
+                if ((extraPhoneNumber != null) && (!extraPhoneNumber.isEmpty())) {
+                    managerReportExtraPhoneNumber.setText(extraPhoneNumber);
+                    managerReportExtraPhoneNumberLayout.setVisibility(View.VISIBLE);
+                }
+                else
+                    managerReportExtraPhoneNumberLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         String comments = report.getFreeText();
         if ((comments != null) && (!comments.isEmpty())) {
             LinearLayout commentsLayout = findViewById(R.id.managerReportExtraTextLayout);
             TextView closedReportExtraText = findViewById(R.id.managerReportExtraText);
-            closedReportExtraText.setText(report.getFreeText());
+            closedReportExtraText.setText(comments);
             commentsLayout.setVisibility(View.VISIBLE);
         }
+
+        TextView managerReportIsDogWithReporter = findViewById(R.id.isDogWithReporter);
+        Boolean isDogWithReporter = report.getIsDogWithReporter();
+        if (isDogWithReporter)
+            managerReportIsDogWithReporter.setText(R.string.dog_is_with_reporter);
+        else
+            managerReportIsDogWithReporter.setText(R.string.dog_is_not_with_reporter);
 
         if (report.getImageUrl() != null) {
             ImageView managerReportImage = findViewById(R.id.managerReportImage);
             managerReportImage.setVisibility(View.VISIBLE);
             Glide.with(this).load(report.getImageUrl()).into(managerReportImage);
+        }
+        else {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    ScrollView.LayoutParams.MATCH_PARENT,
+                    0,
+                    2.8f
+            );
+            ScrollView scroll = findViewById(R.id.report_details_scroll_view);
+            scroll.setLayoutParams(param);
         }
 
         DatabaseReference statusManagerRef = FirebaseDatabase.getInstance()
@@ -288,7 +334,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             if (status.equals("CLOSED")) {
                 closing_or_cancellation_headline.setText(R.string.closing_reason_headline);
                 final Query queryCancelText = FirebaseDatabase.getInstance()
-                        .getReference("reports").child(report.getId()).child("closingText");
+                        .getReference("reports").child(report.getId()).child("cancellationText");
 
                 queryCancelText.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
