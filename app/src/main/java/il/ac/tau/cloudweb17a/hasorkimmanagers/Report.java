@@ -334,6 +334,7 @@ public class Report implements java.io.Serializable {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String, Object> reportMap = new HashMap<String, Object>();
+        setCancellationUserType("מנהל");
         reportMap.put("cancellationUserType", "מנהל");
         reportsRef.updateChildren(reportMap);
     }

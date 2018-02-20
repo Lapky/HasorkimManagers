@@ -19,7 +19,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:text="@string/report_manager_view_status"
             android:textColor="@android:color/black"
             android:textSize="@dimen/button_text_size"
@@ -29,7 +28,6 @@
             android:id="@+id/managerReportStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:paddingStart="@dimen/manager_view_status_padding"
             android:textColor="@android:color/black"
             android:textSize="@dimen/button_text_size"
@@ -103,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:paddingTop="@dimen/report_status_padding"
                 android:paddingBottom="@dimen/report_view_padding">
 
                 <LinearLayout
@@ -133,32 +131,48 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/report_status_padding"
+                    android:layout_marginTop="@dimen/scanners_list_padding"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingTop="@dimen/report_date_padding"
                         android:text="@string/report_view_manager_phone_number"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/managerReportPhoneNumber"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2.6"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/report_item_text_size"
-                        android:textStyle="bold" />
+                        android:layout_weight="2.6">
+
+                        <TextView
+                            android:id="@+id/managerReportPhoneNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/report_view_padding"
+                            android:paddingTop="@dimen/report_date_padding"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/report_item_text_size"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/call_number_button"
+                            android:layout_width="@dimen/call_icon_size"
+                            android:layout_height="@dimen/call_icon_size"
+                            android:foregroundGravity="center"
+                            android:layout_toEndOf="@+id/managerReportPhoneNumber"
+                            android:src="@drawable/ic_call_black_24dp" />
+                    </RelativeLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/managerReportExtraPhoneNumberLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/nav_header_vertical_spacing"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -166,25 +180,41 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingTop="@dimen/report_date_padding"
                         android:text="@string/report_view_manager_extra_phone_number"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/managerReportExtraPhoneNumber"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2.6"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/report_item_text_size"
-                        android:textStyle="bold" />
+                        android:layout_weight="2.6">
+
+                        <TextView
+                            android:id="@+id/managerReportExtraPhoneNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/report_date_padding"
+                            android:layout_marginEnd="@dimen/report_view_padding"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/report_item_text_size"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/call_extra_number_button"
+                            android:layout_width="@dimen/call_icon_size"
+                            android:layout_height="@dimen/call_icon_size"
+                            android:foregroundGravity="center"
+                            android:layout_toEndOf="@+id/managerReportExtraPhoneNumber"
+                            android:src="@drawable/ic_call_black_24dp" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/managerReportExtraTextLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/report_status_padding"
+                    android:layout_marginTop="@dimen/report_list_padding"
                     android:orientation="horizontal"
                     android:textStyle="bold"
                     android:visibility="gone">
@@ -248,6 +278,98 @@
                 android:maxWidth="@dimen/image_manager_view"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:id="@+id/closed_or_cancelled_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/report_view_padding"
+                android:paddingTop="@dimen/report_view_padding"
+                android:background="@drawable/available_scanners_border"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/managing_report_after_closed_or_deleted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="@string/manager_of_report"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/manager_that_was_in_charge_name"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.7"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/report_canceled_by"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:orientation="horizontal"
+                    android:textStyle="bold"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/report_cancelled_by_headline"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/cancellation_user_type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.7"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/closing_or_cancellation_reason_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:orientation="horizontal"
+                    android:textStyle="bold">
+
+                    <TextView
+                        android:id="@+id/closing_or_cancellation_headline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/closing_or_cancellation_reason"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.7"
+                        android:textSize="@dimen/report_item_text_size"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
@@ -277,77 +399,14 @@
             android:id="@+id/list_view_scanners"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/closed_or_cancelled_relative_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/closing_or_cancellation_reason_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:textStyle="bold">
-
-            <TextView
-                android:id="@+id/closing_or_cancellation_headline"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="@dimen/report_item_text_size"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/closing_or_cancellation_reason"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2.1"
-                android:textSize="@dimen/report_item_text_size"
-                android:textColor="@android:color/black"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/report_canceled_by"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/nav_header_vertical_spacing"
-            android:orientation="horizontal"
-            android:layout_below="@+id/closing_or_cancellation_reason_layout"
-            android:textStyle="bold"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/report_cancelled_by_headline"
-                android:textSize="@dimen/report_item_text_size"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/cancellation_user_type"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2.1"
-                android:textSize="@dimen/report_item_text_size"
-                android:textColor="@android:color/black"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/managing_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/report_item_padding"
+        android:paddingTop="@dimen/report_status_padding"
         android:background="@drawable/available_scanners_border">
 
         <TextView

@@ -116,4 +116,6 @@
     <string name="is_dog_with_reporter">האם סומן בדיווח שהכלב קשור?</string>
     <string name="dog_is_with_reporter">כן</string>
     <string name="dog_is_not_with_reporter">לא</string>
+    <string name="closing_reason_was_not_entered">לא הוכנסה סיבת סגירה</string>
+    <string name="cancelling_reason_was_not_entered">לא הוכנסה סיבת ביטול</string>
 </resources>

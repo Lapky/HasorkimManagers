@@ -21,10 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,8 +83,6 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         managerReportLocation.setText(report.getAddress());
 
         TextView managerReportOpenTime = findViewById(R.id.managerReportOpenTime);
-        //managerReportOpenTime.setText(report.getStartTimeAsString());
-
         String reportTime = report.getStartTimeAsString();
         reportTime = (reportTime.substring(6, reportTime.length()) + " ," + reportTime.substring(0, 5));
         managerReportOpenTime.setText(reportTime);
@@ -92,18 +90,19 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         TextView managerReportReporterName = findViewById(R.id.managerReportReporterName);
         managerReportReporterName.setText(report.getReporterName());
 
-        TextView managerReportPhoneNumber = findViewById(R.id.managerReportPhoneNumber);
+        final TextView managerReportPhoneNumber = findViewById(R.id.managerReportPhoneNumber);
         managerReportPhoneNumber.setText(report.getPhoneNumber());
+
+        ImageButton callReporterNumber = findViewById(R.id.call_number_button);
+        callReporterNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callReporter(managerReportPhoneNumber.getText().toString());
+            }
+        });
 
         final LinearLayout managerReportExtraPhoneNumberLayout = findViewById(R.id.managerReportExtraPhoneNumberLayout);
         final TextView managerReportExtraPhoneNumber = findViewById(R.id.managerReportExtraPhoneNumber);
-
-        final TextView managerInChargeName = findViewById(R.id.manager_in_charge_name);
-        final Button setManager = findViewById(R.id.setManager);
-        setManager.setVisibility(View.VISIBLE);
-        final Button deleteManager = findViewById(R.id.deleteManager);
-        deleteManager.setVisibility(View.GONE);
-        deleteManager.setVisibility(View.GONE);
 
         DatabaseReference statusExtraPhoneNumber = FirebaseDatabase.getInstance()
                 .getReference("reports").child(report.getId()).child("extraPhoneNumber");
@@ -123,6 +122,14 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        ImageButton callReporterExtraNumber = findViewById(R.id.call_extra_number_button);
+        callReporterExtraNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callReporter(managerReportExtraPhoneNumber.getText().toString());
             }
         });
 
@@ -150,7 +157,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                     ScrollView.LayoutParams.MATCH_PARENT,
                     0,
-                    2.8f
+                    3f
             );
             ScrollView scroll = findViewById(R.id.report_details_scroll_view);
             scroll.setLayoutParams(param);
@@ -229,6 +236,13 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
             }
         });
+
+        final TextView managerInChargeName = findViewById(R.id.manager_in_charge_name);
+        final Button setManager = findViewById(R.id.setManager);
+        setManager.setVisibility(View.VISIBLE);
+        final Button deleteManager = findViewById(R.id.deleteManager);
+        deleteManager.setVisibility(View.GONE);
+        deleteManager.setVisibility(View.GONE);
 
         DatabaseReference managerRef = FirebaseDatabase.getInstance()
                 .getReference("reports").child(report.getId()).child("managerInCharge");
@@ -325,68 +339,70 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         if ((status.equals("CLOSED")) || (status.equals("CANCELED"))) {
             LinearLayout managerButtons = findViewById(R.id.viewManagerButtonsLayout);
             LinearLayout availableScannersList = findViewById(R.id.availableScannersLayout);
+            LinearLayout managingReportLayout = findViewById(R.id.managing_report);
             managerButtons.setVisibility(View.GONE);
             availableScannersList.setVisibility(View.GONE);
+            managingReportLayout.setVisibility(View.GONE);
+
+            String managerInCharge = report.getManagerInCharge();
+            if ((managerInCharge != null) && (!managerInCharge.isEmpty())) {
+                LinearLayout managerInChargeLayout = findViewById(R.id.managing_report_after_closed_or_deleted);
+                final TextView managerOfReport = findViewById(R.id.manager_that_was_in_charge_name);
+
+                Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                        .child("users").orderByChild("id").equalTo(managerInCharge);
+
+                mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot user : dataSnapshot.getChildren()) {
+                            User dbUser = user.getValue(User.class);
+                            String managerName = dbUser.getName();
+                            managerOfReport.setText(managerName);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                managerInChargeLayout.setVisibility(View.VISIBLE);
+            }
 
             final TextView closing_or_cancellation_reason = findViewById(R.id.closing_or_cancellation_reason);
             TextView closing_or_cancellation_headline = findViewById(R.id.closing_or_cancellation_headline);
 
             if (status.equals("CLOSED")) {
                 closing_or_cancellation_headline.setText(R.string.closing_reason_headline);
-                final Query queryCancelText = FirebaseDatabase.getInstance()
-                        .getReference("reports").child(report.getId()).child("cancellationText");
+                String reasonForClosing = report.getCancellationText();
 
-                queryCancelText.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        closing_or_cancellation_reason.setText(dataSnapshot.getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-            } else {
+                if ((reasonForClosing == null) || reasonForClosing.isEmpty())
+                    closing_or_cancellation_reason.setText(R.string.closing_reason_was_not_entered);
+                else
+                    closing_or_cancellation_reason.setText(reasonForClosing);
+            }
+            else {
                 closing_or_cancellation_headline.setText(R.string.cancellation_reason_headline);
+                String reasonForCancelling = report.getCancellationText();
 
-                final Query queryCancelText = FirebaseDatabase.getInstance()
-                        .getReference("reports").child(report.getId()).child("cancellationText");
+                if ((reasonForCancelling == null) || reasonForCancelling.equals(""))
+                    closing_or_cancellation_reason.setText(R.string.cancelling_reason_was_not_entered);
+                else
+                    closing_or_cancellation_reason.setText(reasonForCancelling);
 
-                Query queryCancelUserType = FirebaseDatabase.getInstance()
-                        .getReference("reports").child(report.getId()).child("cancellationUserType");
+                TextView cancellerType = findViewById(R.id.cancellation_user_type);
+                String canceller = report.getCancellationUserType();
 
-                queryCancelText.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        closing_or_cancellation_reason.setText(dataSnapshot.getValue(String.class));
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                final TextView cancellation_user_type = findViewById(R.id.cancellation_user_type);
-                queryCancelUserType.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        cancellation_user_type.setText(dataSnapshot.getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                LinearLayout report_cancelled_by = findViewById(R.id.report_canceled_by);
-                report_cancelled_by.setVisibility(View.VISIBLE);
+                if ((canceller != null) && (!canceller.isEmpty())) {
+                    cancellerType.setText(canceller);
+                    LinearLayout report_cancelled_by = findViewById(R.id.report_canceled_by);
+                    report_cancelled_by.setVisibility(View.VISIBLE);
+                }
             }
 
-            RelativeLayout closing_or_cancellation_reason_layout = findViewById(R.id.closed_or_cancelled_relative_layout);
+            LinearLayout closing_or_cancellation_reason_layout = findViewById(R.id.closed_or_cancelled_linear_layout);
             closing_or_cancellation_reason_layout.setVisibility(View.VISIBLE);
         }
     }
@@ -595,6 +611,12 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             }
         }
         imagePath = savedImagePath;
+    }
+
+    public void callReporter(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+        if (callIntent.resolveActivity(getPackageManager()) != null)
+            startActivity(callIntent);
     }
 }
 

@@ -17,8 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,25 +66,36 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
 
     public void refreshUI() {
+        LinearLayout reporterDetailsLayout = findViewById(R.id.activeReportReporterDetailsLayout);
+        if (!report.isAssignedScanner(userId)) {
+            reporterDetailsLayout.setVisibility(View.GONE);
 
+            LinearLayout.LayoutParams scrollParam = new LinearLayout.LayoutParams(
+                    ScrollView.LayoutParams.MATCH_PARENT,
+                    0,
+                    3f
+            );
+            ScrollView scannerReportScrollView = findViewById(R.id.scannerReportScrollView);
+            scannerReportScrollView.setLayoutParams(scrollParam);
 
-        LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
-        if (!report.isAssignedScanner(userId))
-            linearLayout.setVisibility(View.GONE);
+            LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    10f
+            );
+            FrameLayout map = findViewById(R.id.scannerMapLayout);
+            map.setLayoutParams(mapParam);
+        }
         else
-            linearLayout.setVisibility(View.VISIBLE);
+            reporterDetailsLayout.setVisibility(View.VISIBLE);
 
         TextView activeReportStatus = findViewById(R.id.activeReportStatus);
         String status = report.statusInHebrew();
         Log.d(TAG, status);
         activeReportStatus.setText(status);
 
-
         TextView activeReportLocation = findViewById(R.id.activeReportLocation);
         activeReportLocation.setText(report.getAddress());
-
-        TextView activeReportOpenTime = findViewById(R.id.activeReportOpenTime);
-        activeReportOpenTime.setText(report.getStartTimeAsString());
 
         TextView activeReportArrivalTime = findViewById(R.id.activeReportArrivalTime);
         activeReportArrivalTime.setText(report.getDuration());
@@ -93,18 +107,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             closedReportExtraText.setText(report.getFreeText());
             commentsLayout.setVisibility(View.VISIBLE);
         }
-
-/*        if (!report.isOpenReport()) {
-            LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
-            linearLayout.setVisibility(LinearLayout.GONE);
-            buttonEnlist.setVisibility(LinearLayout.GONE);
-        } else {*/
-        TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
-        activeReportReporterName.setText(report.getReporterName());
-
-        TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
-        activeReportPhoneNumber.setText(report.getPhoneNumber());
-        /*}*/
 
         if ((Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId)))
             buttonEnlist.setVisibility(View.GONE);
@@ -134,6 +136,15 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             } catch (Exception ignored) {
 
             }
+        }
+        else {
+            LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    7f
+            );
+            FrameLayout map = findViewById(R.id.scannerMapLayout);
+            map.setLayoutParams(mapParam);
         }
     }
 
@@ -227,6 +238,51 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             }
         });
 
+        TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
+        activeReportReporterName.setText(report.getReporterName());
+
+        final TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
+        activeReportPhoneNumber.setText(report.getPhoneNumber());
+
+        ImageButton callReporterNumber = findViewById(R.id.call_number_button);
+        callReporterNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callReporter(activeReportPhoneNumber.getText().toString());
+            }
+        });
+
+        final LinearLayout scannerReportExtraPhoneNumberLayout = findViewById(R.id.scannerReportExtraPhoneNumberLayout);
+        final TextView scannerReportExtraPhoneNumber = findViewById(R.id.scannerReportExtraPhoneNumber);
+
+        DatabaseReference statusExtraPhoneNumber = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("extraPhoneNumber");
+
+        statusExtraPhoneNumber.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String extraPhoneNumber = dataSnapshot.getValue(String.class);
+                if ((extraPhoneNumber != null) && (!extraPhoneNumber.isEmpty())) {
+                    scannerReportExtraPhoneNumber.setText(extraPhoneNumber);
+                    scannerReportExtraPhoneNumberLayout.setVisibility(View.VISIBLE);
+                }
+                else
+                    scannerReportExtraPhoneNumberLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ImageButton callReporterExtraNumber = findViewById(R.id.call_extra_number_button);
+        callReporterExtraNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callReporter(scannerReportExtraPhoneNumber.getText().toString());
+            }
+        });
 
         buttonEnlist = findViewById(R.id.scannerAvailable);
         buttonUnenlist = findViewById(R.id.scannerCancelEnlistment);
@@ -394,6 +450,12 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             }
         }
         imagePath = savedImagePath;
+    }
+
+    public void callReporter(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+        if (callIntent.resolveActivity(getPackageManager()) != null)
+            startActivity(callIntent);
     }
 }
 

@@ -30,4 +30,5 @@
     <dimen name="statistics_text_circle_radius">40dp</dimen>
     <dimen name="image_manager_view">120dp</dimen>
     <dimen name="available_scanner_title">20sp</dimen>
+    <dimen name="call_icon_size">35dp</dimen>
 </resources>
