@@ -16,6 +16,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -457,64 +458,97 @@ public class ReportViewManagerActivity extends AppCompatActivity {
     }
 
     public void OnCloseReportButtonClick(View v) {
-        TextView title = new TextView(ReportViewManagerActivity.this);
-        final EditText editText = new EditText(ReportViewManagerActivity.this);
+        String managerInCharge = report.getManagerInCharge();
 
-        title.setText(R.string.close_report_dialog);
-        title.setPadding(10, 50, 64, 9);
-        title.setTextColor(Color.BLACK);
-        title.setTextSize(20);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        if (!managerInCharge.equals(userId))
+            managerNotInChargePopup();
+        else {
+            TextView title = new TextView(ReportViewManagerActivity.this);
+            final EditText editText = new EditText(ReportViewManagerActivity.this);
 
-        new AlertDialog.Builder(ReportViewManagerActivity.this)
-                .setMessage(R.string.close_report_dialog_message)
-                .setCustomTitle(title)
-                .setView(editText)
-                .setPositiveButton(getResources().getString(R.string.close_report_in_dialog), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String closeReportText = editText.getText().toString();
+            title.setText(R.string.close_report_dialog);
+            title.setPadding(10, 50, 64, 9);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(20);
+            title.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
 
-                        report.reportUpdateClosingText(closeReportText);
-                        report.setStatus("CLOSED");
-                        report.reportUpdateStatus("CLOSED", null);
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.go_back_in_dialog), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                })
-                .create().show();
+            new AlertDialog.Builder(ReportViewManagerActivity.this)
+                    .setMessage(R.string.close_report_dialog_message)
+                    .setCustomTitle(title)
+                    .setView(editText)
+                    .setPositiveButton(getResources().getString(R.string.go_back_in_dialog), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.close_report_in_dialog), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String closeReportText = editText.getText().toString();
+
+                            report.reportUpdateClosingText(closeReportText);
+                            report.setStatus("CLOSED");
+                            report.reportUpdateStatus("CLOSED", null);
+                        }
+                    })
+                    .create().show();
+        }
     }
 
     public void OnCancelReportButtonClick(View v) {
-        TextView title = new TextView(ReportViewManagerActivity.this);
-        final EditText editText = new EditText(ReportViewManagerActivity.this);
+        String managerInCharge = report.getManagerInCharge();
 
-        title.setText(R.string.cancel_report_dialog);
+        if (!managerInCharge.equals(userId))
+            managerNotInChargePopup();
+        else {
+            TextView title = new TextView(ReportViewManagerActivity.this);
+            final EditText editText = new EditText(ReportViewManagerActivity.this);
+
+            title.setText(R.string.cancel_report_dialog);
+            title.setPadding(10, 50, 64, 9);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(20);
+            title.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+            new AlertDialog.Builder(ReportViewManagerActivity.this)
+                    .setMessage(R.string.cancel_report_dialog_message)
+                    .setCustomTitle(title)
+                    .setView(editText)
+                    .setPositiveButton(getResources().getString(R.string.go_back_in_dialog), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel_report_in_dialog), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String cancelReportText = editText.getText().toString();
+
+                            report.reportUpdateCancellationText(cancelReportText);
+                            report.reportUpdateCancellationManagerType();
+                            report.setStatus("CANCELED");
+                            report.reportUpdateStatus("CANCELED", null);
+                        }
+                    })
+                    .create().show();
+        }
+    }
+
+    public void managerNotInChargePopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ReportViewManagerActivity.this);
+        LayoutInflater inflater = ReportViewManagerActivity.this.getLayoutInflater();
+
+        TextView title = new TextView(getApplicationContext());
+        title.setText(R.string.manager_not_in_charge_popup_title);
         title.setPadding(10, 50, 64, 9);
         title.setTextColor(Color.BLACK);
-        title.setTextSize(20);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        title.setTextSize(22);
 
-        new AlertDialog.Builder(ReportViewManagerActivity.this)
-                .setMessage(R.string.cancel_report_dialog_message)
-                .setCustomTitle(title)
-                .setView(editText)
-                .setPositiveButton(getResources().getString(R.string.cancel_report_in_dialog), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String cancelReportText = editText.getText().toString();
-
-                        report.reportUpdateCancellationText(cancelReportText);
-                        report.reportUpdateCancellationManagerType();
-                        report.setStatus("CANCELED");
-                        report.reportUpdateStatus("CANCELED", null);
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.go_back_in_dialog), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                })
-                .create().show();
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflater.inflate(R.layout.manager_not_in_charge_pop, null));
+        builder.setCustomTitle(title);
+        builder.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        builder.create().show();
     }
 
     public void sendScannerHandler(View view) {

@@ -91,10 +91,10 @@
     <string name="scanner_list_distance">מרחק:</string>
     <string name="manager_close_report">סגירת דיווח</string>
     <string name="manager_delete_report">ביטול דיווח</string>
-    <string name="close_report_dialog">סגירת הדיווח</string>
+    <string name="close_report_dialog"><b>סגירת הדיווח</b></string>
     <string name="close_report_dialog_message">אנא הכנס את סיבת הסגירה</string>
     <string name="close_report_in_dialog">סגור דיווח</string>
-    <string name="cancel_report_dialog">ביטול הדיווח</string>
+    <string name="cancel_report_dialog"><b>ביטול הדיווח</b></string>
     <string name="cancel_report_dialog_message">אנא הכנס את סיבת הביטול</string>
     <string name="cancel_report_in_dialog">בטל דיווח</string>
     <string name="go_back_in_dialog">חזור</string>
@@ -118,4 +118,10 @@
     <string name="dog_is_not_with_reporter">לא</string>
     <string name="closing_reason_was_not_entered">לא הוכנסה סיבת סגירה</string>
     <string name="cancelling_reason_was_not_entered">לא הוכנסה סיבת ביטול</string>
+    <string name="manager_not_in_charge_popup_string">רק מי שרשום/ה כמנהל/ת הדיווח יכול/ה לסגור/לבטל אותו</string>
+    <string name="manager_not_in_charge_popup_title"><b>מנהל/ת יקר/ה שים/י לב!</b></string>
+    <string name="scanner_not_in_charge_popup_title"><b>סורק/ת יקר/ה שים/י לב!</b></string>
+    <string name="back">חזור</string>
+    <string name="scanner_cancel_after_being_assigned">נבחר/ת לסריקה עבור הדיווח הנוכחי. האם את/ה בטוח/ה שברצונך לבטל את הרשמתך לסריקה?</string>
+    <string name="scanner_cancel_after_reporting_on_the_way">כבר דיווחת יציאה ליעד. האם את/ה בטוח/ה שברצונך לבטל את הרשמתך לסריקה?</string>
 </resources>

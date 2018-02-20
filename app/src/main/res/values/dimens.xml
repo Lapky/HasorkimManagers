@@ -2,6 +2,7 @@
 <resources>
     <dimen name="new_report_size">36sp</dimen>
     <dimen name="button_text_size">24sp</dimen>
+    <dimen name="popup_padding">24dp</dimen>
     <dimen name="managers_buttons_size">22sp</dimen>
     <dimen name="standard_padding">16dp</dimen>
     <dimen name="report_item_status_size">17sp</dimen>

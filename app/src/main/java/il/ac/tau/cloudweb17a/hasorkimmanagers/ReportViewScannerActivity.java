@@ -1,8 +1,10 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -80,7 +83,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         }
 
         LinearLayout reporterDetailsLayout = findViewById(R.id.activeReportReporterDetailsLayout);
-        if (!report.isAssignedScanner(userId)) {
+        if (!Objects.equals(report.getAssignedScanner(), userId)) {
             reporterDetailsLayout.setVisibility(View.GONE);
 
             LinearLayout.LayoutParams scrollParam = new LinearLayout.LayoutParams(
@@ -315,17 +318,15 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         buttonUnenlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                report.subtrectFromPotentialScanners(userId);
-                report.setIsScannerEnlistedStatus(false);
-                if (report.getAvailableScanners() < 1)
-                    report.reportUpdateStatus("NEW", null);
+                String status = report.getStatus();
+                if (Objects.equals(report.getAssignedScanner(), userId) &&
+                        (status.equals("MANAGER_ASSIGNED_SCANNER") || status.equals("SCANNER_ON_THE_WAY"))) {
 
-                if (Objects.equals(report.getAssignedScanner(), userId))
-                    report.reportUpdateAssignedScanner("");
-
-                refreshUI();
+                    scannerCanceledPopUp();
+                }
+                else
+                    cancelScanner();
             }
-
         });
 
         scannerOnTheWay.setOnClickListener(new View.OnClickListener() {
@@ -386,6 +387,46 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         });
 
         requestPermission(); // TODO is there a reason this is here? (Shahar)
+    }
+
+    public void scannerCanceledPopUp() {
+        TextView title = new TextView(getApplicationContext());
+        title.setText(R.string.scanner_not_in_charge_popup_title);
+        title.setPadding(10, 50, 64, 9);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(22);
+
+        String popupMessage;
+        if (report.getStatus().equals("MANAGER_ASSIGNED_SCANNER"))
+            popupMessage = getString(R.string.scanner_cancel_after_being_assigned);
+        else
+            popupMessage = getString(R.string.scanner_cancel_after_reporting_on_the_way);
+
+        new AlertDialog.Builder(this).setMessage(popupMessage)
+                .setCustomTitle(title)
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+                        scannerReportImage.setVisibility(View.GONE);
+                        cancelScanner();
+                    }
+                }).create().show();
+    }
+
+    public void cancelScanner() {
+        report.subtrectFromPotentialScanners(userId);
+        report.setIsScannerEnlistedStatus(false);
+        if (report.getAvailableScanners() < 1)
+            report.reportUpdateStatus("NEW", null);
+
+        if (Objects.equals(report.getAssignedScanner(), userId))
+            report.reportUpdateAssignedScanner("");
+
+        refreshUI();
     }
 
     @Override
