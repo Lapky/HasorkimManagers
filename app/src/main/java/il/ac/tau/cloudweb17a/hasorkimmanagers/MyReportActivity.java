@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 public class MyReportActivity extends AppCompatActivity {
@@ -26,7 +27,9 @@ public class MyReportActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
-        findViewById(R.id.reports_list_layout).setVisibility(View.VISIBLE);
+        Button backToNewReports = findViewById(R.id.going_to_reports_btn);
+        backToNewReports.setVisibility(View.GONE);
 
+        findViewById(R.id.reports_list_layout).setVisibility(View.VISIBLE);
     }
 }

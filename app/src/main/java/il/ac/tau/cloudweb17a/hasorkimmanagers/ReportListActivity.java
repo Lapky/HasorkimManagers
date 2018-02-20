@@ -1,5 +1,6 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
@@ -42,7 +44,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
     private FusedLocationProviderClient mFusedLocationProviderClient;
     RadioGroup isOnlyOpenGroup;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean isOnlyOpen = false;
+    private boolean isOnlyOpen = true;
     private int numberOfReports = 10;
     private int numberOfReportsToAdd = 10;
     ReportAdapter mAdapter;
@@ -86,6 +88,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                             }
                         }
                 );
+                isOnlyOpenGroup.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,165));
                 isOnlyOpenGroup.setVisibility(View.VISIBLE);
                 setUIVisible.execute();
             }
@@ -155,11 +158,19 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         user.checkCreds(new MyCallBackClass() {
             @Override
             public void execute() {
+                Button goToMyReports = findViewById(R.id.going_to_reports_btn);
+
                 if (getUser().getIsManager()) {
                     navigationView.getMenu().getItem(1).setVisible(false);
-
+                    goToMyReports.setVisibility(View.GONE);
                 } else {
                     navigationView.getMenu().getItem(1).setVisible(true);
+                    goToMyReports.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(getApplicationContext(), MyReportActivity.class));
+                        }
+                    });
                 }
 
                 checkPermissions(showList);

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -47,28 +48,35 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     // you provide access to all the views for a data item in a view holder
 
     public static class ReportViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView StatusView;
-        public final TextView AddressView;
-        public final TextView timeView;
-        public final TextView numberScanners;
-        public final TextView numberScannersTitle;
-        public final TextView distance;
+        private final LinearLayout StatusLayout;
+        private final TextView StatusView;
+        private final TextView AddressView;
+        private final TextView timeView;
+        private final TextView dateView;
+        private final TextView arrowNavigation;
+        private final LinearLayout scannersNumberLayout;
+        private final TextView scannersNumber;
+        private final LinearLayout mangaerInChargeLayout;
+        private final TextView mangaerInCharge;
+        private final TextView distance;
         private final TextView distanceReportTitle;
-        final String TAG = ReportViewHolder.class.getSimpleName();
-        private final TextView StatusViewTitle;
         private Report mReport;
         private Context context;
-
+        final String TAG = ReportViewHolder.class.getSimpleName();
 
         public ReportViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
+            StatusLayout = v.findViewById(R.id.status_layout);
             StatusView = v.findViewById(R.id.report_status);
-            StatusViewTitle = v.findViewById(R.id.report_status_title);
             AddressView = v.findViewById(R.id.report_address);
             timeView = v.findViewById(R.id.report_time);
-            numberScanners = v.findViewById(R.id.numberScanners);
-            numberScannersTitle = v.findViewById(R.id.numberScannersTitle);
+            dateView = v.findViewById(R.id.report_date);
+            arrowNavigation = v.findViewById(R.id.arrow_navigation);
+            scannersNumberLayout = v.findViewById(R.id.scanners_number_layout);
+            scannersNumber = v.findViewById(R.id.scanners_number);
+            mangaerInChargeLayout = v.findViewById(R.id.manager_in_charge_layout);
+            mangaerInCharge = v.findViewById(R.id.manager_in_charge);
             distance = v.findViewById(R.id.distanceReport);
             distanceReportTitle = v.findViewById(R.id.distanceReportTitle);
             context = v.getContext();
@@ -91,26 +99,58 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             mReport = report;
             StatusView.setText(report.statusInHebrew());
             AddressView.setText(report.getAddress());
-            timeView.setText(report.getStartTimeAsString());
+
+            String reportTime = report.getStartTimeAsString();
+            String time = " ," + reportTime.substring(0, 5);
+            String date = reportTime.substring(6, reportTime.length());
+            timeView.setText(time);
+            dateView.setText(date);
+
             if (!getUser().getIsManager()) {
                 distance.setVisibility(View.VISIBLE);
                 distanceReportTitle.setVisibility(View.VISIBLE);
                 distance.setText(report.getDuration());
 
-            } else {
-                numberScanners.setVisibility(View.VISIBLE);
-                numberScannersTitle.setVisibility(View.VISIBLE);
-                StatusView.setVisibility(View.VISIBLE);
-                StatusViewTitle.setVisibility(View.VISIBLE);
             }
+            else {
+                if (!(report.getStatus().equals("CLOSED") || report.getStatus().equals("CANCELED"))) {
+                    String numOfScanners = Integer.toString(report.getAvailableScanners());
+                    scannersNumber.setText(numOfScanners);
+                    scannersNumberLayout.setVisibility(View.VISIBLE);
+                    arrowNavigation.setPadding(0,42,0,0);
+                }
 
-            numberScanners.setText(Integer.toString(report.getAvailableScanners()));
-            //String potentialScanners = Integer.toString(report.getPotentialScannersSize());
-            //numberScanners.setText(potentialScanners);
+                StatusLayout.setVisibility(View.VISIBLE);
+
+                String managerInChargeName = report.getManagerInCharge();
+                if (!managerInChargeName.equals("")) {
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(managerInChargeName);
+
+                    mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                User dbUser = user.getValue(User.class);
+                                String managerName = dbUser.getName();
+                                mangaerInCharge.setText(managerName);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    mangaerInChargeLayout.setVisibility(View.VISIBLE);
+                    arrowNavigation.setPadding(0,66,0,0);
+                }
+                else
+                    mangaerInChargeLayout.setVisibility(View.GONE);
+            }
         }
-
     }
-
 
     class SortbyDistance implements Comparator<Report> {
         public int compare(Report a, Report b) {

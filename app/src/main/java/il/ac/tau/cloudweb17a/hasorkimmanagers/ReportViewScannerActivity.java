@@ -1,8 +1,10 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -17,8 +20,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +41,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
@@ -62,25 +69,44 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
 
     public void refreshUI() {
-
-
-        LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
-        if (!report.isAssignedScanner(userId))
-            linearLayout.setVisibility(View.GONE);
-        else
-            linearLayout.setVisibility(View.VISIBLE);
-
         TextView activeReportStatus = findViewById(R.id.activeReportStatus);
         String status = report.statusInHebrew();
         Log.d(TAG, status);
         activeReportStatus.setText(status);
 
+        if ((Objects.equals(report.getStatus(), "CLOSED")) || (Objects.equals(report.getStatus(), "CANCELED"))) {
+            Button scannerAvailable = findViewById(R.id.scannerAvailable);
+            LinearLayout enlistedScannerLayout = findViewById(R.id.enlistedScannerLayout);
+            scannerAvailable.setVisibility(View.INVISIBLE);
+            enlistedScannerLayout.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        LinearLayout reporterDetailsLayout = findViewById(R.id.activeReportReporterDetailsLayout);
+        if (!Objects.equals(report.getAssignedScanner(), userId)) {
+            reporterDetailsLayout.setVisibility(View.GONE);
+
+            LinearLayout.LayoutParams scrollParam = new LinearLayout.LayoutParams(
+                    ScrollView.LayoutParams.MATCH_PARENT,
+                    0,
+                    3f
+            );
+            ScrollView scannerReportScrollView = findViewById(R.id.scannerReportScrollView);
+            scannerReportScrollView.setLayoutParams(scrollParam);
+
+            LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    10f
+            );
+            FrameLayout map = findViewById(R.id.scannerMapLayout);
+            map.setLayoutParams(mapParam);
+        }
+        else
+            reporterDetailsLayout.setVisibility(View.VISIBLE);
 
         TextView activeReportLocation = findViewById(R.id.activeReportLocation);
         activeReportLocation.setText(report.getAddress());
-
-        TextView activeReportOpenTime = findViewById(R.id.activeReportOpenTime);
-        activeReportOpenTime.setText(report.getStartTimeAsString());
 
         TextView activeReportArrivalTime = findViewById(R.id.activeReportArrivalTime);
         activeReportArrivalTime.setText(report.getDuration());
@@ -93,32 +119,25 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             commentsLayout.setVisibility(View.VISIBLE);
         }
 
-/*        if (!report.isOpenReport()) {
-            LinearLayout linearLayout = findViewById(R.id.activeReportReporterNameLayout);
-            linearLayout.setVisibility(LinearLayout.GONE);
-            buttonEnlist.setVisibility(LinearLayout.GONE);
-        } else {*/
-        TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
-        activeReportReporterName.setText(report.getReporterName());
-
-        TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
-        activeReportPhoneNumber.setText(report.getPhoneNumber());
-        /*}*/
-
         if ((Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId)))
-            buttonEnlist.setVisibility(LinearLayout.GONE);
-        else
-            buttonEnlist.setVisibility(LinearLayout.VISIBLE);
+            buttonEnlist.setVisibility(View.GONE);
+        else {
+            buttonEnlist.setVisibility(View.VISIBLE);
+            enlistedScannerLayout.setVisibility(View.GONE);
+        }
 
-        if (report.isScannerEnlisted(userId))
-            buttonUnenlist.setVisibility(LinearLayout.VISIBLE);
+        if (report.isScannerEnlisted(userId)) {
+            buttonUnenlist.setVisibility(View.VISIBLE);
+            enlistedScannerLayout.setVisibility(View.VISIBLE);
+        }
         else
-            buttonUnenlist.setVisibility(LinearLayout.GONE);
+            buttonUnenlist.setVisibility(View.GONE);
 
         if (Objects.equals(report.getAssignedScanner(), userId) && !Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) {
-            scannerOnTheWay.setVisibility(LinearLayout.VISIBLE);
+            scannerOnTheWay.setVisibility(View.VISIBLE);
+            enlistedScannerLayout.setVisibility(View.VISIBLE);
         } else
-            scannerOnTheWay.setVisibility(LinearLayout.GONE);
+            scannerOnTheWay.setVisibility(View.GONE);
 
         if (Objects.equals(report.getAssignedScanner(), userId)) {
             ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
@@ -128,6 +147,15 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             } catch (Exception ignored) {
 
             }
+        }
+        else {
+            LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    7f
+            );
+            FrameLayout map = findViewById(R.id.scannerMapLayout);
+            map.setLayoutParams(mapParam);
         }
     }
 
@@ -173,6 +201,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
     Button buttonUnenlist;
     Button scannerOnTheWay;
     boolean isScannerEnlisted;
+    LinearLayout enlistedScannerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,11 +249,56 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             }
         });
 
+        TextView activeReportReporterName = findViewById(R.id.activeReportReporterName);
+        activeReportReporterName.setText(report.getReporterName());
+
+        final TextView activeReportPhoneNumber = findViewById(R.id.activeReportPhoneNumber);
+        activeReportPhoneNumber.setText(report.getPhoneNumber());
+
+        ImageButton callReporterNumber = findViewById(R.id.call_number_button);
+        callReporterNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callReporter(activeReportPhoneNumber.getText().toString());
+            }
+        });
+
+        final LinearLayout scannerReportExtraPhoneNumberLayout = findViewById(R.id.scannerReportExtraPhoneNumberLayout);
+        final TextView scannerReportExtraPhoneNumber = findViewById(R.id.scannerReportExtraPhoneNumber);
+
+        DatabaseReference statusExtraPhoneNumber = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("extraPhoneNumber");
+
+        statusExtraPhoneNumber.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String extraPhoneNumber = dataSnapshot.getValue(String.class);
+                if ((extraPhoneNumber != null) && (!extraPhoneNumber.isEmpty())) {
+                    scannerReportExtraPhoneNumber.setText(extraPhoneNumber);
+                    scannerReportExtraPhoneNumberLayout.setVisibility(View.VISIBLE);
+                }
+                else
+                    scannerReportExtraPhoneNumberLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ImageButton callReporterExtraNumber = findViewById(R.id.call_extra_number_button);
+        callReporterExtraNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callReporter(scannerReportExtraPhoneNumber.getText().toString());
+            }
+        });
 
         buttonEnlist = findViewById(R.id.scannerAvailable);
         buttonUnenlist = findViewById(R.id.scannerCancelEnlistment);
         scannerOnTheWay = findViewById(R.id.scannerOnTheWay);
-
+        enlistedScannerLayout = findViewById(R.id.enlistedScannerLayout);
 
         buttonEnlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,20 +318,15 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         buttonUnenlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                report.subtrectFromPotentialScanners(userId);
-                report.setIsScannerEnlistedStatus(false);
-                if (report.getAvailableScanners() < 1)
-                    report.reportUpdateStatus("NEW", new ReportListActivity.MyCallBackClass() {
-                        @Override
-                        public void execute() {
-                            refreshUI();
-                        }
-                    });
+                String status = report.getStatus();
+                if (Objects.equals(report.getAssignedScanner(), userId) &&
+                        (status.equals("MANAGER_ASSIGNED_SCANNER") || status.equals("SCANNER_ON_THE_WAY"))) {
 
-                if (Objects.equals(report.getAssignedScanner(), userId))
-                    report.reportUpdateAssignedScanner("");
+                    scannerCanceledPopUp();
+                }
+                else
+                    cancelScanner();
             }
-
         });
 
         scannerOnTheWay.setOnClickListener(new View.OnClickListener() {
@@ -275,7 +344,89 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
         });
 
-        requestPermission();
+        final LinearLayout managerInChargeLayout = findViewById(R.id.managerInChargeLayout);
+        final TextView managerInChargeName = findViewById(R.id.managerInChargeName);
+
+        DatabaseReference managerRef = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("managerInCharge");
+        managerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String currentManagerId = dataSnapshot.getValue().toString();
+
+                if (currentManagerId.equals(""))
+                    managerInChargeLayout.setVisibility(View.GONE);
+                else {
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(currentManagerId);
+
+                    mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                User dbUser = user.getValue(User.class);
+                                String managerName = dbUser.getName();
+                                managerInChargeName.setText(managerName);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    managerInChargeLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        requestPermission(); // TODO is there a reason this is here? (Shahar)
+    }
+
+    public void scannerCanceledPopUp() {
+        TextView title = new TextView(getApplicationContext());
+        title.setText(R.string.scanner_not_in_charge_popup_title);
+        title.setPadding(10, 50, 64, 9);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(22);
+
+        String popupMessage;
+        if (report.getStatus().equals("MANAGER_ASSIGNED_SCANNER"))
+            popupMessage = getString(R.string.scanner_cancel_after_being_assigned);
+        else
+            popupMessage = getString(R.string.scanner_cancel_after_reporting_on_the_way);
+
+        new AlertDialog.Builder(this).setMessage(popupMessage)
+                .setCustomTitle(title)
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+                        scannerReportImage.setVisibility(View.GONE);
+                        cancelScanner();
+                    }
+                }).create().show();
+    }
+
+    public void cancelScanner() {
+        report.subtrectFromPotentialScanners(userId);
+        report.setIsScannerEnlistedStatus(false);
+        if (report.getAvailableScanners() < 1)
+            report.reportUpdateStatus("NEW", null);
+
+        if (Objects.equals(report.getAssignedScanner(), userId))
+            report.reportUpdateAssignedScanner("");
+
+        refreshUI();
     }
 
     @Override
@@ -350,15 +501,11 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         imagePath = savedImagePath;
     }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(ReportViewScannerActivity.this, ReportListActivity.class));
-        finish();
-
+    public void callReporter(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+        if (callIntent.resolveActivity(getPackageManager()) != null)
+            startActivity(callIntent);
     }
-
 }
 
 

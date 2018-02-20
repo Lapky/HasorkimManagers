@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/popup_padding"
+    android:paddingEnd="@dimen/popup_padding"
+    android:paddingBottom="@dimen/popup_padding">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manager_not_in_charge_popup_string"
+        android:textSize="@dimen/report_item_text_size"
+        android:textStyle="bold"/>
+
+</LinearLayout>

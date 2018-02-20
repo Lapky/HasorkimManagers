@@ -46,7 +46,6 @@ public class Report implements java.io.Serializable {
     private Set<String> potentialScanners;
 
 
-    private String closingText;
     private String cancellationText;
     private String cancellationUserType;
     private String userId;
@@ -57,8 +56,7 @@ public class Report implements java.io.Serializable {
 
 
     private boolean isScannerEnlistedStatus;
-    //private boolean isManagerEnlistedStatus;
-
+    private String managerInCharge;
 
     private double latitude;
     private double longitude;
@@ -184,7 +182,6 @@ public class Report implements java.io.Serializable {
         if (Objects.equals(this.status, "NEW")) {
             if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
-            //if (getIsManagerEnlistedStatus()) return "MANAGER_ENLISTED";
             return "NEW";
         }
 
@@ -222,10 +219,6 @@ public class Report implements java.io.Serializable {
 
     public String getCancellationText() {
         return cancellationText;
-    }
-
-    public String getClosingText() {
-        return closingText;
     }
 
     public int getIncrementalReportId() {
@@ -270,10 +263,6 @@ public class Report implements java.io.Serializable {
 
     public void setCancellationText(String cancellationText) {
         this.cancellationText = cancellationText;
-    }
-
-    public void setClosingText(String closingText) {
-        this.closingText = closingText;
     }
 
     @Exclude
@@ -322,19 +311,11 @@ public class Report implements java.io.Serializable {
             this.setIsScannerEnlistedStatus(true);
         }
 
-        /*
-        if (Objects.equals(dbStatus, "MANAGER_ENLISTED")) {
-            dbStatus = "NEW";
-            this.setIsManagerEnlistedStatus(true);
-        }
-        */
-
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String, Object> reportMap = new HashMap<>();
         reportMap.put("status", dbStatus);
         reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
-        //reportMap.put("IsManagerEnlistedStatus", isManagerEnlistedStatus);
         reportsRef.updateChildren(reportMap);
         if (myCallBackClass != null)
             myCallBackClass.execute();
@@ -356,12 +337,7 @@ public class Report implements java.io.Serializable {
     }
 
     public void reportUpdateClosingText(String closingText) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference reportsRef = ref.child("reports").child(this.id);
-        Map<String, Object> reportMap = new HashMap<String, Object>();
-        setClosingText(closingText);
-        reportMap.put("closingText", closingText);
-        reportsRef.updateChildren(reportMap);
+        reportUpdateCancellationText(closingText);
     }
 
     public void reportUpdateCancellationText(String cancellationText) {
@@ -377,6 +353,7 @@ public class Report implements java.io.Serializable {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String, Object> reportMap = new HashMap<String, Object>();
+        setCancellationUserType("מנהל");
         reportMap.put("cancellationUserType", "מנהל");
         reportsRef.updateChildren(reportMap);
     }
@@ -389,6 +366,19 @@ public class Report implements java.io.Serializable {
         reportMap.put("assignedScanner", userId);
         reportsRef.updateChildren(reportMap);
 
+    }
+
+    /**
+     *
+     * @param userId
+     */
+    public void reportUpdateManagerInCharge(String userId) {
+        this.setManagerInCharge(userId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reportsRef = ref.child("reports").child(this.id);
+        Map<String, Object> reportMap = new HashMap<>();
+        reportMap.put("managerInCharge", userId);
+        reportsRef.updateChildren(reportMap);
     }
 
     public void updateOnTheWayTimestamp() {
@@ -531,16 +521,6 @@ public class Report implements java.io.Serializable {
         isScannerEnlistedStatus = scannerEnlistedStatus;
     }
 
-    /*
-    public boolean getIsManagerEnlistedStatus() {
-        return isManagerEnlistedStatus;
-    }
-
-    public void setIsManagerEnlistedStatus(boolean ManagerEnlistedStatus) {
-        isManagerEnlistedStatus = ManagerEnlistedStatus;
-    }
-    */
-
     public void setAssignedScanner(String assignedScanner) {
         this.assignedScanner = assignedScanner;
     }
@@ -599,5 +579,13 @@ public class Report implements java.io.Serializable {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public String getManagerInCharge() {
+        return managerInCharge;
+    }
+
+    public void setManagerInCharge(String managerInCharge) {
+        this.managerInCharge = managerInCharge;
     }
 }
