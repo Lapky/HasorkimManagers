@@ -66,6 +66,19 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
 
     public void refreshUI() {
+        TextView activeReportStatus = findViewById(R.id.activeReportStatus);
+        String status = report.statusInHebrew();
+        Log.d(TAG, status);
+        activeReportStatus.setText(status);
+
+        if ((Objects.equals(report.getStatus(), "CLOSED")) || (Objects.equals(report.getStatus(), "CANCELED"))) {
+            Button scannerAvailable = findViewById(R.id.scannerAvailable);
+            LinearLayout enlistedScannerLayout = findViewById(R.id.enlistedScannerLayout);
+            scannerAvailable.setVisibility(View.INVISIBLE);
+            enlistedScannerLayout.setVisibility(View.INVISIBLE);
+            return;
+        }
+
         LinearLayout reporterDetailsLayout = findViewById(R.id.activeReportReporterDetailsLayout);
         if (!report.isAssignedScanner(userId)) {
             reporterDetailsLayout.setVisibility(View.GONE);
@@ -88,11 +101,6 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         }
         else
             reporterDetailsLayout.setVisibility(View.VISIBLE);
-
-        TextView activeReportStatus = findViewById(R.id.activeReportStatus);
-        String status = report.statusInHebrew();
-        Log.d(TAG, status);
-        activeReportStatus.setText(status);
 
         TextView activeReportLocation = findViewById(R.id.activeReportLocation);
         activeReportLocation.setText(report.getAddress());
