@@ -87,14 +87,32 @@
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/managerReportOpenTime"
+                <LinearLayout
+                    android:id="@+id/time_and_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.6"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/standard_text_size"
-                    android:textStyle="bold" />
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/managerReportOpenDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/standard_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/managerReportOpenTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="6dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/standard_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -138,7 +156,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingTop="@dimen/report_date_padding"
+                        android:paddingTop="@dimen/report_status_padding"
                         android:text="@string/report_view_manager_phone_number"
                         android:textSize="@dimen/report_item_text_size"
                         android:textStyle="bold" />
@@ -243,7 +261,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/report_status_padding"
+                    android:paddingTop="@dimen/report_date_padding"
                     android:textStyle="bold">
 
                     <TextView
@@ -309,7 +327,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1.7"
-                        android:gravity="center_vertical"
+                        android:gravity="right"
                         android:textSize="@dimen/report_item_text_size"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"/>
@@ -337,6 +355,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.7"
+                        android:gravity="right"
                         android:textSize="@dimen/report_item_text_size"
                         android:textColor="@android:color/black"
                         android:textStyle="bold" />
@@ -363,6 +382,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.7"
+                        android:gravity="right"
                         android:textSize="@dimen/report_item_text_size"
                         android:textColor="@android:color/black"
                         android:textStyle="bold" />

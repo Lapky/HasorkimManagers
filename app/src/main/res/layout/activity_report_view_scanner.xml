@@ -260,7 +260,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
                     android:text="@string/report_view_scanner_comments"
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
@@ -270,6 +269,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.4"
+                    android:gravity="right"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/report_item_text_size"
                     android:textStyle="bold" />
@@ -295,7 +295,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2.9"
-        android:layout_marginTop="@dimen/report_list_item_padding">
+        android:paddingTop="@dimen/nav_header_vertical_spacing">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"

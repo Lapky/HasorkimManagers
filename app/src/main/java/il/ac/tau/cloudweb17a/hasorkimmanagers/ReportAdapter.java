@@ -101,7 +101,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             AddressView.setText(report.getAddress());
 
             String reportTime = report.getStartTimeAsString();
-            String time = " ," + reportTime.substring(0, 5);
+            String time = reportTime.substring(0, 5);
             String date = reportTime.substring(6, reportTime.length());
             timeView.setText(time);
             dateView.setText(date);

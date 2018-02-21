@@ -83,10 +83,15 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         TextView managerReportLocation = findViewById(R.id.managerReportLocation);
         managerReportLocation.setText(report.getAddress());
 
+        TextView managerReportOpenDate = findViewById(R.id.managerReportOpenDate);
         TextView managerReportOpenTime = findViewById(R.id.managerReportOpenTime);
+
         String reportTime = report.getStartTimeAsString();
-        reportTime = (reportTime.substring(6, reportTime.length()) + " ," + reportTime.substring(0, 5));
-        managerReportOpenTime.setText(reportTime);
+        String date = reportTime.substring(6, reportTime.length());
+        String time = reportTime.substring(0, 5);
+
+        managerReportOpenDate.setText(date);
+        managerReportOpenTime.setText(time);
 
         TextView managerReportReporterName = findViewById(R.id.managerReportReporterName);
         managerReportReporterName.setText(report.getReporterName());
@@ -158,7 +163,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                     ScrollView.LayoutParams.MATCH_PARENT,
                     0,
-                    3f
+                    2.5f
             );
             ScrollView scroll = findViewById(R.id.report_details_scroll_view);
             scroll.setLayoutParams(param);

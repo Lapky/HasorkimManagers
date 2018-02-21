@@ -102,6 +102,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.2"
+                android:gravity="right"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/standard_text_size"
                 android:textStyle="bold" />

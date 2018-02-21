@@ -104,30 +104,8 @@ public class Report implements java.io.Serializable {
     }
 
 
-    public void setPotentialScanners() {
-        if (this.id != null) {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference reportsRef = ref.child("reports").child(this.id).child("potentialScanners");
-            potentialScanners = new HashSet<>();
-            reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
-                    for (DataSnapshot userId : contactChildren) {
-                        potentialScanners.add(userId.getKey().toString());
-                    }
-
-                    availableScanners = potentialScanners.size();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError firebaseError) {
-                }
-            });
-        } else {
-            Log.e(TAG, "id is null");
-        }
-
+    public void setPotentialScanners(Set<String> potentialScanners) {
+        this.potentialScanners = potentialScanners;
     }
 
     public int getPotentialScannersSize() {
@@ -217,6 +195,10 @@ public class Report implements java.io.Serializable {
         return this.availableScanners;
     }
 
+    public void setAvailableScanners(int availableScanners) {
+        this.availableScanners = availableScanners;
+    }
+
     public String getCancellationText() {
         return cancellationText;
     }
@@ -250,7 +232,7 @@ public class Report implements java.io.Serializable {
 
     public void setId(String id) {
         this.id = id;
-        this.setPotentialScanners();
+        this.potentialScanners = new HashSet<>();
     }
 
     public void setStartTime() {

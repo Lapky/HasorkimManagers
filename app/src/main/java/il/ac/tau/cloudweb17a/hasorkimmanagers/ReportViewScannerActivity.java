@@ -49,7 +49,9 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
@@ -140,15 +142,38 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             scannerOnTheWay.setVisibility(View.GONE);
 
         if (Objects.equals(report.getAssignedScanner(), userId)) {
-            ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
-            scannerReportImage.setVisibility(View.VISIBLE);
-            try {
-                Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
-            } catch (Exception ignored) {
+            if (report.getImageUrl() == null) {
+                LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        4.5f
+                );
+                FrameLayout map = findViewById(R.id.scannerMapLayout);
+                map.setLayoutParams(mapParam);
+            }
+            else {
+                ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+                scannerReportImage.setVisibility(View.VISIBLE);
 
+                LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        2.9f
+                );
+                FrameLayout map = findViewById(R.id.scannerMapLayout);
+                map.setLayoutParams(mapParam);
+
+                try {
+                    Glide.with(this).load(report.getImageUrl()).into(scannerReportImage);
+                } catch (Exception ignored) {
+
+                }
             }
         }
         else {
+            ImageView scannerReportImage = findViewById(R.id.scannerReportImage);
+            scannerReportImage.setVisibility(View.GONE);
+
             LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     0,
@@ -218,8 +243,8 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         isScannerEnlisted = report.isScannerEnlisted(userId);
         report.setIsScannerEnlistedStatus(isScannerEnlisted);
 
-
-        DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance().getReference("reports").child(report.getId()).child("assignedScanner");
+        DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("assignedScanner");
         assignedScannerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -234,7 +259,28 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             }
         });
 
-        DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference("reports").child(report.getId()).child("status");
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("potentialScanners");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
+                Set<String> potentialScanners = new HashSet<>();
+                for (DataSnapshot userId : contactChildren) {
+                    potentialScanners.add(userId.getKey());
+                }
+
+                report.setPotentialScanners(potentialScanners);
+                report.setAvailableScanners(potentialScanners.size());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+            }
+        });
+
+        DatabaseReference statusRef = FirebaseDatabase.getInstance()
+                .getReference("reports").child(report.getId()).child("status");
         statusRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -311,6 +357,8 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
                             refreshUI();
                         }
                     });
+                else
+                    refreshUI();
             }
 
         });
@@ -418,13 +466,13 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
     }
 
     public void cancelScanner() {
+        if (Objects.equals(report.getAssignedScanner(), userId)) {
+            report.reportUpdateAssignedScanner("");
+            report.reportUpdateStatus("NEW", null);
+        }
+
         report.subtrectFromPotentialScanners(userId);
         report.setIsScannerEnlistedStatus(false);
-        if (report.getAvailableScanners() < 1)
-            report.reportUpdateStatus("NEW", null);
-
-        if (Objects.equals(report.getAssignedScanner(), userId))
-            report.reportUpdateAssignedScanner("");
 
         refreshUI();
     }

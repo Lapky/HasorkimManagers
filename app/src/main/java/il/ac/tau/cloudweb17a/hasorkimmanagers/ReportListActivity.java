@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
@@ -88,7 +89,12 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                             }
                         }
                 );
-                isOnlyOpenGroup.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,165));
+                LinearLayout.LayoutParams radioGroup = new LinearLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        1.2f
+                );
+                isOnlyOpenGroup.setLayoutParams(radioGroup);
                 isOnlyOpenGroup.setVisibility(View.VISIBLE);
                 setUIVisible.execute();
             }
