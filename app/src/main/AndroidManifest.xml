@@ -97,7 +97,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".WaitForApprovalActivity"></activity>
+        <activity android:name=".WaitForApprovalActivity" />
     </application>
 
 </manifest>
