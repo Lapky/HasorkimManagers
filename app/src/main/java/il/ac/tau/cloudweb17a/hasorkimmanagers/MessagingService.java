@@ -142,7 +142,7 @@ public class MessagingService extends FirebaseMessagingService {
 
                 Intent resultIntent;
 
-                if (getUser().getIsManager()) {
+                if (getUser().isManager()) {
                     resultIntent = new Intent(getApplicationContext(), ReportViewManagerActivity.class);
                 } else {
                     resultIntent = new Intent(getApplicationContext(), ReportViewScannerActivity.class);

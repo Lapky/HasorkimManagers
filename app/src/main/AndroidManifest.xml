@@ -13,7 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".LogInActivity"
             android:screenOrientation="portrait">
@@ -23,28 +22,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ReportListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ReportViewScannerActivity"
             android:label="פרטי דיווח"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ReportListActivity">
+            android:parentActivityName=".ReportListActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
         </activity>
-
         <activity
             android:name=".ReportViewManagerActivity"
             android:label="פרטי דיווח"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ReportListActivity">
+            android:parentActivityName=".ReportListActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
@@ -69,25 +65,23 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ReportListActivity">
+            android:parentActivityName=".ReportListActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="il.ac.tau.cloudweb17a.hasorkimmanagers.ReportListActivity" />
         </activity>
-
         <activity
             android:name=".MyReportActivity"
             android:label="@string/my_reports"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".StatisticsActivity"
             android:label="@string/statistics"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ReportListActivity"/>
+            android:parentActivityName=".ReportListActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -103,6 +97,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".WaitForApprovalActivity"></activity>
     </application>
 
 </manifest>

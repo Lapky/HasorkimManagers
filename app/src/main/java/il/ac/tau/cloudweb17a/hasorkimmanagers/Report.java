@@ -388,7 +388,7 @@ public class Report implements java.io.Serializable {
 
     public String translateStatus(String status) {
         User user = getUser();
-        if (user.getIsManager()) {
+        if (user.isManager()) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("NEW", "דיווח חדש");
             map.put("SCANNER_ENLISTED", "קיים סורק זמין");

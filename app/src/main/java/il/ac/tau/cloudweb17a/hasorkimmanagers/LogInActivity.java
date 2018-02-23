@@ -42,15 +42,13 @@ public class LogInActivity extends AppCompatActivity {
         if (isEmulator()) {
             GoToReportList("");
         } else {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
+            final FirebaseAuth auth = FirebaseAuth.getInstance();
             if (auth.getCurrentUser() != null) {
                 // already signed in
                 auth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
                     @Override
                     public void onSuccess(GetTokenResult result) {
-                        String idToken = result.getToken();
-                        //Do whatever
-                        GoToReportList(idToken);
+                        GoToReportList(auth.getCurrentUser().getPhoneNumber());
                     }
                 });
 
@@ -74,11 +72,11 @@ public class LogInActivity extends AppCompatActivity {
     }
 
 
-    public void GoToReportList(String idToken) {
+    public void GoToReportList(String phoneNumber) {
         getLocationPermission();
         FirebaseMessaging.getInstance().subscribeToTopic("new_report");
-        Intent intent = new Intent(LogInActivity.this, ReportListActivity.class);
-        intent.putExtra("token", idToken);
+        Intent intent = new Intent(LogInActivity.this, WaitForApprovalActivity.class);
+        intent.putExtra("phone_number", phoneNumber.replace("+972","0"));
         startActivity(intent);
         finish();
     }
@@ -109,7 +107,7 @@ public class LogInActivity extends AppCompatActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-                GoToReportList(response.getIdpToken());
+                GoToReportList(response.getPhoneNumber());
                 finish();
                 return;
             } else {

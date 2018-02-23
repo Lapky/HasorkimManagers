@@ -1,6 +1,5 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -65,11 +64,11 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
             };
 
 
-            mAdapter = new ReportAdapter(isOnlyOpen, user.getIsManager(), getApplicationContext(), activity, setUIVisible, numberOfReports);
+            mAdapter = new ReportAdapter(isOnlyOpen, getUser().isManager(), getApplicationContext(), activity, setUIVisible, numberOfReports);
             mRecyclerView.setAdapter(mAdapter);
 
 
-            if (getUser().getIsManager()) {
+            if (getUser().isManager()) {
                 mRecyclerView.addOnScrollListener(
                         new RecyclerView.OnScrollListener() {
                             @Override
@@ -101,7 +100,6 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         }
     };
 
-    User user;
     Activity activity;
 
 
@@ -158,30 +156,22 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
 
         activity = this;
 
-        //setting up a user object for the list
-        user = getUser();
+        Button goToMyReports = findViewById(R.id.going_to_reports_btn);
 
-        user.checkCreds(new MyCallBackClass() {
-            @Override
-            public void execute() {
-                Button goToMyReports = findViewById(R.id.going_to_reports_btn);
-
-                if (getUser().getIsManager()) {
-                    navigationView.getMenu().getItem(1).setVisible(false);
-                    goToMyReports.setVisibility(View.GONE);
-                } else {
-                    navigationView.getMenu().getItem(1).setVisible(true);
-                    goToMyReports.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(getApplicationContext(), MyReportActivity.class));
-                        }
-                    });
+        if (getUser().isManager()) {
+            navigationView.getMenu().getItem(1).setVisible(false);
+            goToMyReports.setVisibility(View.GONE);
+        } else {
+            navigationView.getMenu().getItem(1).setVisible(true);
+            goToMyReports.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(), MyReportActivity.class));
                 }
+            });
+        }
 
-                checkPermissions(showList);
-            }
-        });
+        checkPermissions(showList);
 
     }
 
@@ -190,7 +180,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
 
         if ((ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) &&
                 (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-            if (user.getIsManager()) {
+            if (getUser().isManager()) {
                 showList.execute();
             } else {
                 distanceService.getDeviceLocation(showList, mFusedLocationProviderClient, this);

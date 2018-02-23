@@ -124,4 +124,7 @@
     <string name="back">חזור</string>
     <string name="scanner_cancel_after_being_assigned">נבחר/ת לסריקה עבור הדיווח הנוכחי. האם את/ה בטוח/ה שברצונך לבטל את הרשמתך לסריקה?</string>
     <string name="scanner_cancel_after_reporting_on_the_way">כבר דיווחת יציאה ליעד. האם את/ה בטוח/ה שברצונך לבטל את הרשמתך לסריקה?</string>
+    <string name="add_your_name">להשלמת התהליך נא הכניסו את שמכם</string>
+    <string name="wait_for_approval">פרטיך התקבלו וחשבונך יאושר בהקדם</string>
+    <string name="received_your_request">קיבלנו את בקשתך להצטרפות לאפליקציית המנהלים</string>
 </resources>

@@ -86,7 +86,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         public void onClick(View v) {
 
             Intent intent;
-            if (getUser().getIsManager())
+            if (getUser().isManager())
                 intent = new Intent(context, ReportViewManagerActivity.class);
             else
                 intent = new Intent(context, ReportViewScannerActivity.class);
@@ -106,7 +106,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             timeView.setText(time);
             dateView.setText(date);
 
-            if (!getUser().getIsManager()) {
+            if (!getUser().isManager()) {
                 distance.setVisibility(View.VISIBLE);
                 distanceReportTitle.setVisibility(View.VISIBLE);
                 distance.setText(report.getDuration());
