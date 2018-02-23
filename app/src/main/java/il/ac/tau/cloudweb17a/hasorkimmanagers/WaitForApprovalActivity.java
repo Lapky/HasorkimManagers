@@ -84,6 +84,11 @@ public class WaitForApprovalActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.getChildrenCount() == 0) { // no user
+                    Query mUserReference = FirebaseDatabase.getInstance().getReference()
+                            .child("users").orderByChild("id").equalTo(FirebaseInstanceId.getInstance().getToken());
+
+                    mUserReference.addValueEventListener(approved);
+
                     setVisibilityToAddName();
                     et_name.addTextChangedListener(new TextWatcher() {
                         @Override
