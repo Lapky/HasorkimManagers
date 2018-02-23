@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -140,6 +141,16 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+        LinearLayout header = (LinearLayout) navigationView.getHeaderView(0);
+
+        TextView navName = (TextView) header.getChildAt(1);
+        TextView navPhone = (TextView) header.getChildAt(2);
+
+        navName.setText(getUser().getName());
+        navPhone.setText(getUser().getPhoneNumber());
 
 
         mRecyclerView = findViewById(R.id.my_recycler_view);
