@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">הסורקים</string>
+    <string name="app_name">ניהול</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
