@@ -26,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -344,11 +345,15 @@ public class ReportViewManagerActivity extends AppCompatActivity {
     private void updateInactiveReport(String status) {
         if ((status.equals("CLOSED")) || (status.equals("CANCELED"))) {
             LinearLayout managerButtons = findViewById(R.id.viewManagerButtonsLayout);
-            LinearLayout availableScannersList = findViewById(R.id.availableScannersLayout);
+            RelativeLayout availableScannersHeadlineLayout = findViewById(R.id.available_scanners_headline_layout);
+            ListView availableScannersList = findViewById(R.id.list_view_scanners);
             LinearLayout managingReportLayout = findViewById(R.id.managing_report);
+            RelativeLayout managingReportHeadlineLayout = findViewById(R.id.managing_report_headline_layout);
             managerButtons.setVisibility(View.GONE);
+            availableScannersHeadlineLayout.setVisibility(View.GONE);
             availableScannersList.setVisibility(View.GONE);
             managingReportLayout.setVisibility(View.GONE);
+            managingReportHeadlineLayout.setVisibility(View.GONE);
 
             String managerInCharge = report.getManagerInCharge();
             if ((managerInCharge != null) && (!managerInCharge.isEmpty())) {
@@ -408,7 +413,9 @@ public class ReportViewManagerActivity extends AppCompatActivity {
                 }
             }
 
+            RelativeLayout closed_deleted_report_managing_headline_layout = findViewById(R.id.closed_deleted_report_managing_headline_layout);
             LinearLayout closing_or_cancellation_reason_layout = findViewById(R.id.closed_or_cancelled_linear_layout);
+            closed_deleted_report_managing_headline_layout.setVisibility(View.VISIBLE);
             closing_or_cancellation_reason_layout.setVisibility(View.VISIBLE);
         }
     }
