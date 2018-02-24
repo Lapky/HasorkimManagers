@@ -52,7 +52,15 @@ public class Report implements java.io.Serializable {
     private boolean isDogWithReporter;
     private String imageUrl;
 
-    private boolean isScannerEnlisted;
+    public boolean isCurrentUserScannerEnlisted() {
+        return scannerEnlisted;
+    }
+
+    public void setScannerEnlisted(boolean scannerEnlisted) {
+        this.scannerEnlisted = scannerEnlisted;
+    }
+
+    private boolean scannerEnlisted;
     private String managerInCharge;
 
     private double latitude;
@@ -64,14 +72,6 @@ public class Report implements java.io.Serializable {
     private int nextIncrementalId;
     private static final String TAG = "Report";
     private int distancevalue;
-
-    public boolean isScannerEnlisted() {
-        return isScannerEnlisted;
-    }
-
-    public void setScannerEnlisted(boolean scannerEnlisted) {
-        isScannerEnlisted = scannerEnlisted;
-    }
 
     private void changePotentialScanners(String userId, int change) {
         if (change == 0) potentialScanners.remove(userId);
@@ -99,7 +99,7 @@ public class Report implements java.io.Serializable {
     }
 
 
-    public boolean isScannerEnlisted(String userId) {
+    public boolean isCurrentUserScannerEnlisted(String userId) {
         return potentialScanners.containsKey(userId);
     }
 
@@ -167,7 +167,7 @@ public class Report implements java.io.Serializable {
     public String getStatus() {
 
         if (Objects.equals(this.status, "NEW")) {
-            if (isScannerEnlisted()) return "SCANNER_ENLISTED";
+            if (isCurrentUserScannerEnlisted()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
             return "NEW";
         }
@@ -332,7 +332,7 @@ public class Report implements java.io.Serializable {
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String, Object> reportMap = new HashMap<>();
         reportMap.put("status", dbStatus);
-        reportMap.put("isScannerEnlisted", isScannerEnlisted);
+        reportMap.put("scannerEnlisted", scannerEnlisted);
         reportsRef.updateChildren(reportMap);
         if (myCallBackClass != null)
             myCallBackClass.execute();

@@ -135,14 +135,14 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             commentsLayout.setVisibility(View.VISIBLE);
         }
 
-        if ((Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) || (report.isScannerEnlisted(userId)))
+        if ((Objects.equals(report.getStatus(), "SCANNER_ON_THE_WAY")) || (report.isCurrentUserScannerEnlisted(userId)))
             buttonEnlist.setVisibility(View.GONE);
         else {
             buttonEnlist.setVisibility(View.VISIBLE);
             enlistedScannerLayout.setVisibility(View.GONE);
         }
 
-        if (report.isScannerEnlisted(userId)) {
+        if (report.isCurrentUserScannerEnlisted(userId)) {
             buttonUnenlist.setVisibility(View.VISIBLE);
             enlistedScannerLayout.setVisibility(View.VISIBLE);
         }
@@ -254,7 +254,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         report = (Report) getIntent().getSerializableExtra("Report");
         userId = getUser().getId();
 
-        isScannerEnlisted = report.isScannerEnlisted(userId);
+        isScannerEnlisted = report.isCurrentUserScannerEnlisted(userId);
         report.setScannerEnlisted(isScannerEnlisted);
 
         DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance()
