@@ -44,6 +44,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
     private LinearLayoutManager mLayoutManager;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     RadioGroup isOnlyOpenGroup;
+    View lineSeparator;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean isOnlyOpen = true;
     private int numberOfReports = 10;
@@ -96,6 +97,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                 );
                 isOnlyOpenGroup.setLayoutParams(radioGroup);
                 isOnlyOpenGroup.setVisibility(View.VISIBLE);
+                lineSeparator.setVisibility(View.VISIBLE);
                 setUIVisible.execute();
             }
         }
@@ -128,6 +130,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
             }
         });
 
+        lineSeparator = findViewById(R.id.line_separator);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
