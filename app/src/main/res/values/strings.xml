@@ -118,8 +118,8 @@
     <string name="cancelling_reason_was_not_entered">לא הוכנסה סיבת ביטול</string>
     <string name="manager_not_in_charge_popup_string">רק מי שרשום/ה כמנהל/ת הדיווח יכול/ה לסגור/לבטל אותו</string>
     <string name="more_than_one_scanner_selected_string">לא ניתן לבחור יותר מסורק אחד עבור דיווח</string>
-    <string name="manager_not_in_charge_popup_title"><b>מנהל/ת יקר/ה שים/י לב!</b></string>
-    <string name="scanner_not_in_charge_popup_title"><b>סורק/ת יקר/ה שים/י לב!</b></string>
+    <string name="manager_not_in_charge_popup_title"><b>שים/י לב!</b></string>
+    <string name="scanner_not_in_charge_popup_title"><b>שים/י לב!</b></string>
     <string name="back">חזור</string>
     <string name="scanner_cancel_after_being_assigned">נבחר/ת לסריקה עבור הדיווח הנוכחי. האם את/ה בטוח/ה שברצונך לבטל את הרשמתך לסריקה?</string>
     <string name="scanner_cancel_after_reporting_on_the_way">כבר דיווחת יציאה ליעד. האם את/ה בטוח/ה שברצונך לבטל את הרשמתך לסריקה?</string>
