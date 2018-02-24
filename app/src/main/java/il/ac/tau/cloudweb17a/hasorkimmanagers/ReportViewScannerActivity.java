@@ -72,7 +72,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
 
     public void refreshUI() {
         TextView activeReportStatus = findViewById(R.id.activeReportStatus);
-        String status = report.statusInHebrew();
+        String status = report.statusInHebrew(this);
         Log.d(TAG, status);
         activeReportStatus.setText(status);
 

@@ -82,7 +82,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         //String reportStatus = report.getStatus();
 
         final TextView managerReportStatus = findViewById(R.id.managerReportStatus);
-        managerReportStatus.setText(report.statusInHebrew());
+        managerReportStatus.setText(report.statusInHebrew(this));
 
         TextView managerReportLocation = findViewById(R.id.managerReportLocation);
         managerReportLocation.setText(report.getAddress());
@@ -181,7 +181,7 @@ public class ReportViewManagerActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String status = dataSnapshot.getValue(String.class);
                 report.setStatus(status);
-                managerReportStatus.setText(report.statusInHebrew());
+                managerReportStatus.setText(report.statusInHebrew(getApplicationContext()));
                 updateInactiveReport(report.getStatus());
             }
 

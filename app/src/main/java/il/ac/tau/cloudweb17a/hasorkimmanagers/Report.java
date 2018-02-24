@@ -1,5 +1,8 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -408,13 +411,15 @@ public class Report implements java.io.Serializable {
         else return true;
     }
 
-    public String statusInHebrew() {
-        return translateStatus(this.getStatus());
+    public String statusInHebrew(Context context) {
+        return translateStatus(this.getStatus(), context);
     }
 
-    public String translateStatus(String status) {
-        User user = getUser();
-        if (user.isManager()) {
+    public String translateStatus(String status, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Boolean manager = prefs.getBoolean(context.getString(R.string.isManager), false);
+        String id = prefs.getString(context.getString(R.string.UserId), "");
+        if (manager) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("NEW", "דיווח חדש");
             map.put("SCANNER_ENLISTED", "קיים סורק זמין");
@@ -435,7 +440,7 @@ public class Report implements java.io.Serializable {
             map.put("CLOSED", "סגור");
             map.put("CANCELED", "בוטל");
 
-            if (user.getId() != null && user.getId().equals(assignedScanner)) {
+            if (id.equals(assignedScanner)) {
                 map.put("MANAGER_ASSIGNED_SCANNER", "צא ליעד, דווח יציאה לדרך");
             }
             return map.get(status);

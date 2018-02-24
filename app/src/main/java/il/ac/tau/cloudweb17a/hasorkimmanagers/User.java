@@ -1,4 +1,9 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 public class User implements java.io.Serializable {
@@ -72,7 +77,7 @@ public class User implements java.io.Serializable {
         addUserToDb();
     }
 
-    public static void setUser(User user){
+    public static void setUser(User user) {
         User.user = user;
     }
 

@@ -74,7 +74,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
 
         public void bindReport(Report report) {
             mReport = report;
-            StatusView.setText(report.statusInHebrew());
+            StatusView.setText(report.statusInHebrew(context));
             AddressView.setText(report.getAddress());
 
             String reportTime = report.getStartTimeAsString();
