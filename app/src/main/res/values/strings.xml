@@ -135,4 +135,5 @@
     <string name="channel_name">hasorkim</string>
     <string name="channel_description">hasorkim</string>
     <string name="isManager">isManager</string>
+    <string name="UserId">uderId</string>
 </resources>

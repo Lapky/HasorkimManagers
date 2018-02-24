@@ -1,6 +1,5 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -66,7 +65,7 @@ public class WaitForApprovalActivity extends AppCompatActivity {
                     if (dbUser != null && dbUser.id != null && dbUser.id.equals(FirebaseInstanceId.getInstance().getToken())) { // user in db
                         if (dbUser.isApproved()) { // user is approved
                             User.setUser(dbUser);
-                            setUserDetails(dbUser.isManager());
+                            setUserDetails(dbUser.isManager(), dbUser.getId());
                             Intent intent = new Intent(WaitForApprovalActivity.this, ReportListActivity.class);
                             startActivity(intent);
                             finish();
@@ -134,7 +133,7 @@ public class WaitForApprovalActivity extends AppCompatActivity {
                     if (dbUser != null && dbUser.id != null && dbUser.id.equals(FirebaseInstanceId.getInstance().getToken())) { // user in db
                         if (dbUser.isApproved()) { // user is approved
                             User.setUser(dbUser);
-                            setUserDetails(dbUser.isManager());
+                            setUserDetails(dbUser.isManager(), dbUser.getId());
                             Intent intent = new Intent(WaitForApprovalActivity.this, ReportListActivity.class);
                             startActivity(intent);
                             finish();
@@ -162,10 +161,11 @@ public class WaitForApprovalActivity extends AppCompatActivity {
         mUserReference.addListenerForSingleValueEvent(postListener);
     }
 
-    private void setUserDetails(boolean manager) {
+    private void setUserDetails(boolean manager, String userId) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(getString(R.string.isManager), manager);
+        editor.putString(getString(R.string.UserId), userId);
         editor.apply();
     }
 

@@ -3,12 +3,14 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -69,7 +71,8 @@ public class ReportViewManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_view_manager);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-        userId = getUser().getId();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userId = prefs.getString(getString(R.string.UserId), "");
         scannerList = new ArrayList<>();
         final ScannerAdapter adapter = new ScannerAdapter(this, scannerList);
 
