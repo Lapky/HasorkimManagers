@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/radio_buttons_border_line"
+            android:background="@android:color/white"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -50,6 +50,11 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/report_list_padding"
+            android:background="@android:color/black" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_recycler_view"
