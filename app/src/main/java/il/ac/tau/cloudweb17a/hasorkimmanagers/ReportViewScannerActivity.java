@@ -2,12 +2,14 @@ package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -252,7 +254,8 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         mapFragment.getMapAsync(this);
 
         report = (Report) getIntent().getSerializableExtra("Report");
-        userId = getUser().getId();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userId = prefs.getString(getString(R.string.UserId), "");
 
         isScannerEnlisted = report.isCurrentUserScannerEnlisted(userId);
         report.setScannerEnlisted(isScannerEnlisted);
