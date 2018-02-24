@@ -113,7 +113,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     0,
-                    10f
+                    8f
             );
             FrameLayout map = findViewById(R.id.scannerMapLayout);
             map.setLayoutParams(mapParam);

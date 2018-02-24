@@ -573,9 +573,25 @@ public class ReportViewManagerActivity extends AppCompatActivity {
 
         String assignedScanner = report.getAssignedScanner();
 
-        if (assignedScanner != null && !Objects.equals(assignedScanner, "") &&
-                !Objects.equals(assignedScanner, scannerNameString)) {
-            sendScanner.setError("יכול להיות רק סורק מאושר אחד");
+        if (assignedScanner != null && !Objects.equals(assignedScanner, "") && !Objects.equals(assignedScanner, scannerNameString)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ReportViewManagerActivity.this);
+            LayoutInflater inflater = ReportViewManagerActivity.this.getLayoutInflater();
+
+            TextView title = new TextView(getApplicationContext());
+            title.setText(R.string.manager_not_in_charge_popup_title);
+            title.setPadding(10, 50, 64, 9);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(22);
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.more_than_one_scanner_selected_pop, null));
+            builder.setCustomTitle(title);
+            builder.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            builder.create().show();
         } else {
             if (!Objects.equals(report.getAssignedScanner(), scannerNameString)) {
                 report.reportUpdateAssignedScanner(scannerNameString);

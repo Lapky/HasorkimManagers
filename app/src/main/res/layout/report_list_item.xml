@@ -29,14 +29,13 @@
                 android:layout_weight="1"
                 android:text="@string/report_status_in_list"
                 android:textSize="@dimen/report_item_status_size"
-                android:textStyle="bold"
-                android:textColor="@color/reportListColor"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/report_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="2.9"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/report_item_status_size"
                 android:textStyle="bold" />
@@ -94,17 +93,16 @@
                 android:layout_weight="1"
                 android:text="@string/number_of_scanners"
                 android:textSize="@dimen/standard_text_size"
-                android:textStyle="bold"
-                android:textColor="@color/reportListColor" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/scanners_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.2"
+                android:layout_weight="1.15"
                 android:gravity="right"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/standard_text_size"
+                android:textSize="@dimen/separator_headline_size"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -123,8 +121,7 @@
                 android:layout_weight="1"
                 android:text="@string/manager_of_report"
                 android:textSize="@dimen/standard_text_size"
-                android:textStyle="bold"
-                android:textColor="@color/reportListColor" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/manager_in_charge"
@@ -141,7 +138,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingTop="@dimen/report_item_padding">
+        android:paddingTop="@dimen/report_list_padding">
 
         <LinearLayout
             android:id="@+id/time_and_date"

@@ -25,14 +25,13 @@
                 android:layout_weight="1"
                 android:text="@string/report_status_in_list"
                 android:textSize="@dimen/report_item_status_size"
-                android:textStyle="bold"
-                android:textColor="@color/reportListColor"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/report_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="2.9"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/report_item_status_size"
                 android:textStyle="bold"/>
@@ -45,7 +44,7 @@
             android:layout_below="@+id/status_layout"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/reportListColor"
+            android:textColor="@android:color/black"
             android:paddingBottom="@dimen/nav_header_vertical_spacing"/>
     </RelativeLayout>
 
@@ -53,7 +52,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingTop="@dimen/report_item_padding">
+        android:paddingTop="@dimen/report_list_padding">
 
         <LinearLayout
             android:id="@+id/time_and_date"
