@@ -255,7 +255,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         userId = getUser().getId();
 
         isScannerEnlisted = report.isScannerEnlisted(userId);
-        report.setIsScannerEnlistedStatus(isScannerEnlisted);
+        report.setScannerEnlisted(isScannerEnlisted);
 
         DatabaseReference assignedScannerRef = FirebaseDatabase.getInstance()
                 .getReference("reports").child(report.getId()).child("assignedScanner");
@@ -280,7 +280,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             public void onDataChange(DataSnapshot snapshot) {
                 Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
                 for (DataSnapshot userId : contactChildren)
-                    report.addPotentialScanner(userId.getKey());
+                    report.addPotentialScanner(userId.getKey(), userId.getValue().toString());
 
                 report.setAvailableScanners(report.getPotentialScannersSize());
 
@@ -485,7 +485,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         }
 
         report.subtrectFromPotentialScanners(userId);
-        report.setIsScannerEnlistedStatus(false);
+        report.setScannerEnlisted(false);
 
         refreshUI();
     }

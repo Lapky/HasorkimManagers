@@ -10,21 +10,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
@@ -49,7 +41,7 @@ public class Report implements java.io.Serializable {
 
     private int availableScanners;
 
-    private Set<String> potentialScanners;
+    private Map<String, String> potentialScanners = new HashMap<>();
 
 
     private String cancellationText;
@@ -60,8 +52,7 @@ public class Report implements java.io.Serializable {
     private boolean isDogWithReporter;
     private String imageUrl;
 
-
-    private boolean isScannerEnlistedStatus;
+    private boolean isScannerEnlisted;
     private String managerInCharge;
 
     private double latitude;
@@ -74,23 +65,26 @@ public class Report implements java.io.Serializable {
     private static final String TAG = "Report";
     private int distancevalue;
 
+    public boolean isScannerEnlisted() {
+        return isScannerEnlisted;
+    }
+
+    public void setScannerEnlisted(boolean scannerEnlisted) {
+        isScannerEnlisted = scannerEnlisted;
+    }
+
     private void changePotentialScanners(String userId, int change) {
         if (change == 0) potentialScanners.remove(userId);
-        else if (change == 1) potentialScanners.add(userId);
+        else if (change == 1) potentialScanners.put(userId, this.getDuration());
 
         availableScanners = potentialScanners.size();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
+
         Map<String, Object> reportMap = new HashMap<>();
-        Map<String, Object> potentialScannersMap = new HashMap<>();
-
-        for (String scanner : potentialScanners) {
-            potentialScannersMap.put(scanner, this.getDuration());
-        }
-
-        reportMap.put("availableScanners", this.availableScanners);
-        reportMap.put("potentialScanners", potentialScannersMap);
+        reportMap.put("availableScanners", availableScanners);
+        reportMap.put("potentialScanners", potentialScanners);
 
         reportsRef.updateChildren(reportMap);
     }
@@ -106,38 +100,21 @@ public class Report implements java.io.Serializable {
 
 
     public boolean isScannerEnlisted(String userId) {
-        return potentialScanners.contains(userId);
+        return potentialScanners.containsKey(userId);
     }
 
-    public void setPotentialScanners() {
-        if (this.id != null) {
-            DatabaseReference reportsRef = FirebaseDatabase.getInstance()
-                    .getReference("reports").child(this.getId()).child("potentialScanners");
-
-            potentialScanners = new HashSet<>();
-            reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
-                    for (DataSnapshot userId : contactChildren) {
-                        addPotentialScanner(userId.getKey());
-                    }
-
-                    availableScanners = potentialScanners.size();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError firebaseError) {
-                }
-            });
-        } else {
-            Log.e(TAG, "id is null");
-        }
+    public Map<String, String> getPotentialScanners() {
+        return potentialScanners;
     }
 
-    public void addPotentialScanner(String scannerId) {
-        this.potentialScanners.add(scannerId);
+    public void setPotentialScanners(Map<String, String> potentialScanners) {
+        this.potentialScanners = potentialScanners;
+        availableScanners = potentialScanners.size();
+    }
 
+
+    public void addPotentialScanner(String scannerId, String duration) {
+        this.potentialScanners.put(scannerId, duration);
     }
 
     public int getPotentialScannersSize() {
@@ -148,7 +125,7 @@ public class Report implements java.io.Serializable {
     public Report() {
         // Default constructor required for calls to DataSnapshot.getValue(Report.class)
 
-        //this.setPotentialScanners();
+        //this.buildPotentialScanners();
     }
 
 
@@ -190,7 +167,7 @@ public class Report implements java.io.Serializable {
     public String getStatus() {
 
         if (Objects.equals(this.status, "NEW")) {
-            if (getIsScannerEnlistedStatus()) return "SCANNER_ENLISTED";
+            if (isScannerEnlisted()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
             return "NEW";
         }
@@ -264,8 +241,32 @@ public class Report implements java.io.Serializable {
 
     public void setId(String id) {
         this.id = id;
-        //this.potentialScanners = new HashSet<>();
-        setPotentialScanners();
+        buildPotentialScanners();
+    }
+
+    private void buildPotentialScanners() {
+        if (this.id != null) {
+            DatabaseReference reportsRef = FirebaseDatabase.getInstance()
+                    .getReference("reports").child(this.getId()).child("potentialScanners");
+
+            reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
+                    for (DataSnapshot userId : contactChildren) {
+                        addPotentialScanner(userId.getKey(), userId.getValue().toString());
+                    }
+
+                    availableScanners = potentialScanners.size();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError firebaseError) {
+                }
+            });
+        } else {
+            Log.e(TAG, "id is null");
+        }
     }
 
     public void setStartTime() {
@@ -303,7 +304,7 @@ public class Report implements java.io.Serializable {
         this.incrementalReportId = nextIncrementalId;
     }
 
-    public void logReportUpdateStatus(String status){
+    public void logReportUpdateStatus(String status) {
 
         User user = getUser();
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SS")
@@ -317,20 +318,21 @@ public class Report implements java.io.Serializable {
         logRef.child("oldStatus").setValue(this.previousStatus);
         logRef.child("newStatus").setValue(status);
     }
+
     public void reportUpdateStatus(String status, ReportListActivity.MyCallBackClass myCallBackClass) {
         this.logReportUpdateStatus(status);
 
         String dbStatus = status;
         if (Objects.equals(dbStatus, "SCANNER_ENLISTED")) {
             dbStatus = "NEW";
-            this.setIsScannerEnlistedStatus(true);
+            this.setScannerEnlisted(true);
         }
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference reportsRef = ref.child("reports").child(this.id);
         Map<String, Object> reportMap = new HashMap<>();
         reportMap.put("status", dbStatus);
-        reportMap.put("IsScannerEnlistedStatus", isScannerEnlistedStatus);
+        reportMap.put("isScannerEnlisted", isScannerEnlisted);
         reportsRef.updateChildren(reportMap);
         if (myCallBackClass != null)
             myCallBackClass.execute();
@@ -384,7 +386,6 @@ public class Report implements java.io.Serializable {
     }
 
     /**
-     *
      * @param userId
      */
     public void reportUpdateManagerInCharge(String userId) {
@@ -515,44 +516,6 @@ public class Report implements java.io.Serializable {
     }
 
     public String getDuration() {
-        //return Integer.toString(ThreadLocalRandom.current().nextInt(3, 31));
-        ArrayList<LatLong> locationList = new ArrayList<>();
-        LatLong thisLatLong = new LatLong();
-        thisLatLong.Lat = this.getLatitude();
-        thisLatLong.Long = this.getLongitude();
-        locationList.add(thisLatLong);
-        distanceService.getDistanceRequest(locationList, "AIzaSyA-Z3nQCb_k1vj1fB5zCPIz7Z7_6uw_HS0").enqueue(
-                new Callback() {
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e(TAG, "no response from distances");
-                        //probably should retry
-
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        ResponseBody responseBody = response.body();
-                        String[] parsedDate = distanceService.parseJSON(responseBody.string());
-                        if (parsedDate == null) {
-                            Log.d(TAG, "couldn't get distance");
-                            //TODO decide what to do here
-                            setDistance("לא ידוע");
-                            setDuration("לא ידוע");
-                            setDistancevalue(1000000000);
-
-                        } else {
-                            setDistance(parsedDate[0]);
-                            setDuration(parsedDate[1]);
-                            setDistancevalue(Integer.parseInt(parsedDate[2]));
-                            //update
-                            //distance.setText(distance);
-                        }
-                    }
-                }
-        );
-        //String temp = duration;
         return duration;
     }
 
@@ -563,14 +526,6 @@ public class Report implements java.io.Serializable {
 
     public int getDistancevalue() {
         return distancevalue;
-    }
-
-    public boolean getIsScannerEnlistedStatus() {
-        return isScannerEnlistedStatus;
-    }
-
-    public void setIsScannerEnlistedStatus(boolean scannerEnlistedStatus) {
-        isScannerEnlistedStatus = scannerEnlistedStatus;
     }
 
     public void setAssignedScanner(String assignedScanner) {
