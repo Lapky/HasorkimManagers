@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name=".ReportListActivity"
+            android:label="דיווחים חדשים"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -75,8 +76,10 @@
             android:name=".MyReportActivity"
             android:label="@string/my_reports"
             android:launchMode="singleTop"
+            android:parentActivityName=".ReportListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".StatisticsActivity"
             android:label="@string/statistics"

@@ -214,9 +214,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                             }
                         }
                     } else {
-
                         calculateDuration(report, true);
-
                     }
 
                     //Log.d(TAG, "added a report");
@@ -246,7 +244,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                                     if (mDataset.size() == 0) {
                                         setUIVisible.execute();
                                     }
-                                    if (add){
+                                    if (add) {
                                         mDataset.add(report);
                                     }
 
@@ -316,6 +314,26 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //getting key of report to update
+                Report report = dataSnapshot.getValue(Report.class);
+                calculateDuration(report, false);
+                String key = dataSnapshot.getKey();
+                report.setId(key);
+                //looking for report to update
+                int index = -1;
+                for (int i = 0; i < mDataset.size(); i++) {
+                    if (mDataset.get(i) != null && mDataset.get(i).getId() != null && mDataset.get(i).getId().equals(key)) {
+                        index = i;
+                    }
+                }
+
+                //updating
+                if (index != -1) {
+                    mDataset.remove(index);
+                    notifyDataSetChanged();
+                } else {
+                    Log.w(TAG, "Failed to find value in local report list");
+                }
             }
 
             @Override

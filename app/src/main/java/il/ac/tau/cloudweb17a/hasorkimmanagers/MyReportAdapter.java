@@ -99,7 +99,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyReportAdapter(final ProgressBar mProgressBar, final RecyclerView mRecyclerView, final Context context) {
+    public MyReportAdapter(final ProgressBar mProgressBar, final RecyclerView mRecyclerView, final TextView noReports, final Context context) {
 
         this.context = context;
 
@@ -115,7 +115,8 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (!dataSnapshot.exists()) {
                         mProgressBar.setVisibility(View.GONE);
-                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
+                        noReports.setVisibility(View.VISIBLE);
                         //add no reports view
                     }
                 }
@@ -172,6 +173,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
                 mDataset.add(report);
                 Collections.sort(mDataset, new SortbyId());
                 mProgressBar.setVisibility(View.GONE);
+                noReports.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 notifyDataSetChanged();
 
@@ -206,6 +208,27 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //getting key of report to update
+                Report report = dataSnapshot.getValue(Report.class);
+                String key = dataSnapshot.getKey();
+                report.setId(key);
+
+
+                //looking for report to update
+                int index = -1;
+                for (int i = 0; i < mDataset.size(); i++) {
+                    if (mDataset.get(i) != null && mDataset.get(i).getId() != null && mDataset.get(i).getId().equals(key)) {
+                        index = i;
+                    }
+                }
+
+                //updating
+                if (index != -1) {
+                    mDataset.remove(index);
+                    notifyDataSetChanged();
+                } else {
+                    Log.w(TAG, "Failed to find value in local report list");
+                }
             }
 
             @Override

@@ -14,6 +14,17 @@
         android:indeterminate="true"
         android:theme="@style/ProgressTheme" />
 
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/no_reports_exists"
+        android:visibility="gone"
+        android:id="@+id/no_reports"/>
+
     <LinearLayout
         android:id="@+id/reports_list_layout"
         android:layout_width="match_parent"

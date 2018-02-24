@@ -1,6 +1,7 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -205,8 +207,24 @@ public class MessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
 
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                String CHANNEL_ID = "23123";
 
-                Notification n = new Notification.Builder(MessagingService.this)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Create the NotificationChannel
+                    CharSequence name = getString(R.string.channel_name);
+                    String description = getString(R.string.channel_description);
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+                    mChannel.setDescription(description);
+                    // Register the channel with the system; you can't change the importance
+                    // or other notification behaviors after this
+
+                    notificationManager.createNotificationChannel(mChannel);
+                }
+
+                Notification.Builder builder = new Notification.Builder(MessagingService.this)
                         .setContentTitle(title)
                         .setContentText("אנא סמן יצאתי לדרך כשאתה מוכן")
                         .setSmallIcon(R.drawable.dog_icon)
@@ -214,14 +232,14 @@ public class MessagingService extends FirebaseMessagingService {
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setAutoCancel(true)
-                        .setContentIntent(resultPendingIntent)
-                        .build();
+                        .setContentIntent(resultPendingIntent);
 
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    builder.setChannelId(CHANNEL_ID);
+                }
 
                 if (notificationManager != null) {
-                    notificationManager.notify(0, n);
+                    notificationManager.notify(0, builder.build());
                 }
             }
 
