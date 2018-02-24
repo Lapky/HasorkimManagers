@@ -63,9 +63,11 @@
         </RadioGroup>
 
         <View
+            android:id="@+id/line_separator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/report_list_padding"
-            android:background="@android:color/black" />
+            android:background="@android:color/black"
+            android:visibility="gone"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_recycler_view"
