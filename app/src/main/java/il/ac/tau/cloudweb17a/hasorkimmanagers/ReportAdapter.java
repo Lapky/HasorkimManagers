@@ -111,13 +111,12 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 distanceReportTitle.setVisibility(View.VISIBLE);
                 distance.setText(report.getDuration());
 
-            }
-            else {
+            } else {
                 if (!(report.getStatus().equals("CLOSED") || report.getStatus().equals("CANCELED"))) {
                     String numOfScanners = Integer.toString(report.getAvailableScanners());
                     scannersNumber.setText(numOfScanners);
                     scannersNumberLayout.setVisibility(View.VISIBLE);
-                    arrowNavigation.setPadding(0,42,0,0);
+                    arrowNavigation.setPadding(0, 42, 0, 0);
                 }
 
                 StatusLayout.setVisibility(View.VISIBLE);
@@ -144,9 +143,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     });
 
                     mangaerInChargeLayout.setVisibility(View.VISIBLE);
-                    arrowNavigation.setPadding(0,66,0,0);
-                }
-                else
+                    arrowNavigation.setPadding(0, 66, 0, 0);
+                } else
                     mangaerInChargeLayout.setVisibility(View.GONE);
             }
         }
@@ -173,7 +171,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             query = reportsRef.orderByChild("status").equalTo("NEW");
         }
         Log.d(TAG, "only open:" + isOnlyOpen + ", is manager:" + isManager);
-        
+
         //.orderByChild("startTime")
         //.limitToLast(10);
 
@@ -185,17 +183,14 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                     setUIVisible.execute();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
-        }
-        );
+        });
 
 
         updateList(query, setUIVisible);
-
-
     }
 
     public void updateList(Query query, final ReportListActivity.MyCallBackClass setUIVisible) {
@@ -220,60 +215,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                         }
                     } else {
 
-                        ArrayList<LatLong> locationList = new ArrayList<>();
-                        LatLong thisLatLong = new LatLong();
-                        thisLatLong.Lat = report.getLatitude();
-                        thisLatLong.Long = report.getLongitude();
-                        locationList.add(thisLatLong);
-
-
-                        Log.d(TAG, "sendRequest");
-                        distanceService.getDistanceRequest(locationList, context.getString(R.string.general_key)).enqueue(
-                                new Callback() {
-
-                                    Runnable updateUI = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (mDataset.size() == 0) {
-                                                setUIVisible.execute();
-                                            }
-                                            mDataset.add(report);
-                                            Collections.sort(mDataset, new SortbyDistance());
-
-                                            notifyDataSetChanged();
-                                        }
-                                    };
-
-                                    @Override
-                                    public void onFailure(Call call, IOException e) {
-                                        Log.e(TAG, "no response from distances");
-                                        //probably should retry
-
-                                    }
-
-                                    @Override
-                                    public void onResponse(Call call, Response response) throws IOException {
-                                        ResponseBody responseBody = response.body();
-                                        String[] parsedDate = distanceService.parseJSON(responseBody.string());
-                                        if (parsedDate == null) {
-                                            Log.d(TAG, "couldn't get distance");
-                                            //TODO decide what to do here
-                                            report.setDistance("לא ידוע");
-                                            report.setDuration("לא ידוע");
-                                            report.setDistancevalue(1000000000);
-                                            activity.runOnUiThread(updateUI);
-
-                                        } else {
-                                            report.setDistance(parsedDate[0]);
-                                            report.setDuration(parsedDate[1]);
-                                            report.setDistancevalue(Integer.parseInt(parsedDate[2]));
-                                            //update
-                                            //distance.setText(distance);
-                                            activity.runOnUiThread(updateUI);
-                                        }
-                                    }
-                                }
-                        );
+                        calculateDuration(report, true);
 
                     }
 
@@ -286,11 +228,72 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
             }
 
+            private void calculateDuration(final Report report, final boolean add) {
+                ArrayList<LatLong> locationList = new ArrayList<>();
+                LatLong thisLatLong = new LatLong();
+                thisLatLong.Lat = report.getLatitude();
+                thisLatLong.Long = report.getLongitude();
+                locationList.add(thisLatLong);
+
+
+                Log.d(TAG, "sendRequest");
+                distanceService.getDistanceRequest(locationList, context.getString(R.string.general_key)).enqueue(
+                        new Callback() {
+
+                            Runnable updateUI = new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mDataset.size() == 0) {
+                                        setUIVisible.execute();
+                                    }
+                                    if (add){
+                                        mDataset.add(report);
+                                    }
+
+                                    Collections.sort(mDataset, new SortbyDistance());
+
+                                    notifyDataSetChanged();
+                                }
+                            };
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.e(TAG, "no response from distances");
+                                //probably should retry
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                ResponseBody responseBody = response.body();
+                                String[] parsedDate = distanceService.parseJSON(responseBody.string());
+                                if (parsedDate == null) {
+                                    Log.d(TAG, "couldn't get distance");
+                                    //TODO decide what to do here
+                                    report.setDistance("לא ידוע");
+                                    report.setDuration("לא ידוע");
+                                    report.setDistancevalue(1000000000);
+                                    activity.runOnUiThread(updateUI);
+
+                                } else {
+                                    report.setDistance(parsedDate[0]);
+                                    report.setDuration(parsedDate[1]);
+                                    report.setDistancevalue(Integer.parseInt(parsedDate[2]));
+                                    //update
+                                    //distance.setText(distance);
+                                    activity.runOnUiThread(updateUI);
+                                }
+                            }
+                        }
+                );
+            }
+
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
 
                 //getting key of report to update
                 Report report = dataSnapshot.getValue(Report.class);
+                calculateDuration(report, false);
                 String key = dataSnapshot.getKey();
                 report.setId(key);
                 //looking for report to update
