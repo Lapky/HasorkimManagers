@@ -146,7 +146,6 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
         LinearLayout header = (LinearLayout) navigationView.getHeaderView(0);
 
         TextView navName = (TextView) header.getChildAt(1);
@@ -222,6 +221,8 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     distanceService.getDeviceLocation(showList, mFusedLocationProviderClient, this);
+                } else {
+                    showList.execute();
                 }
             }
         }
