@@ -100,7 +100,7 @@ public class MessagingService extends FirebaseMessagingService {
                 .appendQueryParameter("destinations", (lat + "," + lon))
                 .appendQueryParameter("mode", "driving")
                 .appendQueryParameter("language", "iw")
-                .appendQueryParameter("key", getString(R.string.google_places_key));
+                .appendQueryParameter("key", getString(R.string.general_key));
 
         Request request = new Request.Builder()
                 .url(urlMaps.build().toString())

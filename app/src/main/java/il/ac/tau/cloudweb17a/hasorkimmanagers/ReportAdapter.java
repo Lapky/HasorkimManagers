@@ -228,7 +228,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
 
                         Log.d(TAG, "sendRequest");
-                        distanceService.getDistanceRequest(locationList, context.getString(R.string.google_maps_key)).enqueue(
+                        distanceService.getDistanceRequest(locationList, context.getString(R.string.general_key)).enqueue(
                                 new Callback() {
 
                                     Runnable updateUI = new Runnable() {

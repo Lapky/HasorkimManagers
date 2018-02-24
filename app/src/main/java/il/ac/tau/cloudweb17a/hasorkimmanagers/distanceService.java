@@ -37,7 +37,7 @@ public class distanceService {
 
 
     //Activity activity =this;
-    //getDistanceRequest(locationList,Lat,Long,getString(R.string.google_maps_key)).enqueue(new Callback() {
+    //getDistanceRequest(locationList,Lat,Long,getString(R.string.general_key)).enqueue(new Callback() {
     //    @Override
     //    public void onResponse(Call call, Response response) throws IOException {
     //        ResponseBody responseBody = response.body();
@@ -82,7 +82,7 @@ public class distanceService {
                 .appendQueryParameter("destinations", nearVetsID.toString())
                 .appendQueryParameter("mode","driving")
                 .appendQueryParameter("language", "iw")
-                .appendQueryParameter("key", key);  //getString(R.string.google_maps_key)
+                .appendQueryParameter("key", key);  //getString(R.string.general_key)
 
         String currentUrlDistances = urlMaps.build().toString();
         //Log.d(TAG, currentUrlDistances);

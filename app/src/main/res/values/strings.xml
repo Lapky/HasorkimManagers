@@ -17,7 +17,6 @@
     <string name="logo_content_description">לוגו</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="google_places_key">AIzaSyAB8e2CBArqVvR4TXIsx1PP0qvMWHn-sF8</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="sign_in_cancelled">התחברות בוטלה</string>
@@ -127,4 +126,6 @@
     <string name="wait_for_approval">פרטיך התקבלו וחשבונך יאושר בהקדם</string>
     <string name="received_your_request">קיבלנו את בקשתך להצטרפות לאפליקציית המנהלים</string>
     <string name="title_activity_maps2">Map</string>
+    <string name="general_key">AIzaSyCqnQU1rlTfEbN5yEj6XFRmcKEWep8Zumc</string>
+
 </resources>

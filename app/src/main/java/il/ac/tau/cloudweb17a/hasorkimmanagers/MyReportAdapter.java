@@ -137,7 +137,7 @@ class MyReportAdapter extends RecyclerView.Adapter<MyReportAdapter.ReportViewHol
                 thisLatLong.Long = report.getLongitude();
                 locationList.add(thisLatLong);
 
-                distanceService.getDistanceRequest(locationList, context.getString(R.string.google_maps_key)).enqueue(
+                distanceService.getDistanceRequest(locationList, context.getString(R.string.general_key)).enqueue(
                         new Callback() {
 
                             @Override
