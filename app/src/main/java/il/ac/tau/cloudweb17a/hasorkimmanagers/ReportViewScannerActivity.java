@@ -49,9 +49,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
@@ -79,8 +77,24 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
         if ((Objects.equals(report.getStatus(), "CLOSED")) || (Objects.equals(report.getStatus(), "CANCELED"))) {
             Button scannerAvailable = findViewById(R.id.scannerAvailable);
             LinearLayout enlistedScannerLayout = findViewById(R.id.enlistedScannerLayout);
-            scannerAvailable.setVisibility(View.INVISIBLE);
-            enlistedScannerLayout.setVisibility(View.INVISIBLE);
+            scannerAvailable.setVisibility(View.GONE);
+            enlistedScannerLayout.setVisibility(View.GONE);
+
+            LinearLayout.LayoutParams scrollParam = new LinearLayout.LayoutParams(
+                    ScrollView.LayoutParams.MATCH_PARENT,
+                    0,
+                    5f
+            );
+            ScrollView scannerReportScrollView = findViewById(R.id.scannerReportScrollView);
+            scannerReportScrollView.setLayoutParams(scrollParam);
+
+            LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    14f
+            );
+            FrameLayout map = findViewById(R.id.scannerMapLayout);
+            map.setLayoutParams(mapParam);
             return;
         }
 
@@ -99,7 +113,7 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             LinearLayout.LayoutParams mapParam = new LinearLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     0,
-                    10f
+                    8f
             );
             FrameLayout map = findViewById(R.id.scannerMapLayout);
             map.setLayoutParams(mapParam);
@@ -265,13 +279,12 @@ public class ReportViewScannerActivity extends AppCompatActivity implements OnMa
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
-                Set<String> potentialScanners = new HashSet<>();
-                for (DataSnapshot userId : contactChildren) {
-                    potentialScanners.add(userId.getKey());
-                }
+                for (DataSnapshot userId : contactChildren)
+                    report.addPotentialScanner(userId.getKey());
 
-                report.setPotentialScanners(potentialScanners);
-                report.setAvailableScanners(potentialScanners.size());
+                report.setAvailableScanners(report.getPotentialScannersSize());
+
+                refreshUI();
             }
 
             @Override

@@ -117,6 +117,7 @@
     <string name="closing_reason_was_not_entered">לא הוכנסה סיבת סגירה</string>
     <string name="cancelling_reason_was_not_entered">לא הוכנסה סיבת ביטול</string>
     <string name="manager_not_in_charge_popup_string">רק מי שרשום/ה כמנהל/ת הדיווח יכול/ה לסגור/לבטל אותו</string>
+    <string name="more_than_one_scanner_selected_string">לא ניתן לבחור יותר מסורק אחד עבור דיווח</string>
     <string name="manager_not_in_charge_popup_title"><b>מנהל/ת יקר/ה שים/י לב!</b></string>
     <string name="scanner_not_in_charge_popup_title"><b>סורק/ת יקר/ה שים/י לב!</b></string>
     <string name="back">חזור</string>
@@ -125,7 +126,9 @@
     <string name="add_your_name">להשלמת התהליך נא הכניסו את שמכם</string>
     <string name="wait_for_approval">פרטיך התקבלו וחשבונך יאושר בהקדם</string>
     <string name="received_your_request">קיבלנו את בקשתך להצטרפות לאפליקציית המנהלים</string>
-    <string name="title_activity_maps2">Map</string>
+    <string name="report_details_headline">פרטי דיווח</string>
+    <string name="available_scanners_headline">רשימת סורקים זמינים</string>
+    <string name="manage_report_headline">ניהול דיווח</string>
+    <string name="administrative_report_details_headline">פרטי דיווח מנהליים</string>
     <string name="general_key">AIzaSyCqnQU1rlTfEbN5yEj6XFRmcKEWep8Zumc</string>
-
 </resources>

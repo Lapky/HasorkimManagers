@@ -92,7 +92,7 @@ public class ReportListActivity extends AppCompatActivity implements NavigationV
                 LinearLayout.LayoutParams radioGroup = new LinearLayout.LayoutParams(
                         FrameLayout.LayoutParams.MATCH_PARENT,
                         0,
-                        1.2f
+                        1.1f
                 );
                 isOnlyOpenGroup.setLayoutParams(radioGroup);
                 isOnlyOpenGroup.setVisibility(View.VISIBLE);

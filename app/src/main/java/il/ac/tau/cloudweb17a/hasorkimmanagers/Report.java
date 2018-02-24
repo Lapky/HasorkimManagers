@@ -10,8 +10,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +21,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
 
@@ -103,9 +109,35 @@ public class Report implements java.io.Serializable {
         return potentialScanners.contains(userId);
     }
 
+    public void setPotentialScanners() {
+        if (this.id != null) {
+            DatabaseReference reportsRef = FirebaseDatabase.getInstance()
+                    .getReference("reports").child(this.getId()).child("potentialScanners");
 
-    public void setPotentialScanners(Set<String> potentialScanners) {
-        this.potentialScanners = potentialScanners;
+            potentialScanners = new HashSet<>();
+            reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Iterable<DataSnapshot> contactChildren = snapshot.getChildren();
+                    for (DataSnapshot userId : contactChildren) {
+                        addPotentialScanner(userId.getKey());
+                    }
+
+                    availableScanners = potentialScanners.size();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError firebaseError) {
+                }
+            });
+        } else {
+            Log.e(TAG, "id is null");
+        }
+    }
+
+    public void addPotentialScanner(String scannerId) {
+        this.potentialScanners.add(scannerId);
+
     }
 
     public int getPotentialScannersSize() {
@@ -232,7 +264,8 @@ public class Report implements java.io.Serializable {
 
     public void setId(String id) {
         this.id = id;
-        this.potentialScanners = new HashSet<>();
+        //this.potentialScanners = new HashSet<>();
+        setPotentialScanners();
     }
 
     public void setStartTime() {
@@ -483,6 +516,43 @@ public class Report implements java.io.Serializable {
 
     public String getDuration() {
         //return Integer.toString(ThreadLocalRandom.current().nextInt(3, 31));
+        ArrayList<LatLong> locationList = new ArrayList<>();
+        LatLong thisLatLong = new LatLong();
+        thisLatLong.Lat = this.getLatitude();
+        thisLatLong.Long = this.getLongitude();
+        locationList.add(thisLatLong);
+        distanceService.getDistanceRequest(locationList, "AIzaSyA-Z3nQCb_k1vj1fB5zCPIz7Z7_6uw_HS0").enqueue(
+                new Callback() {
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e(TAG, "no response from distances");
+                        //probably should retry
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        ResponseBody responseBody = response.body();
+                        String[] parsedDate = distanceService.parseJSON(responseBody.string());
+                        if (parsedDate == null) {
+                            Log.d(TAG, "couldn't get distance");
+                            //TODO decide what to do here
+                            setDistance("לא ידוע");
+                            setDuration("לא ידוע");
+                            setDistancevalue(1000000000);
+
+                        } else {
+                            setDistance(parsedDate[0]);
+                            setDuration(parsedDate[1]);
+                            setDistancevalue(Integer.parseInt(parsedDate[2]));
+                            //update
+                            //distance.setText(distance);
+                        }
+                    }
+                }
+        );
+        //String temp = duration;
         return duration;
     }
 
