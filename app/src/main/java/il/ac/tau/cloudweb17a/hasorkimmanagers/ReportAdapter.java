@@ -234,8 +234,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                                     Runnable updateUI = new Runnable() {
                                         @Override
                                         public void run() {
-                                            //TextView dText = activity.findViewById(R.id.dText);
-                                            //dText.setText(String.valueOf("gotten to callback: "+ distance+""+report.getId()));
                                             if (mDataset.size() == 0) {
                                                 setUIVisible.execute();
                                             }

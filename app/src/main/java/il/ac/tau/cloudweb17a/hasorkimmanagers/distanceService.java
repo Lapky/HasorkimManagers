@@ -1,13 +1,9 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -20,20 +16,19 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * Created by hen on 04/01/2018.
  */
 
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-
 
 public class distanceService {
     private static final String TAG = "distance_service";
     private static final OkHttpClient client = new OkHttpClient();
-    public static LatLong myLatLong= new LatLong();
+    public static LatLong myLatLong = new LatLong();
 
 
     //Activity activity =this;
@@ -59,13 +54,12 @@ public class distanceService {
     // });
 
 
-
-    static public Call getDistanceRequest(List<LatLong> locationList, String key){
+    static public Call getDistanceRequest(List<LatLong> locationList, String key) {
 
         int listSize = locationList.size();
         StringBuilder nearVetsID = new StringBuilder();
         for (int i = 0; i < listSize; i++) {
-            nearVetsID.append(String.valueOf(locationList.get(i).Lat)+"," + String.valueOf(locationList.get(i).Long));
+            nearVetsID.append(String.valueOf(locationList.get(i).Lat) + "," + String.valueOf(locationList.get(i).Long));
 
             if (i < (listSize - 1))
                 nearVetsID.append("|");
@@ -80,18 +74,18 @@ public class distanceService {
                 .appendPath("json")
                 .appendQueryParameter("origins", (Double.toString(myLatLong.Lat) + "," + Double.toString(myLatLong.Long)))
                 .appendQueryParameter("destinations", nearVetsID.toString())
-                .appendQueryParameter("mode","driving")
+                .appendQueryParameter("mode", "driving")
                 .appendQueryParameter("language", "iw")
-                .appendQueryParameter("key", key);  //getString(R.string.general_key)
+                .appendQueryParameter("key", key);
 
         String currentUrlDistances = urlMaps.build().toString();
         //Log.d(TAG, currentUrlDistances);
 
-        Request request=new Request.Builder()
+        Request request = new Request.Builder()
                 .url(currentUrlDistances)
                 .build();
 
-        Log.d(TAG, Double.toString(myLatLong.Lat) + "," + Double.toString(myLatLong.Long)+ "->" +locationList.get(0).Lat+","+locationList.get(0).Long);
+        Log.d(TAG, Double.toString(myLatLong.Lat) + "," + Double.toString(myLatLong.Long) + "->" + locationList.get(0).Lat + "," + locationList.get(0).Long);
         return client.newCall(request);
     }
 
@@ -99,24 +93,23 @@ public class distanceService {
     public static String[] parseJSON(String jsonData) {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
-            JSONArray jsonArray=null;
-            if(jsonObject.getJSONArray("rows") !=null &&jsonObject.getJSONArray("rows").getJSONObject(0)!=null){
+            JSONArray jsonArray = null;
+            if (jsonObject.getJSONArray("rows") != null && jsonObject.getJSONArray("rows").getJSONObject(0) != null) {
                 jsonArray = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
             }
 
-            Log.d(TAG,jsonArray.toString());
+            Log.d(TAG, jsonArray.toString());
 
-            if(jsonArray!=null &&((JSONObject) jsonArray.get(0) !=null)){
+            if (jsonArray != null && jsonArray.get(0) != null) {
                 JSONObject element = (JSONObject) jsonArray.get(0);
-                if(element.getString("status")!=null&&element.getString("status").equals("ZERO_RESULTS")) {
+                if (element.getString("status") != null && element.getString("status").equals("ZERO_RESULTS")) {
                     Log.d(TAG, "couldn't find any results");
                     return null;
-                }
-                else{
+                } else {
                     String[] response = new String[3];
-                    response[0]= element.getJSONObject("distance").getString("text");
-                    response[1]= element.getJSONObject("duration").getString("text");
-                    response[2]= element.getJSONObject("distance").getString("value");
+                    response[0] = element.getJSONObject("distance").getString("text");
+                    response[1] = element.getJSONObject("duration").getString("text");
+                    response[2] = String.valueOf(element.getJSONObject("distance").getInt("value"));
                     return response;
                 }
             }
@@ -126,8 +119,6 @@ public class distanceService {
         }
         return null;
     }
-
-
 
 
     public static void getDeviceLocation(final ReportListActivity.MyCallBackClass showList, FusedLocationProviderClient mFusedLocationProviderClient, Activity activity) {
@@ -143,7 +134,7 @@ public class distanceService {
                         myLatLong.Lat = mLastKnownLocation.getLatitude();
                         myLatLong.Long = mLastKnownLocation.getLongitude();
 
-                        Log.d(TAG, "get curr location: "+ Double.toString(myLatLong.Lat) + "," + Double.toString(myLatLong.Long));
+                        Log.d(TAG, "get curr location: " + Double.toString(myLatLong.Lat) + "," + Double.toString(myLatLong.Long));
                     }
 
                     showList.execute();
