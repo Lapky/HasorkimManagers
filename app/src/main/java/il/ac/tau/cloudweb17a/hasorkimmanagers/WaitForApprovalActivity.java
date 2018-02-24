@@ -1,7 +1,10 @@
 package il.ac.tau.cloudweb17a.hasorkimmanagers;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -63,6 +66,7 @@ public class WaitForApprovalActivity extends AppCompatActivity {
                     if (dbUser != null && dbUser.id != null && dbUser.id.equals(FirebaseInstanceId.getInstance().getToken())) { // user in db
                         if (dbUser.isApproved()) { // user is approved
                             User.setUser(dbUser);
+                            setUserDetails(dbUser.isManager());
                             Intent intent = new Intent(WaitForApprovalActivity.this, ReportListActivity.class);
                             startActivity(intent);
                             finish();
@@ -130,6 +134,7 @@ public class WaitForApprovalActivity extends AppCompatActivity {
                     if (dbUser != null && dbUser.id != null && dbUser.id.equals(FirebaseInstanceId.getInstance().getToken())) { // user in db
                         if (dbUser.isApproved()) { // user is approved
                             User.setUser(dbUser);
+                            setUserDetails(dbUser.isManager());
                             Intent intent = new Intent(WaitForApprovalActivity.this, ReportListActivity.class);
                             startActivity(intent);
                             finish();
@@ -155,6 +160,13 @@ public class WaitForApprovalActivity extends AppCompatActivity {
                 .child("users").orderByChild("id").equalTo(FirebaseInstanceId.getInstance().getToken());
 
         mUserReference.addListenerForSingleValueEvent(postListener);
+    }
+
+    private void setUserDetails(boolean manager) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(getString(R.string.isManager), manager);
+        editor.apply();
     }
 
 

@@ -35,4 +35,25 @@ public class DataParser {
 
         return null;
     }
+
+    static String getDuration(String jsonData) {
+
+        String duration = "לא ידוע";
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONArray jsonArray = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject element = (JSONObject) (jsonArray.get(i));
+                duration = element.getJSONObject("duration").getString("text");
+            }
+
+            return duration;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return duration;
+    }
 }

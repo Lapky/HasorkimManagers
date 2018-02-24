@@ -38,8 +38,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static il.ac.tau.cloudweb17a.hasorkimmanagers.User.getUser;
-
 public class MessagingService extends FirebaseMessagingService {
     private static final String TAG = MessagingService.class.getSimpleName();
     private double currLatitude;
@@ -59,7 +57,6 @@ public class MessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData() == null) {
             return;
         }
-
         reportId = remoteMessage.getData().get("report");
 
         if (remoteMessage.getData().get("type").equals("notifyManagersAndScannersNewReport")) {
@@ -134,56 +131,115 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     private void notifyNewReport() {
-        DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(reportId);
 
-        reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        Uri.Builder urlMaps = new Uri.Builder()
+                .scheme("https")
+                .authority("maps.googleapis.com")
+                .appendPath("maps")
+                .appendPath("api")
+                .appendPath("distancematrix")
+                .appendPath("json")
+                .appendQueryParameter("origins", (currLatitude + "," + currLongitude))
+                .appendQueryParameter("destinations", (lat + "," + lon))
+                .appendQueryParameter("mode", "driving")
+                .appendQueryParameter("language", "iw")
+                .appendQueryParameter("key", getString(R.string.general_key));
+
+        Request request = new Request.Builder()
+                .url(urlMaps.build().toString())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Report report = dataSnapshot.getValue(Report.class);
-                report.setId(reportId);
-
-                Intent resultIntent;
-
-                if (getUser().isManager()) {
-                    resultIntent = new Intent(getApplicationContext(), ReportViewManagerActivity.class);
-                } else {
-                    resultIntent = new Intent(getApplicationContext(), ReportViewScannerActivity.class);
-                }
-                resultIntent.putExtra("Report", report);
-
-                PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(
-                                getApplicationContext(),
-                                (int) System.currentTimeMillis(),
-                                resultIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-
-
-                Notification n = new Notification.Builder(MessagingService.this)
-                        .setContentTitle("התקבל דיווח חדש")
-                        .setContentText("דיווח חדש בכתובת " + address)
-                        .setSmallIcon(R.drawable.dog_icon)
-                        .setColor(getResources().getColor(R.color.colorAccent))
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true)
-                        .setContentIntent(resultPendingIntent)
-                        .build();
-
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-                if (notificationManager != null) {
-                    notificationManager.notify(0, n);
-                }
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onResponse(Call call, Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful())
+                        throw new IOException("Unexpected code " + response);
 
+                    String returnedString = responseBody.string();
+                    final String duration = DataParser.getDuration(returnedString);
+
+                    DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(reportId);
+
+                    reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Report report = dataSnapshot.getValue(Report.class);
+                            report.setId(reportId);
+                            report.setDuration(duration);
+                            Intent resultIntent;
+
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                            if (prefs.getBoolean(getString(R.string.isManager), false)) {
+                                resultIntent = new Intent(getApplicationContext(), ReportViewManagerActivity.class);
+                            } else {
+                                resultIntent = new Intent(getApplicationContext(), ReportViewScannerActivity.class);
+                            }
+                            resultIntent.putExtra("Report", report);
+
+                            PendingIntent resultPendingIntent =
+                                    PendingIntent.getActivity(
+                                            getApplicationContext(),
+                                            (int) System.currentTimeMillis(),
+                                            resultIntent,
+                                            PendingIntent.FLAG_UPDATE_CURRENT
+                                    );
+
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                            String CHANNEL_ID = "23123";
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                // Create the NotificationChannel
+                                CharSequence name = getString(R.string.channel_name);
+                                String description = getString(R.string.channel_description);
+                                int importance = NotificationManager.IMPORTANCE_HIGH;
+                                NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+                                mChannel.setDescription(description);
+                                // Register the channel with the system; you can't change the importance
+                                // or other notification behaviors after this
+
+                                notificationManager.createNotificationChannel(mChannel);
+                            }
+
+
+                            Notification.Builder builder = new Notification.Builder(MessagingService.this)
+                                    .setContentTitle("התקבל דיווח חדש")
+                                    .setContentText("דיווח חדש בכתובת " + address)
+                                    .setSmallIcon(R.drawable.dog_icon)
+                                    .setColor(getResources().getColor(R.color.colorAccent))
+                                    .setPriority(Notification.PRIORITY_HIGH)
+                                    .setDefaults(Notification.DEFAULT_ALL)
+                                    .setAutoCancel(true)
+                                    .setContentIntent(resultPendingIntent);
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                builder.setChannelId(CHANNEL_ID);
+                            }
+
+                            if (notificationManager != null) {
+                                notificationManager.notify(0, builder.build());
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
             }
         });
+
     }
 
     private void notifyScannerEnlisted() {

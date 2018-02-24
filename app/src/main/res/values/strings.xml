@@ -134,4 +134,5 @@
     <string name="no_reports_exists">לא קיימים דיווחים פעילים על שמך</string>
     <string name="channel_name">hasorkim</string>
     <string name="channel_description">hasorkim</string>
+    <string name="isManager">isManager</string>
 </resources>
