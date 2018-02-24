@@ -52,14 +52,6 @@ public class Report implements java.io.Serializable {
     private boolean isDogWithReporter;
     private String imageUrl;
 
-    public boolean isCurrentUserScannerEnlisted() {
-        return scannerEnlisted;
-    }
-
-    public void setScannerEnlisted(boolean scannerEnlisted) {
-        this.scannerEnlisted = scannerEnlisted;
-    }
-
     private boolean scannerEnlisted;
     private String managerInCharge;
 
@@ -167,7 +159,7 @@ public class Report implements java.io.Serializable {
     public String getStatus() {
 
         if (Objects.equals(this.status, "NEW")) {
-            if (isCurrentUserScannerEnlisted()) return "SCANNER_ENLISTED";
+            if (isScannerEnlisted()) return "SCANNER_ENLISTED";
             //if (potentialScanners.size() > 0) return "SCANNER_ENLISTED";
             return "NEW";
         }
@@ -594,5 +586,13 @@ public class Report implements java.io.Serializable {
 
     public void setManagerInCharge(String managerInCharge) {
         this.managerInCharge = managerInCharge;
+    }
+
+    public void setScannerEnlisted(boolean scannerEnlisted) {
+        this.scannerEnlisted = scannerEnlisted;
+    }
+
+    public boolean isScannerEnlisted() {
+        return scannerEnlisted;
     }
 }
